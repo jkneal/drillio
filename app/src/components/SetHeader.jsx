@@ -1,12 +1,17 @@
-import { Map, Music } from 'lucide-react';
+import { Map, Music, Sparkles } from 'lucide-react';
+import { setNicknamesConfig } from '../data/setNicknamesConfig';
 
 const SetHeader = ({ 
   setNumber, 
   subtitle,
   showMusicIcon = true,
   onDrillChartClick,
-  onMusicClick
+  onMusicClick,
+  movement
 }) => {
+  // Convert setNumber to string for config lookup
+  const nickname = movement && setNumber && setNicknamesConfig[movement]?.[String(setNumber)];
+  
   return (
     <div className="text-center mb-4">
       <div className="flex items-center justify-center mb-2">

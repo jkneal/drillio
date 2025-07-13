@@ -7,6 +7,7 @@ import MusicModal from '../components/MusicModal';
 import DrillChartModal from '../components/DrillChartModal';
 import SetHeader from '../components/SetHeader';
 import TipDisplay from '../components/TipDisplay';
+import NicknameBadge from '../components/NicknameBadge';
 
 const DrillPage = () => {
   const { movement } = useParams();
@@ -205,16 +206,18 @@ const DrillPage = () => {
           </div>
 
           <div 
-            className="bg-red-600/20 border border-red-500/30 rounded-xl p-6 backdrop-blur-sm mb-6"
+            className="bg-red-600/20 border border-red-500/30 rounded-xl p-6 backdrop-blur-sm mb-6 relative"
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
           >
+            <NicknameBadge movement={movement} setNumber={setNumber} />
             <SetHeader 
               setNumber={setNumber}
               subtitle="All Performers"
               onDrillChartClick={handleDrillChartClick}
               onMusicClick={handleMusicClick}
+              movement={movement}
             />
 
             <div className="space-y-3">
@@ -322,11 +325,12 @@ const DrillPage = () => {
         </div>
 
         <div
-          className="bg-red-600/20 border border-red-500/30 rounded-xl p-6 backdrop-blur-sm mb-6"
+          className="bg-red-600/20 border border-red-500/30 rounded-xl p-6 backdrop-blur-sm mb-6 relative"
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
         >
+          <NicknameBadge movement={movement} setNumber={currentSetData.set} />
           <SetHeader 
             setNumber={currentSetData.set}
             subtitle={
@@ -337,6 +341,7 @@ const DrillPage = () => {
             }
             onDrillChartClick={handleDrillChartClick}
             onMusicClick={handleMusicClick}
+            movement={movement}
           />
 
           <div className="space-y-4">
