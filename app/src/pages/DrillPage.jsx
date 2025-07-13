@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Home, SkipBack, SkipForward, Music, X, Users, Lightbulb, Map } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Home, SkipBack, SkipForward, Users, Lightbulb } from 'lucide-react';
 import { performerData } from '../data/performerData';
+import MusicModal from '../components/MusicModal';
+import DrillChartModal from '../components/DrillChartModal';
+import SetHeader from '../components/SetHeader';
 
 const DrillPage = () => {
   const { movement } = useParams();
@@ -68,6 +71,10 @@ const DrillPage = () => {
   };
 
   const getMusicImagePath = (setNumber) => {
+    if (selectedPerformer === 'Staff') {
+      const movementNum = movement.match(/\d+/)?.[0] || '1';
+      return `/music/Staff${movementNum}-${setNumber}.png`;
+    }
     return `/music/${selectedPerformer}-${setNumber}.png`;
   };
 
@@ -195,20 +202,18 @@ const DrillPage = () => {
             </div>
           </div>
 
-          <div className="bg-red-600/20 border border-red-500/30 rounded-xl p-6 backdrop-blur-sm mb-6">
-            <div className="text-center mb-6">
-              <div className="flex items-center justify-center mb-2">
-                <h2 className="text-2xl font-bold text-white">SET {setNumber}</h2>
-                <button
-                  onClick={handleDrillChartClick}
-                  className="ml-3 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg p-icon transition-all duration-200"
-                  title="View drill chart"
-                >
-                  <Map className="w-5 h-5 text-blue-300" />
-                </button>
-              </div>
-              <div className="text-white/80 text-lg">All Performers</div>
-            </div>
+          <div 
+            className="bg-red-600/20 border border-red-500/30 rounded-xl p-6 backdrop-blur-sm mb-6"
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+          >
+            <SetHeader 
+              setNumber={setNumber}
+              subtitle="All Performers"
+              onDrillChartClick={handleDrillChartClick}
+              onMusicClick={handleMusicClick}
+            />
 
             <div className="space-y-3">
               {allPerformersData.map((performer) => (
@@ -262,43 +267,25 @@ const DrillPage = () => {
             goToLastSet={goToLastSet}
           />
 
-          {showDrillChart && (
-            <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-              <div className="bg-red-600/20 border border-red-500/30 rounded-xl p-4 backdrop-blur-sm max-w-full max-h-full overflow-auto">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-white font-bold text-lg">
-                    Drill Chart - Movement {movement.match(/\d+/)?.[0] || '1'}, Set {setNumber}
-                  </h3>
-                  <button
-                    onClick={() => setShowDrillChart(false)}
-                    className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon transition-all duration-200"
-                  >
-                    <X className="w-5 h-5 text-white" />
-                  </button>
-                </div>
-                <div className="text-center">
-                  {!drillChartError ? (
-                    <img
-                      src={getDrillChartPath(movement.match(/\d+/)?.[0] || '1', setNumber)}
-                      alt={`Drill chart for Movement ${movement.match(/\d+/)?.[0] || '1'}, Set ${setNumber}`}
-                      className="max-w-full max-h-96 object-contain rounded"
-                      onError={handleDrillChartError}
-                    />
-                  ) : (
-                    <div className="bg-red-700/20 border border-red-500/30 rounded-lg p-8 text-center">
-                      <Map className="w-12 h-12 text-red-300 mx-auto mb-4" />
-                      <p className="text-white/80">
-                        Drill chart not available
-                      </p>
-                      <p className="text-white/60 text-sm mt-1">
-                        {getDrillChartPath(movement.match(/\d+/)?.[0] || '1', setNumber)}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
+          <DrillChartModal
+            show={showDrillChart}
+            onClose={() => setShowDrillChart(false)}
+            imagePath={getDrillChartPath(movement.match(/\d+/)?.[0] || '1', setNumber)}
+            movement={movement.match(/\d+/)?.[0] || '1'}
+            setNumber={setNumber}
+            error={drillChartError}
+            onError={handleDrillChartError}
+          />
+
+          <MusicModal
+            show={showMusicImage && setNumber > 1}
+            onClose={() => setShowMusicImage(false)}
+            imagePath={getMusicImagePath(setNumber)}
+            movement={movement.match(/\d+/)?.[0] || '1'}
+            setNumber={setNumber}
+            error={musicImageError}
+            onError={handleImageError}
+          />
         </div>
       </div>
     );
@@ -345,31 +332,17 @@ const DrillPage = () => {
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
         >
-          <div className="text-center mb-4">
-            <div className="flex items-center justify-center mb-2">
-              <h2 className="text-2xl font-bold text-white">SET {currentSetData.set}</h2>
-              <button
-                onClick={handleDrillChartClick}
-                className="ml-3 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg p-icon transition-all duration-200"
-                title="View drill chart"
-              >
-                <Map className="w-5 h-5 text-blue-300" />
-              </button>
-              {currentSetData.set > 1 && (
-                <button
-                  onClick={handleMusicClick}
-                  className="ml-2 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg p-icon transition-all duration-200"
-                  title="View music snippet"
-                >
-                  <Music className="w-5 h-5 text-blue-300" />
-                </button>
-              )}
-            </div>
-            <div className="text-white/80 text-lg">
-              Measures: {currentSetData.measures}
-              {currentSetData.counts && <span> | {currentSetData.counts} counts</span>}
-            </div>
-          </div>
+          <SetHeader 
+            setNumber={currentSetData.set}
+            subtitle={
+              <>
+                Measures: {currentSetData.measures}
+                {currentSetData.counts && <span> | {currentSetData.counts} counts</span>}
+              </>
+            }
+            onDrillChartClick={handleDrillChartClick}
+            onMusicClick={handleMusicClick}
+          />
 
           <div className="space-y-4">
             <div className="bg-red-700/20 border border-red-500/30 rounded-lg p-4">
@@ -433,81 +406,26 @@ const DrillPage = () => {
           goToLastSet={goToLastSet}
         />
 
-        {showMusicImage && currentSetData.set > 1 && (
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-red-600/20 border border-red-500/30 rounded-xl p-4 backdrop-blur-sm max-w-full max-h-full overflow-auto">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-white font-bold text-lg">
-                  Music - Set {currentSetData.set}
-                </h3>
-                <button
-                  onClick={() => setShowMusicImage(false)}
-                  className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon transition-all duration-200"
-                >
-                  <X className="w-5 h-5 text-white" />
-                </button>
-              </div>
-              <div className="text-center">
-                {!musicImageError ? (
-                  <img
-                    src={getMusicImagePath(currentSetData.set)}
-                    alt={`Music snippet for Set ${currentSetData.set}`}
-                    className="max-w-full max-h-96 object-contain rounded"
-                    onError={handleImageError}
-                  />
-                ) : (
-                  <div className="bg-red-700/20 border border-red-500/30 rounded-lg p-8 text-center">
-                    <Music className="w-12 h-12 text-red-300 mx-auto mb-4" />
-                    <p className="text-white/80">
-                      Music snippet not available
-                    </p>
-                    <p className="text-white/60 text-sm mt-1">
-                      {getMusicImagePath(currentSetData.set)}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
 
-        {showDrillChart && (
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-red-600/20 border border-red-500/30 rounded-xl p-4 backdrop-blur-sm max-w-full max-h-full overflow-auto">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-white font-bold text-lg">
-                  Drill Chart - Movement {movement.match(/\d+/)?.[0] || '1'}, Set {currentSetData.set}
-                </h3>
-                <button
-                  onClick={() => setShowDrillChart(false)}
-                  className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon transition-all duration-200"
-                >
-                  <X className="w-5 h-5 text-white" />
-                </button>
-              </div>
-              <div className="text-center">
-                {!drillChartError ? (
-                  <img
-                    src={getDrillChartPath(movement.match(/\d+/)?.[0] || '1', currentSetData.set)}
-                    alt={`Drill chart for Movement ${movement.match(/\d+/)?.[0] || '1'}, Set ${currentSetData.set}`}
-                    className="max-w-full max-h-96 object-contain rounded"
-                    onError={handleDrillChartError}
-                  />
-                ) : (
-                  <div className="bg-red-700/20 border border-red-500/30 rounded-lg p-8 text-center">
-                    <Map className="w-12 h-12 text-red-300 mx-auto mb-4" />
-                    <p className="text-white/80">
-                      Drill chart not available
-                    </p>
-                    <p className="text-white/60 text-sm mt-1">
-                      {getDrillChartPath(movement.match(/\d+/)?.[0] || '1', currentSetData.set)}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
+        <DrillChartModal
+          show={showDrillChart}
+          onClose={() => setShowDrillChart(false)}
+          imagePath={getDrillChartPath(movement.match(/\d+/)?.[0] || '1', currentSetData.set)}
+          movement={movement.match(/\d+/)?.[0] || '1'}
+          setNumber={currentSetData.set}
+          error={drillChartError}
+          onError={handleDrillChartError}
+        />
+
+        <MusicModal
+          show={showMusicImage && currentSetData.set > 1}
+          onClose={() => setShowMusicImage(false)}
+          imagePath={getMusicImagePath(currentSetData.set)}
+          movement={movement.match(/\d+/)?.[0] || '1'}
+          setNumber={currentSetData.set}
+          error={musicImageError}
+          onError={handleImageError}
+        />
       </div>
     </div>
   );
