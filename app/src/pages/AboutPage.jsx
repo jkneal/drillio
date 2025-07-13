@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Home, ChevronRight, Users, Music, Play, SkipForward, ChevronLeft, Lightbulb, Map, Wifi, WifiOff } from 'lucide-react';
+import { Home, ChevronRight, Users, Music, Play, SkipForward, ChevronLeft, Lightbulb, Map, Wifi, WifiOff, ArrowRight, Sparkles } from 'lucide-react';
 import { movementsConfig } from '../data/movementsConfig';
 
 const AboutPage = () => {
@@ -138,9 +138,28 @@ const AboutPage = () => {
               <Lightbulb className="w-4 h-4 text-yellow-300 mr-2 flex-shrink-0" />
               <div className="text-white/80 text-sm">
                 <span className="font-semibold text-white">Performance Tips:</span> Look for yellow 
-                lightbulb icons that provide helpful reminders and movement instructions. 
-                <span className="bg-yellow-600 text-black px-1 rounded font-semibold ml-1">Hold</span> indicators 
-                are highlighted for visibility.
+                lightbulb icons that provide helpful reminders and movement instructions. Movement 
+                directions are highlighted in <span className="text-blue-300 font-semibold">blue</span>, 
+                step sizes in <span className="text-green-300 font-semibold">green</span>, and 
+                <span className="bg-yellow-600 text-black px-1 rounded font-semibold">Hold</span> indicators 
+                are highlighted for visibility. Visual movement vectors show direction at a glance.
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <ArrowRight className="w-4 h-4 text-blue-300 mr-2 flex-shrink-0" />
+              <div className="text-white/80 text-sm">
+                <span className="font-semibold text-white">Next Set Preview:</span> See what's coming 
+                next with the "Next:" indicator, helping you prepare for smooth transitions between sets.
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <Sparkles className="w-4 h-4 text-yellow-300 mr-2 flex-shrink-0" />
+              <div className="text-white/80 text-sm">
+                <span className="font-semibold text-white">Special Set Nicknames:</span> Look for 
+                flashy badges on certain sets that mark important moments in the show, like "The Opening" 
+                or "Grand Finale".
               </div>
             </div>
 
