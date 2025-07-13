@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trophy, Info } from 'lucide-react';
+import { Trophy } from 'lucide-react';
 import { performerData } from '../data/performerData';
 
 const HomePage = () => {
@@ -34,13 +34,6 @@ const HomePage = () => {
               }}
             />
             <h1 className="text-2xl font-bold text-white tracking-wider uppercase font-sans">Drillio</h1>
-            <button
-              onClick={() => navigate('/about')}
-              className="ml-8 bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg pi-1 transition-all duration-200"
-              title="About Drillio"
-            >
-              <Info className="w-5 h-5 text-white" />
-            </button>
           </div>
         </div>
 
@@ -99,6 +92,15 @@ const HomePage = () => {
               <div className="text-xs text-red-200 text-center">2018 • 2022 • 2023 • 2024</div>
               <div className="text-xs text-red-300 mt-0.5 text-center">ISSMA Open Class C</div>
             </div>
+          </div>
+          
+          <div className="text-center mt-8">
+            <button
+              onClick={() => navigate('/about')}
+              className="text-white/60 hover:text-white text-sm transition-colors"
+            >
+              About
+            </button>
           </div>
         </div>
       </div>

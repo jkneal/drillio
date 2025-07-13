@@ -285,7 +285,7 @@ const DrillPage = () => {
               {currentSetData.set > 1 && (
                 <button
                   onClick={handleMusicClick}
-                  className="ml-3 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg p-2 transition-all duration-200"
+                  className="ml-3 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg p-icon transition-all duration-200"
                   title="View music snippet"
                 >
                   <Music className="w-5 h-5 text-blue-300" />
@@ -369,7 +369,7 @@ const DrillPage = () => {
                 </h3>
                 <button
                   onClick={() => setShowMusicImage(false)}
-                  className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-2 transition-all duration-200"
+                  className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon transition-all duration-200"
                 >
                   <X className="w-5 h-5 text-white" />
                 </button>

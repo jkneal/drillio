@@ -12,6 +12,10 @@
   padding: 1rem;
 }
 
+.p-icon {
+  padding: 0.5rem 0.5rem 0.3rem 0.5rem;
+}
+
 .pt-4 {
   padding-top: 1rem;
 }
