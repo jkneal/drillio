@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Home, SkipBack, SkipForward, Users, Lightbulb } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Home, SkipBack, SkipForward, Users } from 'lucide-react';
 import { performerData } from '../data/performerData';
+import { movementsConfig } from '../data/movementsConfig';
 import MusicModal from '../components/MusicModal';
 import DrillChartModal from '../components/DrillChartModal';
 import SetHeader from '../components/SetHeader';
+import TipDisplay from '../components/TipDisplay';
 
 const DrillPage = () => {
   const { movement } = useParams();
@@ -187,7 +189,7 @@ const DrillPage = () => {
           </div>
 
           <div className="text-center mb-6">
-            <h2 className="text-xl font-bold text-white mb-2">{movement} - Staff View</h2>
+            <h2 className="text-xl font-bold text-white mb-2">{movementsConfig[movement]?.displayName || movement} - Staff View</h2>
             <div className="text-white/80">
               Set {setNumber} of {currentMovement.length}
             </div>
@@ -237,20 +239,13 @@ const DrillPage = () => {
                       <span className="text-white/60">F-B:</span> {performer.homeVisitor}
                     </div>
                   </div>
-                  {performer.tip && (
-                    <div className="mt-2 flex items-start">
-                      <Lightbulb className="w-3 h-3 text-yellow-300 mr-1 mt-0.5 flex-shrink-0" />
-                      <div className="text-white/70 text-xs leading-relaxed">
-                        {performer.tip.split(/(hold|Hold|HOLD)/i).map((part, index) =>
-                          /^(hold|Hold|HOLD)$/i.test(part) ? (
-                            <span key={index} className="bg-yellow-600 text-black px-1 rounded font-semibold">
-                              Hold
-                            </span>
-                          ) : (
-                            part
-                          )
-                        )}
-                      </div>
+                  {(performer.tip || performer.nextSet) && (
+                    <div className="mt-2">
+                      <TipDisplay 
+                        tip={performer.tip} 
+                        nextSet={performer.nextSet}
+                        size="small"
+                      />
                     </div>
                   )}
                 </div>
@@ -311,7 +306,7 @@ const DrillPage = () => {
         </div>
 
         <div className="text-center mb-6">
-          <h2 className="text-xl font-bold text-white mb-2">{movement}</h2>
+          <h2 className="text-xl font-bold text-white mb-2">{movementsConfig[movement]?.displayName || movement}</h2>
           <div className="text-white/80">
             Set {currentSetData.set} of {currentMovement.length}
           </div>
@@ -362,8 +357,8 @@ const DrillPage = () => {
 
           <div className="mt-4 space-y-2">
             {currentSetData.form && (
-              <div className="flex items-start">
-                <Users className="w-4 h-4 text-red-300 mr-2 mt-0.5 flex-shrink-0" />
+              <div className="flex items-center">
+                <Users className="w-4 h-4 text-red-300 mr-2 flex-shrink-0" />
                 <div className="text-white/80 text-sm">
                   {currentSetData.form.split(/(line|Line|LINE)/i).map((part, index) =>
                     /^(line|Line|LINE)$/i.test(part) ? (
@@ -378,22 +373,11 @@ const DrillPage = () => {
               </div>
             )}
 
-            {currentSetData.tip && (
-              <div className="flex items-start">
-                <Lightbulb className="w-4 h-4 text-yellow-300 mr-2 mt-0.5 flex-shrink-0" />
-                <div className="text-white/80 text-sm leading-relaxed">
-                  {currentSetData.tip.split(/(hold|Hold|HOLD)/i).map((part, index) =>
-                    /^(hold|Hold|HOLD)$/i.test(part) ? (
-                      <span key={index} className="bg-yellow-600 text-black px-1 rounded font-semibold">
-                        Hold
-                      </span>
-                    ) : (
-                      part
-                    )
-                  )}
-                </div>
-              </div>
-            )}
+            <TipDisplay 
+              tip={currentSetData.tip} 
+              nextSet={currentSetData.nextSet}
+              size="normal"
+            />
           </div>
         </div>
 

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Trophy, Play } from 'lucide-react';
 import { performerData } from '../data/performerData';
+import { movementsConfig } from '../data/movementsConfig';
 
 const MovementSelectionPage = () => {
   const [selectedPerformer, setSelectedPerformer] = useState(null);
@@ -77,7 +78,7 @@ const MovementSelectionPage = () => {
                 className="flex-1 bg-red-600/20 hover:bg-red-600/30 text-white p-4 rounded-lg backdrop-blur-sm transition-all duration-200 border border-red-500/30"
               >
                 <div className="text-left">
-                  <div className="font-semibold text-lg">{movement}</div>
+                  <div className="font-semibold text-lg">{movementsConfig[movement]?.displayName || movement}</div>
                   <div className="text-sm opacity-80">
                     {currentPerformer.movements[movement].length} sets
                   </div>
@@ -132,7 +133,7 @@ const MovementSelectionPage = () => {
             <div className="bg-red-600/20 border border-red-500/30 rounded-xl p-4 backdrop-blur-sm max-w-4xl max-h-full overflow-auto">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-white font-bold text-lg">
-                  {currentMovementVideo} Animation
+                  {movementsConfig[currentMovementVideo]?.displayName || currentMovementVideo} Animation
                 </h3>
                 <button
                   onClick={() => {

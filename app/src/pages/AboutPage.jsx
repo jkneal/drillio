@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Home, ChevronRight, Users, Music, Play, SkipForward, ChevronLeft, Lightbulb, Map, Wifi, WifiOff } from 'lucide-react';
+import { movementsConfig } from '../data/movementsConfig';
 
 const AboutPage = () => {
   const navigate = useNavigate();
@@ -63,8 +64,9 @@ const AboutPage = () => {
                 2. Choose a Movement
               </h3>
               <p className="text-white/80 text-sm">
-                Select from the 5 movements in our show: Uninvited, TBD, Transition, Ballad, 
-                and Closer. You can also watch movement preview videos when available.
+                Select from the {Object.keys(movementsConfig).length} movements in our show: {
+                  Object.values(movementsConfig).map(m => m.name).join(', ')
+                }. You can also watch movement preview videos when available.
               </p>
             </div>
 
@@ -109,7 +111,7 @@ const AboutPage = () => {
           
           <div className="space-y-3 mb-6">
             <div className="flex items-start">
-              <Map className="w-4 h-4 text-blue-300 mr-2 mt-0.5 flex-shrink-0" />
+              <Map className="w-4 h-4 text-blue-300 mr-2 flex-shrink-0" />
               <div className="text-white/80 text-sm">
                 <span className="font-semibold text-white">Drill Charts:</span> Tap the map icon to 
                 view the full field drill chart for any set, showing all performers' positions.
@@ -117,7 +119,7 @@ const AboutPage = () => {
             </div>
 
             <div className="flex items-start">
-              <Music className="w-4 h-4 text-blue-300 mr-2 mt-0.5 flex-shrink-0" />
+              <Music className="w-4 h-4 text-blue-300 mr-2 flex-shrink-0" />
               <div className="text-white/80 text-sm">
                 <span className="font-semibold text-white">Music Snippets:</span> Tap the music 
                 icon on any set (except Set 1) to view the corresponding music notation.
@@ -125,7 +127,7 @@ const AboutPage = () => {
             </div>
 
             <div className="flex items-start">
-              <Play className="w-4 h-4 text-green-300 mr-2 mt-0.5 flex-shrink-0" />
+              <Play className="w-4 h-4 text-green-300 mr-2 flex-shrink-0" />
               <div className="text-white/80 text-sm">
                 <span className="font-semibold text-white">Movement Videos:</span> Watch animated 
                 previews of each movement from the movement selection screen.
@@ -133,7 +135,7 @@ const AboutPage = () => {
             </div>
 
             <div className="flex items-start">
-              <Lightbulb className="w-4 h-4 text-yellow-300 mr-2 mt-0.5 flex-shrink-0" />
+              <Lightbulb className="w-4 h-4 text-yellow-300 mr-2 flex-shrink-0" />
               <div className="text-white/80 text-sm">
                 <span className="font-semibold text-white">Performance Tips:</span> Look for yellow 
                 lightbulb icons that provide helpful reminders and movement instructions. 
@@ -143,7 +145,7 @@ const AboutPage = () => {
             </div>
 
             <div className="flex items-start">
-              <Users className="w-4 h-4 text-red-300 mr-2 mt-0.5 flex-shrink-0" />
+              <Users className="w-4 h-4 text-red-300 mr-2 flex-shrink-0" />
               <div className="text-white/80 text-sm">
                 <span className="font-semibold text-white">Staff View:</span> Directors can select 
                 "Staff View" to see all performers' positions for any given set.
@@ -151,7 +153,7 @@ const AboutPage = () => {
             </div>
 
             <div className="flex items-start">
-              <WifiOff className="w-4 h-4 text-green-300 mr-2 mt-0.5 flex-shrink-0" />
+              <WifiOff className="w-4 h-4 text-green-300 mr-2 flex-shrink-0" />
               <div className="text-white/80 text-sm">
                 <span className="font-semibold text-white">Works Offline:</span> Once installed, 
                 Drillio works without an internet connection - perfect for outdoor rehearsals!
