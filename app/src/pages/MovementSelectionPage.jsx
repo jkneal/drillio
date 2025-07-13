@@ -52,16 +52,19 @@ const MovementSelectionPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-red-900 via-black to-red-800 p-4">
       <div className="max-w-md mx-auto">
         <div className="mb-6 pt-4">
-          <div className="flex items-center justify-center">
+          <div className="flex flex-col items-center">
             <img
                 src="/HSlogo.png"
                 alt="E Logo"
-                className="w-6 h-4 mr-2"
+                className="w-8 h-5 mb-1"
                 onError={(e) => {
                   e.target.style.display = 'none';
                 }}
             />
-            <span className="text-white">Edgewood 2025 - Transient</span>
+            <div className="text-white text-center">
+              <div>Edgewood 2025</div>
+              <div className="text-sm">- Transient -</div>
+            </div>
           </div>
         </div>
 

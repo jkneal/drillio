@@ -38,16 +38,19 @@ const HomePage = () => {
         </div>
 
           <div className="bg-black/40 border-2 border-white/40 rounded-lg p-3 backdrop-blur-sm mb-4 shadow-lg">
-            <div className="flex items-center justify-center mb-3">
+            <div className="flex flex-col items-center">
               <img
                   src="/HSlogo.png"
                   alt="E Logo"
-                  className="w-8 h-5 mr-3"
+                  className="w-10 h-6"
                   onError={(e) => {
                     e.target.style.display = 'none';
                   }}
               />
-              <h2 className="text-2xl font-bold text-white">Edgewood 2025 - Transient</h2>
+              <h2 className="text-2xl font-bold text-white text-center" style={{"marginTop": "0.2rem"}}>
+                <div>Edgewood 2025</div>
+                <div className="text-xl mt-1">- Transient -</div>
+              </h2>
             </div>
             <p className="text-white text-lg mb-4" style={{"marginTop": "0.2rem"}}>
               Select your performer:
@@ -82,6 +85,15 @@ const HomePage = () => {
                   </option>
                 ))}
             </select>
+            
+            {selectedPerformer && (
+              <button
+                onClick={() => navigate('/movements')}
+                className="w-full mt-4 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200"
+              >
+                Continue as {performerData[selectedPerformer].name}
+              </button>
+            )}
             
             <div className="mt-6 pt-6  border-t border-white/20">
               <div className="flex items-center justify-center mb-1 mt-4">

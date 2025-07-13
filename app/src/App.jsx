@@ -3,6 +3,7 @@ import HomePage from './pages/HomePage';
 import MovementSelectionPage from './pages/MovementSelectionPage';
 import DrillPage from './pages/DrillPage';
 import AboutPage from './pages/AboutPage';
+import PWAPrompt from './components/PWAPrompt';
 import './App.css';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <PWAPrompt />
     </Router>
   );
 }
