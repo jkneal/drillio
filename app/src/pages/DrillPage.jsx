@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Home, SkipBack, SkipForward, Music, X, Users, Lightbulb } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Home, SkipBack, SkipForward, Music, X, Users, Lightbulb, Map } from 'lucide-react';
 import { performerData } from '../data/performerData';
 
 const DrillPage = () => {
@@ -10,6 +10,8 @@ const DrillPage = () => {
   const [currentSet, setCurrentSet] = useState(0);
   const [showMusicImage, setShowMusicImage] = useState(false);
   const [musicImageError, setMusicImageError] = useState(false);
+  const [showDrillChart, setShowDrillChart] = useState(false);
+  const [drillChartError, setDrillChartError] = useState(false);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
 
@@ -41,6 +43,7 @@ const DrillPage = () => {
     if (currentSet < currentMovement.length - 1) {
       setCurrentSet(currentSet + 1);
       setMusicImageError(false);
+      setDrillChartError(false);
     }
   };
 
@@ -48,21 +51,28 @@ const DrillPage = () => {
     if (currentSet > 0) {
       setCurrentSet(currentSet - 1);
       setMusicImageError(false);
+      setDrillChartError(false);
     }
   };
 
   const goToFirstSet = () => {
     setCurrentSet(0);
     setMusicImageError(false);
+    setDrillChartError(false);
   };
 
   const goToLastSet = () => {
     setCurrentSet(currentMovement.length - 1);
     setMusicImageError(false);
+    setDrillChartError(false);
   };
 
   const getMusicImagePath = (setNumber) => {
     return `/music/${selectedPerformer}-${setNumber}.png`;
+  };
+
+  const getDrillChartPath = (movementNum, setNumber) => {
+    return `/drill/${movementNum}-${setNumber}.png`;
   };
 
   const handleMusicClick = () => {
@@ -72,8 +82,17 @@ const DrillPage = () => {
     }
   };
 
+  const handleDrillChartClick = () => {
+    setShowDrillChart(true);
+    setDrillChartError(false);
+  };
+
   const handleImageError = () => {
     setMusicImageError(true);
+  };
+
+  const handleDrillChartError = () => {
+    setDrillChartError(true);
   };
 
   const minSwipeDistance = 50;
@@ -178,7 +197,16 @@ const DrillPage = () => {
 
           <div className="bg-red-600/20 border border-red-500/30 rounded-xl p-6 backdrop-blur-sm mb-6">
             <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold text-white">SET {setNumber}</h2>
+              <div className="flex items-center justify-center mb-2">
+                <h2 className="text-2xl font-bold text-white">SET {setNumber}</h2>
+                <button
+                  onClick={handleDrillChartClick}
+                  className="ml-3 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg p-icon transition-all duration-200"
+                  title="View drill chart"
+                >
+                  <Map className="w-5 h-5 text-blue-300" />
+                </button>
+              </div>
               <div className="text-white/80 text-lg">All Performers</div>
             </div>
 
@@ -210,7 +238,7 @@ const DrillPage = () => {
                       <div className="text-white/70 text-xs leading-relaxed">
                         {performer.tip.split(/(hold|Hold|HOLD)/i).map((part, index) =>
                           /^(hold|Hold|HOLD)$/i.test(part) ? (
-                            <span key={index} className="bg-yellow-400 text-black px-1 rounded font-semibold">
+                            <span key={index} className="bg-yellow-600 text-black px-1 rounded font-semibold">
                               Hold
                             </span>
                           ) : (
@@ -233,6 +261,44 @@ const DrillPage = () => {
             goToFirstSet={goToFirstSet}
             goToLastSet={goToLastSet}
           />
+
+          {showDrillChart && (
+            <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-red-600/20 border border-red-500/30 rounded-xl p-4 backdrop-blur-sm max-w-full max-h-full overflow-auto">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-white font-bold text-lg">
+                    Drill Chart - Movement {movement.match(/\d+/)?.[0] || '1'}, Set {setNumber}
+                  </h3>
+                  <button
+                    onClick={() => setShowDrillChart(false)}
+                    className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon transition-all duration-200"
+                  >
+                    <X className="w-5 h-5 text-white" />
+                  </button>
+                </div>
+                <div className="text-center">
+                  {!drillChartError ? (
+                    <img
+                      src={getDrillChartPath(movement.match(/\d+/)?.[0] || '1', setNumber)}
+                      alt={`Drill chart for Movement ${movement.match(/\d+/)?.[0] || '1'}, Set ${setNumber}`}
+                      className="max-w-full max-h-96 object-contain rounded"
+                      onError={handleDrillChartError}
+                    />
+                  ) : (
+                    <div className="bg-red-700/20 border border-red-500/30 rounded-lg p-8 text-center">
+                      <Map className="w-12 h-12 text-red-300 mx-auto mb-4" />
+                      <p className="text-white/80">
+                        Drill chart not available
+                      </p>
+                      <p className="text-white/60 text-sm mt-1">
+                        {getDrillChartPath(movement.match(/\d+/)?.[0] || '1', setNumber)}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -282,10 +348,17 @@ const DrillPage = () => {
           <div className="text-center mb-4">
             <div className="flex items-center justify-center mb-2">
               <h2 className="text-2xl font-bold text-white">SET {currentSetData.set}</h2>
+              <button
+                onClick={handleDrillChartClick}
+                className="ml-3 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg p-icon transition-all duration-200"
+                title="View drill chart"
+              >
+                <Map className="w-5 h-5 text-blue-300" />
+              </button>
               {currentSetData.set > 1 && (
                 <button
                   onClick={handleMusicClick}
-                  className="ml-3 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg p-icon transition-all duration-200"
+                  className="ml-2 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg p-icon transition-all duration-200"
                   title="View music snippet"
                 >
                   <Music className="w-5 h-5 text-blue-300" />
@@ -338,7 +411,7 @@ const DrillPage = () => {
                 <div className="text-white/80 text-sm leading-relaxed">
                   {currentSetData.tip.split(/(hold|Hold|HOLD)/i).map((part, index) =>
                     /^(hold|Hold|HOLD)$/i.test(part) ? (
-                      <span key={index} className="bg-yellow-400 text-black px-1 rounded font-semibold">
+                      <span key={index} className="bg-yellow-600 text-black px-1 rounded font-semibold">
                         Hold
                       </span>
                     ) : (
@@ -390,6 +463,44 @@ const DrillPage = () => {
                     </p>
                     <p className="text-white/60 text-sm mt-1">
                       {getMusicImagePath(currentSetData.set)}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showDrillChart && (
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-red-600/20 border border-red-500/30 rounded-xl p-4 backdrop-blur-sm max-w-full max-h-full overflow-auto">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-white font-bold text-lg">
+                  Drill Chart - Movement {movement.match(/\d+/)?.[0] || '1'}, Set {currentSetData.set}
+                </h3>
+                <button
+                  onClick={() => setShowDrillChart(false)}
+                  className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon transition-all duration-200"
+                >
+                  <X className="w-5 h-5 text-white" />
+                </button>
+              </div>
+              <div className="text-center">
+                {!drillChartError ? (
+                  <img
+                    src={getDrillChartPath(movement.match(/\d+/)?.[0] || '1', currentSetData.set)}
+                    alt={`Drill chart for Movement ${movement.match(/\d+/)?.[0] || '1'}, Set ${currentSetData.set}`}
+                    className="max-w-full max-h-96 object-contain rounded"
+                    onError={handleDrillChartError}
+                  />
+                ) : (
+                  <div className="bg-red-700/20 border border-red-500/30 rounded-lg p-8 text-center">
+                    <Map className="w-12 h-12 text-red-300 mx-auto mb-4" />
+                    <p className="text-white/80">
+                      Drill chart not available
+                    </p>
+                    <p className="text-white/60 text-sm mt-1">
+                      {getDrillChartPath(movement.match(/\d+/)?.[0] || '1', currentSetData.set)}
                     </p>
                   </div>
                 )}

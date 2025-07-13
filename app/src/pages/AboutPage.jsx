@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Home, ChevronRight, Users, Music, Play, SkipForward, ChevronLeft, Lightbulb } from 'lucide-react';
+import { Home, ChevronRight, Users, Music, Play, SkipForward, ChevronLeft, Lightbulb, Map, Wifi, WifiOff } from 'lucide-react';
 
 const AboutPage = () => {
   const navigate = useNavigate();
@@ -16,16 +16,19 @@ const AboutPage = () => {
               <Home className="w-6 h-6 mr-2" />
               <span>Home</span>
             </button>
-            <div className="flex items-center">
+            <div className="flex flex-col items-center">
               <img
                 src="/HSlogo.png"
                 alt="E Logo"
-                className="w-6 h-4 mr-2"
+                className="w-8 h-5 mb-1"
                 onError={(e) => {
                   e.target.style.display = 'none';
                 }}
               />
-              <span className="text-white">Edgewood 2025</span>
+              <div className="text-white text-center text-sm">
+                <div>Edgewood 2025</div>
+                <div className="text-xs">- Transient -</div>
+              </div>
             </div>
           </div>
         </div>
@@ -106,6 +109,14 @@ const AboutPage = () => {
           
           <div className="space-y-3 mb-6">
             <div className="flex items-start">
+              <Map className="w-4 h-4 text-blue-300 mr-2 mt-0.5 flex-shrink-0" />
+              <div className="text-white/80 text-sm">
+                <span className="font-semibold text-white">Drill Charts:</span> Tap the map icon to 
+                view the full field drill chart for any set, showing all performers' positions.
+              </div>
+            </div>
+
+            <div className="flex items-start">
               <Music className="w-4 h-4 text-blue-300 mr-2 mt-0.5 flex-shrink-0" />
               <div className="text-white/80 text-sm">
                 <span className="font-semibold text-white">Music Snippets:</span> Tap the music 
@@ -125,7 +136,9 @@ const AboutPage = () => {
               <Lightbulb className="w-4 h-4 text-yellow-300 mr-2 mt-0.5 flex-shrink-0" />
               <div className="text-white/80 text-sm">
                 <span className="font-semibold text-white">Performance Tips:</span> Look for yellow 
-                lightbulb icons that provide helpful reminders and movement instructions.
+                lightbulb icons that provide helpful reminders and movement instructions. 
+                <span className="bg-yellow-600 text-black px-1 rounded font-semibold ml-1">Hold</span> indicators 
+                are highlighted for visibility.
               </div>
             </div>
 
@@ -134,6 +147,14 @@ const AboutPage = () => {
               <div className="text-white/80 text-sm">
                 <span className="font-semibold text-white">Staff View:</span> Directors can select 
                 "Staff View" to see all performers' positions for any given set.
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <WifiOff className="w-4 h-4 text-green-300 mr-2 mt-0.5 flex-shrink-0" />
+              <div className="text-white/80 text-sm">
+                <span className="font-semibold text-white">Works Offline:</span> Once installed, 
+                Drillio works without an internet connection - perfect for outdoor rehearsals!
               </div>
             </div>
           </div>

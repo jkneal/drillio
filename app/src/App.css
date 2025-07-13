@@ -341,6 +341,18 @@
   background-color: #facc15;
 }
 
+.bg-yellow-600 {
+  background-color: #ca8a04;
+}
+
+.text-yellow-100 {
+  color: #fef3c7;
+}
+
+.text-black {
+  color: #000000;
+}
+
 .bg-gray-800 {
   background-color: #1f2937;
 }
