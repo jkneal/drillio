@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trophy, Play } from 'lucide-react';
+import {Trophy, Play, X} from 'lucide-react';
 import { performerData } from '../data/performerData';
 import { movementsConfig } from '../data/movementsConfig';
 
@@ -141,9 +141,9 @@ const MovementSelectionPage = () => {
                     setCurrentMovementVideo('');
                     setVideoError(false);
                   }}
-                  className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-2 transition-all duration-200"
+                  className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon transition-all duration-200"
                 >
-                  <span className="text-white">×</span>
+                  <X className="w-5 h-5 text-white" />
                 </button>
               </div>
               <div className="text-center">

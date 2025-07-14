@@ -8,6 +8,7 @@ import DrillChartModal from '../components/DrillChartModal';
 import SetHeader from '../components/SetHeader';
 import TipDisplay from '../components/TipDisplay';
 import NicknameBadge from '../components/NicknameBadge';
+import NotesModal from '../components/NotesModal';
 
 const DrillPage = () => {
   const { movement } = useParams();
@@ -15,9 +16,8 @@ const DrillPage = () => {
   const [selectedPerformer, setSelectedPerformer] = useState(null);
   const [currentSet, setCurrentSet] = useState(0);
   const [showMusicImage, setShowMusicImage] = useState(false);
-  const [musicImageError, setMusicImageError] = useState(false);
   const [showDrillChart, setShowDrillChart] = useState(false);
-  const [drillChartError, setDrillChartError] = useState(false);
+  const [showNotes, setShowNotes] = useState(false);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
 
@@ -48,38 +48,23 @@ const DrillPage = () => {
   const goToNextSet = () => {
     if (currentSet < currentMovement.length - 1) {
       setCurrentSet(currentSet + 1);
-      setMusicImageError(false);
-      setDrillChartError(false);
     }
   };
 
   const goToPrevSet = () => {
     if (currentSet > 0) {
       setCurrentSet(currentSet - 1);
-      setMusicImageError(false);
-      setDrillChartError(false);
     }
   };
 
   const goToFirstSet = () => {
     setCurrentSet(0);
-    setMusicImageError(false);
-    setDrillChartError(false);
   };
 
   const goToLastSet = () => {
     setCurrentSet(currentMovement.length - 1);
-    setMusicImageError(false);
-    setDrillChartError(false);
   };
 
-  const getMusicImagePath = (setNumber) => {
-    if (selectedPerformer === 'Staff') {
-      const movementNum = movement.match(/\d+/)?.[0] || '1';
-      return `/music/Staff${movementNum}-${setNumber}.png`;
-    }
-    return `/music/${selectedPerformer}-${setNumber}.png`;
-  };
 
   const getDrillChartPath = (movementNum, setNumber) => {
     return `/drill/${movementNum}-${setNumber}.png`;
@@ -88,22 +73,23 @@ const DrillPage = () => {
   const handleMusicClick = () => {
     if (currentSetData && currentSetData.set > 1) {
       setShowMusicImage(true);
-      setMusicImageError(false);
     }
   };
 
   const handleDrillChartClick = () => {
     setShowDrillChart(true);
-    setDrillChartError(false);
   };
 
-  const handleImageError = () => {
-    setMusicImageError(true);
+  const handleNotesClick = () => {
+    setShowNotes(true);
   };
 
-  const handleDrillChartError = () => {
-    setDrillChartError(true);
+  const checkHasNote = (performerId, movement, setNumber) => {
+    const key = `note_${performerId}_${movement}_${setNumber}`;
+    return localStorage.getItem(key) !== null;
   };
+
+
 
   const minSwipeDistance = 50;
 
@@ -218,6 +204,8 @@ const DrillPage = () => {
               onDrillChartClick={handleDrillChartClick}
               onMusicClick={handleMusicClick}
               movement={movement}
+              onNotesClick={null}
+              hasNote={false}
             />
 
             <div className="space-y-3">
@@ -271,18 +259,17 @@ const DrillPage = () => {
             imagePath={getDrillChartPath(movement.match(/\d+/)?.[0] || '1', setNumber)}
             movement={movement.match(/\d+/)?.[0] || '1'}
             setNumber={setNumber}
-            error={drillChartError}
-            onError={handleDrillChartError}
+            totalSets={currentMovement.length}
           />
 
           <MusicModal
             show={showMusicImage && setNumber > 1}
             onClose={() => setShowMusicImage(false)}
-            imagePath={getMusicImagePath(setNumber)}
             movement={movement.match(/\d+/)?.[0] || '1'}
             setNumber={setNumber}
-            error={musicImageError}
-            onError={handleImageError}
+            isStaffView={true}
+            performerKey={selectedPerformer}
+            totalSets={currentMovement.length}
           />
         </div>
       </div>
@@ -341,7 +328,9 @@ const DrillPage = () => {
             }
             onDrillChartClick={handleDrillChartClick}
             onMusicClick={handleMusicClick}
+            onNotesClick={handleNotesClick}
             movement={movement}
+            hasNote={checkHasNote(selectedPerformer, movement, currentSetData.set)}
           />
 
           <div className="space-y-4">
@@ -402,18 +391,25 @@ const DrillPage = () => {
           imagePath={getDrillChartPath(movement.match(/\d+/)?.[0] || '1', currentSetData.set)}
           movement={movement.match(/\d+/)?.[0] || '1'}
           setNumber={currentSetData.set}
-          error={drillChartError}
-          onError={handleDrillChartError}
+          totalSets={currentMovement.length}
         />
 
         <MusicModal
           show={showMusicImage && currentSetData.set > 1}
           onClose={() => setShowMusicImage(false)}
-          imagePath={getMusicImagePath(currentSetData.set)}
           movement={movement.match(/\d+/)?.[0] || '1'}
           setNumber={currentSetData.set}
-          error={musicImageError}
-          onError={handleImageError}
+          isStaffView={false}
+          performerKey={selectedPerformer}
+          totalSets={currentMovement.length}
+        />
+
+        <NotesModal
+          show={showNotes}
+          onClose={() => setShowNotes(false)}
+          movement={movement}
+          setNumber={currentSetData.set}
+          performerId={selectedPerformer}
         />
       </div>
     </div>

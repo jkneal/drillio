@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Home, ChevronRight, Users, Music, Play, SkipForward, ChevronLeft, Lightbulb, Map, Wifi, WifiOff, ArrowRight, Sparkles } from 'lucide-react';
+import { Home, ChevronRight, Users, Music, Play, SkipForward, ChevronLeft, Lightbulb, Map, Wifi, WifiOff, ArrowRight, Sparkles, StickyNote } from 'lucide-react';
 import { movementsConfig } from '../data/movementsConfig';
 
 const AboutPage = () => {
@@ -160,6 +160,15 @@ const AboutPage = () => {
                 <span className="font-semibold text-white">Special Set Nicknames:</span> Look for 
                 flashy badges on certain sets that mark important moments in the show, like "The Opening" 
                 or "Grand Finale".
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <StickyNote className="w-4 h-4 text-yellow-300 mr-2 flex-shrink-0" />
+              <div className="text-white/80 text-sm">
+                <span className="font-semibold text-white">Personal Notes:</span> Add your own notes 
+                to any set using the notes icon. Choose from quick templates or write custom reminders. 
+                Notes are saved on your device and persist between sessions.
               </div>
             </div>
 
