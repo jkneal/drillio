@@ -61,8 +61,8 @@ const NotesModal = ({
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-red-600/20 border border-red-500/30 rounded-xl p-4 backdrop-blur-sm w-full max-w-md">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-auto">
+      <div className="bg-red-600/20 border border-red-500/30 rounded-xl p-4 backdrop-blur-sm w-full max-w-md mx-auto" style={{ maxWidth: 'min(28rem, calc(100vw - 2rem))' }}>
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-white font-bold text-lg flex items-center">
             <StickyNote className="w-5 h-5 mr-2" />
@@ -84,6 +84,7 @@ const NotesModal = ({
               onChange={(e) => setNote(e.target.value)}
               placeholder="Add your personal notes for this set..."
               className="w-full h-32 bg-black/40 border border-white/40 rounded-lg p-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-red-400 resize-none"
+              style={{ fontSize: '16px' }}
               autoFocus
             />
           </div>
