@@ -13,13 +13,13 @@ const NotesModal = ({
   
   const quickTemplates = [
     "Check spacing with ",
+    "2 step spacing",
+    "3 step spacing",
     "Watch step size",
     "Little in front of ",
-    "Littin behind ",
+    "Little behind ",
     "Line up with yard line",
     "Stay in line with ",
-    "Hit position stronger",
-    "Watch for visual cue",
     "Keep shoulders square",
     "Rock and Roll Step "
   ];
