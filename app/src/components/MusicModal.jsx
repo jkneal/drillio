@@ -80,7 +80,7 @@ const MusicModal = ({
                 <button
                   onClick={handlePrevious}
                   disabled={currentSet <= 2}
-                  className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ChevronLeft className="w-5 h-5 text-white" />
                 </button>
@@ -90,7 +90,7 @@ const MusicModal = ({
                 <button
                   onClick={handleNext}
                   disabled={currentSet >= totalSets}
-                  className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ChevronRight className="w-5 h-5 text-white" />
                 </button>
@@ -109,7 +109,7 @@ const MusicModal = ({
                 <button
                   onClick={handlePrevious}
                   disabled={currentSet <= 2}
-                  className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ChevronLeft className="w-5 h-5 text-white" />
                 </button>
@@ -119,7 +119,7 @@ const MusicModal = ({
                 <button
                   onClick={handleNext}
                   disabled={currentSet >= totalSets}
-                  className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ChevronRight className="w-5 h-5 text-white" />
                 </button>

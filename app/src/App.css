@@ -16,6 +16,10 @@
   padding: 0.5rem 0.5rem 0.3rem 0.5rem;
 }
 
+.p-icon-sm {
+  padding: 0.375rem 0.375rem 0.25rem 0.375rem;
+}
+
 .pt-4 {
   padding-top: 1rem;
 }
@@ -682,6 +686,10 @@
 
 .p-2 {
   padding: 0.5rem;
+}
+
+.p-2\.5 {
+  padding: 0.625rem;
 }
 
 .p-3 {
