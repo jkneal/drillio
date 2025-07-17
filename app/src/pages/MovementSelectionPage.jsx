@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {Trophy, Play, X} from 'lucide-react';
+import {Trophy, Play, X, Route} from 'lucide-react';
 import { performerData } from '../data/performerData';
 import { movementsConfig } from '../data/movementsConfig';
+import PathVisualizerModal from '../components/PathVisualizerModal';
 
 const MovementSelectionPage = () => {
   const [selectedPerformer, setSelectedPerformer] = useState(null);
   const [showMovementVideo, setShowMovementVideo] = useState(false);
   const [currentMovementVideo, setCurrentMovementVideo] = useState('');
   const [videoError, setVideoError] = useState(false);
+  const [showPathVisualizer, setShowPathVisualizer] = useState(false);
+  const [currentMovementPath, setCurrentMovementPath] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,6 +52,11 @@ const MovementSelectionPage = () => {
     setVideoError(true);
   };
 
+  const handlePathVisualizerClick = (movement) => {
+    setCurrentMovementPath(movement);
+    setShowPathVisualizer(true);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-900 via-black to-red-800 p-4">
       <div className="max-w-md mx-auto">
@@ -70,27 +78,42 @@ const MovementSelectionPage = () => {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-white mb-4">Select Movement:</h2>
+          <h2 className="text-xl font-semibold text-white">Select Movement:</h2>
+          <p className="text-white/60 text-sm mb-4">Tap a movement to view your drill sets</p>
           {Object.keys(currentPerformer.movements).map((movement) => (
-            <div key={movement} className="flex items-center space-x-3">
+            <div key={movement} className="bg-red-600/20 hover:bg-red-600/30 rounded-lg backdrop-blur-sm transition-all duration-200 border border-red-500/30 overflow-hidden">
               <button
                 onClick={() => handleMovementSelect(movement)}
-                className="flex-1 bg-red-600/20 hover:bg-red-600/30 text-white p-4 rounded-lg backdrop-blur-sm transition-all duration-200 border border-red-500/30"
+                className="w-full text-white p-4 text-left"
               >
-                <div className="text-left">
-                  <div className="font-semibold text-lg">{movementsConfig[movement]?.displayName || movement}</div>
-                  <div className="text-sm opacity-80">
-                    {currentPerformer.movements[movement].length} sets
-                  </div>
+                <div className="font-semibold text-lg">{movementsConfig[movement]?.displayName || movement}</div>
+                <div className="text-sm opacity-80">
+                  {currentPerformer.movements[movement].length} sets
                 </div>
               </button>
-              <button
-                onClick={() => handleMovementVideoClick(movement)}
-                className="bg-green-600/20 hover:bg-green-600/30 border border-green-500/30 rounded-lg p-3 transition-all duration-200"
-                title="View movement animation"
-              >
-                <Play className="w-5 h-5 text-green-300" />
-              </button>
+              <div className="flex items-center justify-end space-x-2 px-4 pb-3">
+                <button
+                  onClick={() => handleMovementVideoClick(movement)}
+                  className="flex items-center text-green-300 hover:text-green-200 text-sm transition-colors"
+                  title="View movement animation"
+                >
+                  <Play className="w-4 h-4 mr-1" />
+                  <span>Preview</span>
+                </button>
+                {selectedPerformer !== 'Staff' && (
+                  <>
+                    <span className="text-white/30">|</span>
+                    <button
+                      onClick={() => handlePathVisualizerClick(movement)}
+                      className="flex items-center text-blue-300 hover:text-blue-200 text-sm transition-colors"
+                      title="View movement path"
+                    >
+                      <Route className="w-4 h-4 mr-1" />
+                      <span>Path</span>
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           ))}
         </div>
@@ -171,6 +194,14 @@ const MovementSelectionPage = () => {
             </div>
           </div>
         )}
+
+        <PathVisualizerModal
+          show={showPathVisualizer}
+          onClose={() => setShowPathVisualizer(false)}
+          performerData={performerData[selectedPerformer]}
+          movement={currentMovementPath}
+          performerId={selectedPerformer}
+        />
       </div>
     </div>
   );

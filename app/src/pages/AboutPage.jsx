@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Home, ChevronRight, Users, Music, Play, SkipForward, ChevronLeft, Lightbulb, Map, Wifi, WifiOff, ArrowRight, Sparkles, StickyNote } from 'lucide-react';
+import { Home, ChevronRight, Users, Music, Play, SkipForward, ChevronLeft, Lightbulb, Map, Wifi, WifiOff, ArrowRight, Sparkles, StickyNote, Route } from 'lucide-react';
 import { movementsConfig } from '../data/movementsConfig';
 
 const AboutPage = () => {
@@ -169,6 +169,16 @@ const AboutPage = () => {
                 <span className="font-semibold text-white">Personal Notes:</span> Add your own notes 
                 to any set using the notes icon. Choose from quick templates or write custom reminders. 
                 Notes are saved on your device and persist between sessions.
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <Route className="w-4 h-4 text-blue-300 mr-2 flex-shrink-0" />
+              <div className="text-white/80 text-sm">
+                <span className="font-semibold text-white">Path Visualization:</span> View your complete 
+                movement path for any drill segment. Watch animated transitions between sets with accurate 
+                timing based on counts. Toggle to see other performers' positions and movements color-coded 
+                by instrument type. Perfect for understanding complex drill patterns and spatial relationships.
               </div>
             </div>
 

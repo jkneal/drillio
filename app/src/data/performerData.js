@@ -158,15 +158,15 @@ export const performerData = {
     number: "45",
     movements: {
       "1": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: 2.0 steps Outside 50 yd ln", homeVisitor: "6.0 steps Behind Visitor Hash", form: "Scattered", tip: "Starting position", nextSet: "Hold, prepare for diagonal movement" },
-        { set: 2, measures: "sub 40", counts: "40", leftRight: "Right: 1.0 steps Inside 45 yd ln", homeVisitor: "2.0 steps Behind Visitor Hash", form: "Snare Diagonal", tip: "Hold for 32 counts, then move right backward for 8 counts", nextSet: "Continue right movement" },
-        { set: 3, measures: "2 - 13", counts: "8", leftRight: "Right: 2.0 steps Outside 40 yd ln", homeVisitor: "2.0 steps Behind Visitor Hash", form: "Snare Line", tip: "Move right (10-to-5) for 8 counts", nextSet: "Larger steps, continue right" },
-        { set: 4, measures: "14 - 17", counts: "16", leftRight: "Right: 4.0 steps Inside 40 yd ln", homeVisitor: "2.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Move right (17-to-5) for 16 counts", nextSet: "Hold position" },
-        { set: 5, measures: "18 - 20", counts: "12", leftRight: "Right: 4.0 steps Inside 40 yd ln", homeVisitor: "2.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Hold for 12 counts", nextSet: "Move backward right diagonal" },
-        { set: 6, measures: "21 - 22", counts: "8", leftRight: "Right: 3.0 steps Inside 35 yd ln", homeVisitor: "7.0 steps In Front Of Visitor Hash", form: "Line full battery", tip: "Move right backward (8-to-5) for 8 counts", nextSet: "Continue same direction" },
-        { set: 7, measures: "23", counts: "4", leftRight: "Right: 4.5 steps Inside 35 yd ln", homeVisitor: "10.0 steps In Front Of Visitor Hash", form: "Line full battery", tip: "Move right backward (8-to-5) for 4 counts", nextSet: "Same step size, then hold" },
-        { set: 8, measures: "24 - 34", counts: "44", leftRight: "Right: On 30 yd ln", homeVisitor: "13.0 steps In Front Of Visitor Hash", form: "Line full battery", tip: "Move right backward (8-to-5) for 4 counts, then hold for 40 counts", nextSet: "Move straight backward" },
-        { set: 9, measures: "35 - 43", counts: "36", leftRight: "Right: On 30 yd ln", homeVisitor: "8.0 steps Behind Home Hash", form: "Line full battery", tip: "Move backward (13-to-5) for 12 counts, then hold for 24 counts", nextSet: "End of drill" }
+        { set: 1, measures: "0", counts: "", leftRight: "Left: 1.0 steps Outside 50 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Scattered", tip: "Starting position", nextSet: "Hold, feet together" },
+        { set: 2, measures: "sub 40", counts: "40", leftRight: "Left: On 45 yd ln", homeVisitor: "On Visitor Hash", form: "Snare Diagonal", tip: "Hold for 32 counts, then Crab Left foot behind 40 degrees left forward (11-to-5) for 8 counts", nextSet: "Step size smaller, direction changes to straight left" },
+        { set: 3, measures: "2 - 13", counts: "8", leftRight: "Left: 2.0 steps Inside 40 yd ln", homeVisitor: "On Visitor Hash", form: "Snare Line", tip: "Crab Left foot behind left (8-to-5) for 8 counts", nextSet: "Step size bigger, direction changes to straight right" },
+        { set: 4, measures: "14 - 17", counts: "16", leftRight: "Left: 1.0 steps Outside 40 yd ln", homeVisitor: "On Visitor Hash", form: "Line with Tenors", tip: "Crab Left foot in front right (19-to-5) for 16 counts", nextSet: "Hold, feet together" },
+        { set: 5, measures: "18 - 20", counts: "12", leftRight: "Left: 1.0 steps Outside 40 yd ln", homeVisitor: "On Visitor Hash", form: "Line with Tenors", tip: "Hold for 12 counts", nextSet: "Step size smaller, direction changes to left forward" },
+        { set: 6, measures: "21 - 22", counts: "8", leftRight: "Right: 1.0 steps Inside 35 yd ln", homeVisitor: "5.0 steps In Front Of Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 30 degrees left forward (10-to-5) for 8 counts", nextSet: "Step size smaller, direction changes more left" },
+        { set: 7, measures: "23", counts: "4", leftRight: "Left: 1.5 steps Outside 35 yd ln", homeVisitor: "8.0 steps In Front Of Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 50 degrees left forward (6-to-5) for 4 counts", nextSet: "Step size bigger, same direction then hold" },
+        { set: 8, measures: "24 - 34", counts: "44", leftRight: "Left: On 30 yd ln", homeVisitor: "11.0 steps In Front Of Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 50 degrees left forward (14-to-5) for 4 counts, then hold for 40 counts", nextSet: "Step size bigger, direction changes to straight forward" },
+        { set: 9, measures: "35 - 43", counts: "36", leftRight: "Left: On 30 yd ln", homeVisitor: "10.0 steps Behind Home Hash", form: "Line Full Battery", tip: "Forward (18-to-5) for 12 counts, then hold for 24 counts", nextSet: "End of drill" }
       ],
       "2": [
         { set: 1, measures: "0", counts: "", leftRight: "Left: 1.0 steps Outside 50 yd ln", homeVisitor: "On Home Hash", form: "Scattered", tip: "Starting position", nextSet: "Movement complete" }
@@ -187,15 +187,15 @@ export const performerData = {
     number: "27",
     movements: {
       "1": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: 1.0 steps Inside 50 yd ln", homeVisitor: "10.0 steps Behind Visitor Hash", form: "Scattered", tip: "Starting position", nextSet: "Hold, then move left backward" },
-        { set: 2, measures: "sub 40", counts: "40", leftRight: "Left: On 45 yd ln", homeVisitor: "4.0 steps Behind Visitor Hash", form: "Tenor Diagonal", tip: "Hold for 32 counts, then move left backward for 8 counts", nextSet: "Continue left movement" },
-        { set: 3, measures: "2 - 13", counts: "8", leftRight: "Left: 1.0 steps Inside 40 yd ln", homeVisitor: "4.0 steps Behind Visitor Hash", form: "Tenor Line", tip: "Move left (11-to-5) for 8 counts", nextSet: "Larger steps left" },
-        { set: 4, measures: "14 - 17", counts: "16", leftRight: "Left: 2.0 steps Outside 40 yd ln", homeVisitor: "4.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Move left (17-to-5) for 16 counts", nextSet: "Hold in place" },
-        { set: 5, measures: "18 - 20", counts: "12", leftRight: "Left: 2.0 steps Outside 40 yd ln", homeVisitor: "4.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Hold for 12 counts", nextSet: "Move left backward diagonal" },
-        { set: 6, measures: "21 - 22", counts: "8", leftRight: "Left: On 35 yd ln", homeVisitor: "3.0 steps In Front Of Visitor Hash", form: "Line full battery", tip: "Move left backward (9-to-5) for 8 counts" },
-        { set: 7, measures: "23", counts: "4", leftRight: "Left: 2.5 steps Outside 35 yd ln", homeVisitor: "6.0 steps In Front Of Visitor Hash", form: "Line full battery", tip: "Move left backward (9-to-5) for 4 counts" },
-        { set: 8, measures: "24 - 34", counts: "44", leftRight: "Left: 3.0 steps Inside 30 yd ln", homeVisitor: "9.0 steps In Front Of Visitor Hash", form: "Line full battery", tip: "Move left backward (9-to-5) for 4 counts, then hold for 40 counts" },
-        { set: 9, measures: "35 - 43", counts: "36", leftRight: "Left: 3.0 steps Inside 30 yd ln", homeVisitor: "12.0 steps Behind Home Hash", form: "Line full battery", tip: "Move backward (13-to-5) for 12 counts, then hold for 24 counts", nextSet: "End of drill" }
+        { set: 1, measures: "0", counts: "", leftRight: "Left: 2.0 steps Outside 50 yd ln", homeVisitor: "12.0 steps Behind Visitor Hash", form: "Scattered", tip: "Starting position", nextSet: "Hold, feet together" },
+        { set: 2, measures: "sub 40", counts: "40", leftRight: "Left: 1.0 steps Inside 45 yd ln", homeVisitor: "4.0 steps Behind Visitor Hash", form: "Tenor Diagonal", tip: "Hold for 32 counts, then Crab Left foot behind 40 degrees left forward (11-to-5) for 8 counts", nextSet: "Step size smaller, direction changes to straight left" },
+        { set: 3, measures: "2 - 13", counts: "8", leftRight: "Left: 3.0 steps Inside 40 yd ln", homeVisitor: "4.0 steps Behind Visitor Hash", form: "Tenor Line", tip: "Crab Left foot behind left (8-to-5) for 8 counts", nextSet: "Step size bigger, direction changes to straight right" },
+        { set: 4, measures: "14 - 17", counts: "16", leftRight: "Left: 2.0 steps Outside 40 yd ln", homeVisitor: "4.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Crab Left foot in front right (19-to-5) for 16 counts", nextSet: "Hold, feet together" },
+        { set: 5, measures: "18 - 20", counts: "12", leftRight: "Left: 2.0 steps Outside 40 yd ln", homeVisitor: "4.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Hold for 12 counts", nextSet: "Step size smaller, direction changes to left forward" },
+        { set: 6, measures: "21 - 22", counts: "8", leftRight: "Left: On 35 yd ln", homeVisitor: "3.0 steps In Front Of Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 30 degrees left forward (10-to-5) for 8 counts", nextSet: "Step size smaller, direction changes more left" },
+        { set: 7, measures: "23", counts: "4", leftRight: "Left: 2.5 steps Outside 35 yd ln", homeVisitor: "6.0 steps In Front Of Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 50 degrees left forward (6-to-5) for 4 counts", nextSet: "Step size bigger, same direction then hold" },
+        { set: 8, measures: "24 - 34", counts: "44", leftRight: "Left: 1.0 steps Inside 30 yd ln", homeVisitor: "9.0 steps In Front Of Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 50 degrees left forward (14-to-5) for 4 counts, then hold for 40 counts", nextSet: "Step size bigger, direction changes to straight forward" },
+        { set: 9, measures: "35 - 43", counts: "36", leftRight: "Left: 1.0 steps Inside 30 yd ln", homeVisitor: "12.0 steps Behind Home Hash", form: "Line Full Battery", tip: "Forward (18-to-5) for 12 counts, then hold for 24 counts", nextSet: "End of drill" }
       ],
       "2": [
         { set: 1, measures: "0", counts: "", leftRight: "Right: 3.0 steps Outside 50 yd ln", homeVisitor: "2.0 steps Behind Home Hash", form: "Scattered", tip: "Starting position", nextSet: "Movement complete" }
@@ -216,15 +216,15 @@ export const performerData = {
     number: "31",
     movements: {
       "1": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: On 50 yd ln", homeVisitor: "4.0 steps Behind Visitor Hash", form: "Scattered", tip: "Starting position" },
-        { set: 2, measures: "sub 40", counts: "40", leftRight: "Left: 3.0 steps Inside 45 yd ln", homeVisitor: "4.0 steps In Front Of Visitor Hash", form: "Snare Diagonal", tip: "Hold for 32 counts, then move left backward for 8 counts" },
-        { set: 3, measures: "2 - 13", counts: "8", leftRight: "Left: On 40 yd ln", homeVisitor: "4.0 steps In Front Of Visitor Hash", form: "Snare Line", tip: "Move left (12-to-5) for 8 counts" },
-        { set: 4, measures: "14 - 17", counts: "16", leftRight: "Left: 1.0 steps Outside 40 yd ln", homeVisitor: "4.0 steps In Front Of Visitor Hash", form: "Line with Tenors", tip: "Move left (19-to-5) for 16 counts" },
-        { set: 5, measures: "18 - 20", counts: "12", leftRight: "Left: 1.0 steps Outside 40 yd ln", homeVisitor: "4.0 steps In Front Of Visitor Hash", form: "Line with Tenors", tip: "Hold for 12 counts" },
-        { set: 6, measures: "21 - 22", counts: "8", leftRight: "Left: 3.0 steps Inside 35 yd ln", homeVisitor: "9.0 steps In Front Of Visitor Hash", form: "Line full battery", tip: "Move left backward (8-to-5) for 8 counts" },
-        { set: 7, measures: "23", counts: "4", leftRight: "Left: 1.5 steps Inside 35 yd ln", homeVisitor: "12.0 steps In Front Of Visitor Hash", form: "Line full battery", tip: "Move left backward (8-to-5) for 4 counts" },
-        { set: 8, measures: "24 - 34", counts: "44", leftRight: "Left: 4.0 steps Inside 30 yd ln", homeVisitor: "15.0 steps In Front Of Visitor Hash", form: "Line full battery", tip: "Move left backward (8-to-5) for 4 counts, then hold for 40 counts" },
-        { set: 9, measures: "35 - 43", counts: "36", leftRight: "Left: 4.0 steps Inside 30 yd ln", homeVisitor: "6.0 steps Behind Home Hash", form: "Line full battery", tip: "Move backward (13-to-5) for 12 counts, then hold for 24 counts" }
+        { set: 1, measures: "0", counts: "", leftRight: "Right: 3.0 steps Inside 50 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Scattered", tip: "Starting position", nextSet: "Hold, feet together" },
+        { set: 2, measures: "sub 40", counts: "40", leftRight: "Right: 2.0 steps Outside 45 yd ln", homeVisitor: "On Visitor Hash", form: "Snare Diagonal", tip: "Hold for 32 counts, then Crab Left foot behind 40 degrees left forward (11-to-5) for 8 counts", nextSet: "Step size smaller, direction changes to straight left" },
+        { set: 3, measures: "2 - 13", counts: "8", leftRight: "Right: On 40 yd ln", homeVisitor: "On Visitor Hash", form: "Snare Line", tip: "Crab Left foot behind left (8-to-5) for 8 counts", nextSet: "Step size bigger, direction changes to straight right" },
+        { set: 4, measures: "14 - 17", counts: "16", leftRight: "Right: 1.0 steps Inside 40 yd ln", homeVisitor: "On Visitor Hash", form: "Line with Tenors", tip: "Crab Left foot in front right (19-to-5) for 16 counts", nextSet: "Hold, feet together" },
+        { set: 5, measures: "18 - 20", counts: "12", leftRight: "Right: 1.0 steps Inside 40 yd ln", homeVisitor: "On Visitor Hash", form: "Line with Tenors", tip: "Hold for 12 counts", nextSet: "Step size smaller, direction changes to left forward" },
+        { set: 6, measures: "21 - 22", counts: "8", leftRight: "Right: 3.0 steps Outside 35 yd ln", homeVisitor: "5.0 steps In Front Of Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 30 degrees left forward (10-to-5) for 8 counts", nextSet: "Step size smaller, direction changes more left" },
+        { set: 7, measures: "23", counts: "4", leftRight: "Right: 1.5 steps Inside 35 yd ln", homeVisitor: "8.0 steps In Front Of Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 50 degrees left forward (6-to-5) for 4 counts", nextSet: "Step size bigger, same direction then hold" },
+        { set: 8, measures: "24 - 34", counts: "44", leftRight: "Right: 2.0 steps Outside 30 yd ln", homeVisitor: "11.0 steps In Front Of Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 50 degrees left forward (14-to-5) for 4 counts, then hold for 40 counts", nextSet: "Step size bigger, direction changes to straight forward" },
+        { set: 9, measures: "35 - 43", counts: "36", leftRight: "Right: 2.0 steps Outside 30 yd ln", homeVisitor: "10.0 steps Behind Home Hash", form: "Line Full Battery", tip: "Forward (18-to-5) for 12 counts, then hold for 24 counts", nextSet: "End of drill" }
       ],
       "2": [
         { set: 1, measures: "0", counts: "", leftRight: "Right: 2.0 steps Inside 50 yd ln", homeVisitor: "2.0 steps Behind Home Hash", form: "Scattered", tip: "Starting position" }
@@ -245,15 +245,15 @@ export const performerData = {
     number: "52",
     movements: {
       "1": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: 2.0 steps Outside 50 yd ln", homeVisitor: "12.0 steps Behind Visitor Hash", form: "Scattered", tip: "Starting position" },
-        { set: 2, measures: "sub 40", counts: "40", leftRight: "Right: 2.0 steps Inside 45 yd ln", homeVisitor: "6.0 steps Behind Visitor Hash", form: "Tenor Diagonal", tip: "Hold for 32 counts, then move right backward for 8 counts" },
-        { set: 3, measures: "2 - 13", counts: "8", leftRight: "Right: 3.0 steps Inside 40 yd ln", homeVisitor: "6.0 steps Behind Visitor Hash", form: "Tenor Line", tip: "Move right (11-to-5) for 8 counts" },
-        { set: 4, measures: "14 - 17", counts: "16", leftRight: "Right: On 40 yd ln", homeVisitor: "6.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Move right (18-to-5) for 16 counts" },
-        { set: 5, measures: "18 - 20", counts: "12", leftRight: "Right: On 40 yd ln", homeVisitor: "6.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Hold for 12 counts" },
-        { set: 6, measures: "21 - 22", counts: "8", leftRight: "Right: 2.0 steps Inside 35 yd ln", homeVisitor: "1.0 steps In Front Of Visitor Hash", form: "Line full battery", tip: "Move right backward (8-to-5) for 8 counts" },
-        { set: 7, measures: "23", counts: "4", leftRight: "Right: On 35 yd ln", homeVisitor: "4.0 steps In Front Of Visitor Hash", form: "Line full battery", tip: "Move right backward (8-to-5) for 4 counts" },
-        { set: 8, measures: "24 - 34", counts: "44", leftRight: "Right: 1.0 steps Inside 30 yd ln", homeVisitor: "7.0 steps In Front Of Visitor Hash", form: "Line full battery", tip: "Move right backward (8-to-5) for 4 counts, then hold for 40 counts" },
-        { set: 9, measures: "35 - 43", counts: "36", leftRight: "Right: 1.0 steps Inside 30 yd ln", homeVisitor: "14.0 steps Behind Home Hash", form: "Line full battery", tip: "Move backward (13-to-5) for 12 counts, then hold for 24 counts" }
+        { set: 1, measures: "0", counts: "", leftRight: "Right: 2.0 steps Inside 50 yd ln", homeVisitor: "12.0 steps Behind Visitor Hash", form: "Scattered", tip: "Starting position", nextSet: "Hold, feet together" },
+        { set: 2, measures: "sub 40", counts: "40", leftRight: "Right: 1.0 steps Outside 45 yd ln", homeVisitor: "4.0 steps Behind Visitor Hash", form: "Tenor Diagonal", tip: "Hold for 32 counts, then Crab Left foot behind 40 degrees left forward (11-to-5) for 8 counts", nextSet: "Step size smaller, direction changes to straight left" },
+        { set: 3, measures: "2 - 13", counts: "8", leftRight: "Right: On 40 yd ln", homeVisitor: "4.0 steps Behind Visitor Hash", form: "Tenor Line", tip: "Crab Left foot behind left (8-to-5) for 8 counts", nextSet: "Step size bigger, direction changes to straight right" },
+        { set: 4, measures: "14 - 17", counts: "16", leftRight: "Right: On 40 yd ln", homeVisitor: "4.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Crab Left foot in front right (19-to-5) for 16 counts", nextSet: "Hold, feet together" },
+        { set: 5, measures: "18 - 20", counts: "12", leftRight: "Right: On 40 yd ln", homeVisitor: "4.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Hold for 12 counts", nextSet: "Step size smaller, direction changes to left forward" },
+        { set: 6, measures: "21 - 22", counts: "8", leftRight: "Right: 3.0 steps Inside 35 yd ln", homeVisitor: "3.0 steps In Front Of Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 30 degrees left forward (10-to-5) for 8 counts", nextSet: "Step size smaller, direction changes more left" },
+        { set: 7, measures: "23", counts: "4", leftRight: "Right: On 35 yd ln", homeVisitor: "6.0 steps In Front Of Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 50 degrees left forward (6-to-5) for 4 counts", nextSet: "Step size bigger, same direction then hold" },
+        { set: 8, measures: "24 - 34", counts: "44", leftRight: "Right: 2.0 steps Inside 30 yd ln", homeVisitor: "9.0 steps In Front Of Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 50 degrees left forward (14-to-5) for 4 counts, then hold for 40 counts", nextSet: "Step size bigger, direction changes to straight forward" },
+        { set: 9, measures: "35 - 43", counts: "36", leftRight: "Right: 1.0 steps Outside 30 yd ln", homeVisitor: "12.0 steps Behind Home Hash", form: "Line Full Battery", tip: "Forward (18-to-5) for 12 counts, then hold for 24 counts", nextSet: "End of drill" }
       ],
       "2": [
         { set: 1, measures: "0", counts: "", leftRight: "Left: 1.0 steps Inside 50 yd ln", homeVisitor: "4.0 steps Behind Home Hash", form: "Scattered", tip: "Starting position" }
@@ -274,15 +274,15 @@ export const performerData = {
     number: "14",
     movements: {
       "1": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: 3.0 steps Inside 50 yd ln", homeVisitor: "14.0 steps Behind Visitor Hash", form: "Scattered", tip: "Starting position" },
-        { set: 2, measures: "sub 40", counts: "40", leftRight: "Right: On 45 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Bass Diagonal", tip: "Hold for 32 counts, then move right backward for 8 counts" },
-        { set: 3, measures: "2 - 13", counts: "8", leftRight: "Right: 2.0 steps Inside 40 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Bass Line", tip: "Move right (12-to-5) for 8 counts" },
-        { set: 4, measures: "14 - 17", counts: "16", leftRight: "Right: 1.0 steps Inside 40 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Move right (18-to-5) for 16 counts" },
-        { set: 5, measures: "18 - 20", counts: "12", leftRight: "Right: 1.0 steps Inside 40 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Hold for 12 counts" },
-        { set: 6, measures: "21 - 22", counts: "8", leftRight: "Right: 4.0 steps Inside 35 yd ln", homeVisitor: "1.0 steps Behind Visitor Hash", form: "Line full battery", tip: "Move right backward (8-to-5) for 8 counts" },
-        { set: 7, measures: "23", counts: "4", leftRight: "Right: 2.0 steps Inside 35 yd ln", homeVisitor: "2.0 steps In Front Of Visitor Hash", form: "Line full battery", tip: "Move right backward (8-to-5) for 4 counts" },
-        { set: 8, measures: "24 - 34", counts: "44", leftRight: "Right: 3.0 steps Outside 30 yd ln", homeVisitor: "5.0 steps In Front Of Visitor Hash", form: "Line full battery", tip: "Move right backward (8-to-5) for 4 counts, then hold for 40 counts" },
-        { set: 9, measures: "35 - 43", counts: "36", leftRight: "Right: 3.0 steps Outside 30 yd ln", homeVisitor: "16.0 steps Behind Home Hash", form: "Line full battery", tip: "Move backward (13-to-5) for 12 counts, then hold for 24 counts" }
+        { set: 1, measures: "0", counts: "", leftRight: "Left: 3.5 steps Outside 50 yd ln", homeVisitor: "16.0 steps Behind Visitor Hash", form: "Scattered", tip: "Starting position", nextSet: "Hold, feet together" },
+        { set: 2, measures: "sub 40", counts: "40", leftRight: "Left: 2.5 steps Inside 45 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Bass Curve", tip: "Hold for 32 counts, then Crab Left foot behind 40 degrees left forward (11-to-5) for 8 counts", nextSet: "Step size smaller, direction changes to straight left" },
+        { set: 3, measures: "2 - 13", counts: "8", leftRight: "Left: 4.0 steps Inside 40 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Bass Curve", tip: "Crab Left foot behind left (8-to-5) for 8 counts", nextSet: "Step size bigger, direction changes to straight right" },
+        { set: 4, measures: "14 - 17", counts: "16", leftRight: "Left: 3.5 steps Outside 40 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Crab Left foot in front right (19-to-5) for 16 counts", nextSet: "Hold, feet together" },
+        { set: 5, measures: "18 - 20", counts: "12", leftRight: "Left: 3.5 steps Outside 40 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Hold for 12 counts", nextSet: "Step size smaller, direction changes to left forward" },
+        { set: 6, measures: "21 - 22", counts: "8", leftRight: "Left: 3.0 steps Inside 35 yd ln", homeVisitor: "1.0 steps Behind Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 30 degrees left forward (10-to-5) for 8 counts", nextSet: "Step size smaller, direction changes more left" },
+        { set: 7, measures: "23", counts: "4", leftRight: "Left: 4.0 steps Outside 35 yd ln", homeVisitor: "2.0 steps In Front Of Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 50 degrees left forward (6-to-5) for 4 counts", nextSet: "Step size bigger, same direction then hold" },
+        { set: 8, measures: "24 - 34", counts: "44", leftRight: "Left: 2.5 steps Inside 30 yd ln", homeVisitor: "5.0 steps In Front Of Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 50 degrees left forward (14-to-5) for 4 counts, then hold for 40 counts", nextSet: "Step size bigger, direction changes to straight forward" },
+        { set: 9, measures: "35 - 43", counts: "36", leftRight: "Left: 2.5 steps Inside 30 yd ln", homeVisitor: "16.0 steps Behind Home Hash", form: "Line Full Battery", tip: "Forward (18-to-5) for 12 counts, then hold for 24 counts", nextSet: "End of drill" }
       ],
       "2": [
         { set: 1, measures: "0", counts: "", leftRight: "Left: On 50 yd ln", homeVisitor: "6.0 steps Behind Home Hash", form: "Scattered", tip: "Starting position" }
@@ -303,15 +303,15 @@ export const performerData = {
     number: "68",
     movements: {
       "1": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: 1.0 steps Outside 50 yd ln", homeVisitor: "16.0 steps Behind Visitor Hash", form: "Scattered", tip: "Starting position" },
-        { set: 2, measures: "sub 40", counts: "40", leftRight: "Left: 2.0 steps Inside 45 yd ln", homeVisitor: "10.0 steps Behind Visitor Hash", form: "Bass Diagonal", tip: "Hold for 32 counts, then move left backward for 8 counts" },
-        { set: 3, measures: "2 - 13", counts: "8", leftRight: "Left: 4.0 steps Inside 40 yd ln", homeVisitor: "10.0 steps Behind Visitor Hash", form: "Bass Line", tip: "Move left (10-to-5) for 8 counts" },
-        { set: 4, measures: "14 - 17", counts: "16", leftRight: "Left: 3.0 steps Inside 40 yd ln", homeVisitor: "10.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Move left (16-to-5) for 16 counts" },
-        { set: 5, measures: "18 - 20", counts: "12", leftRight: "Left: 3.0 steps Inside 40 yd ln", homeVisitor: "10.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Hold for 12 counts" },
-        { set: 6, measures: "21 - 22", counts: "8", leftRight: "Left: On 35 yd ln", homeVisitor: "3.0 steps Behind Visitor Hash", form: "Line full battery", tip: "Move left backward (8-to-5) for 8 counts" },
-        { set: 7, measures: "23", counts: "4", leftRight: "Left: 2.0 steps Outside 35 yd ln", homeVisitor: "On Visitor Hash", form: "Line full battery", tip: "Move left backward (8-to-5) for 4 counts" },
-        { set: 8, measures: "24 - 34", counts: "44", leftRight: "Left: 1.0 steps Outside 30 yd ln", homeVisitor: "3.0 steps In Front Of Visitor Hash", form: "Line full battery", tip: "Move left backward (8-to-5) for 4 counts, then hold for 40 counts" },
-        { set: 9, measures: "35 - 43", counts: "36", leftRight: "Left: 1.0 steps Outside 30 yd ln", homeVisitor: "18.0 steps Behind Home Hash", form: "Line full battery", tip: "Move backward (13-to-5) for 12 counts, then hold for 24 counts" }
+        { set: 1, measures: "0", counts: "", leftRight: "Left: 1.0 steps Outside 50 yd ln", homeVisitor: "16.0 steps Behind Visitor Hash", form: "Scattered", tip: "Starting position", nextSet: "Hold, feet together" },
+        { set: 2, measures: "sub 40", counts: "40", leftRight: "Left: On 45 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Bass Curve", tip: "Hold for 32 counts, then Crab Left foot behind 40 degrees left forward (11-to-5) for 8 counts", nextSet: "Step size smaller, direction changes to straight left" },
+        { set: 3, measures: "2 - 13", counts: "8", leftRight: "Left: 1.0 steps Inside 40 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Bass Curve", tip: "Crab Left foot behind left (8-to-5) for 8 counts", nextSet: "Step size bigger, direction changes to straight right" },
+        { set: 4, measures: "14 - 17", counts: "16", leftRight: "Left: 1.0 steps Outside 40 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Crab Left foot in front right (19-to-5) for 16 counts", nextSet: "Hold, feet together" },
+        { set: 5, measures: "18 - 20", counts: "12", leftRight: "Left: 1.0 steps Outside 40 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Hold for 12 counts", nextSet: "Step size smaller, direction changes to left forward" },
+        { set: 6, measures: "21 - 22", counts: "8", leftRight: "On 35 yd ln", homeVisitor: "1.0 steps Behind Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 30 degrees left forward (10-to-5) for 8 counts", nextSet: "Step size smaller, direction changes more left" },
+        { set: 7, measures: "23", counts: "4", leftRight: "Left: 1.5 steps Outside 35 yd ln", homeVisitor: "2.0 steps In Front Of Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 50 degrees left forward (6-to-5) for 4 counts", nextSet: "Step size bigger, same direction then hold" },
+        { set: 8, measures: "24 - 34", counts: "44", leftRight: "Left: On 30 yd ln", homeVisitor: "5.0 steps In Front Of Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 50 degrees left forward (14-to-5) for 4 counts, then hold for 40 counts", nextSet: "Step size bigger, direction changes to straight forward" },
+        { set: 9, measures: "35 - 43", counts: "36", leftRight: "Left: On 30 yd ln", homeVisitor: "16.0 steps Behind Home Hash", form: "Line Full Battery", tip: "Forward (18-to-5) for 12 counts, then hold for 24 counts", nextSet: "End of drill" }
       ],
       "2": [
         { set: 1, measures: "0", counts: "", leftRight: "Right: 2.0 steps Outside 50 yd ln", homeVisitor: "8.0 steps Behind Home Hash", form: "Scattered", tip: "Starting position" }
@@ -332,15 +332,15 @@ export const performerData = {
     number: "39",
     movements: {
       "1": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: On 50 yd ln", homeVisitor: "18.0 steps Behind Visitor Hash", form: "Scattered", tip: "Starting position" },
-        { set: 2, measures: "sub 40", counts: "40", leftRight: "Right: 3.0 steps Inside 45 yd ln", homeVisitor: "12.0 steps Behind Visitor Hash", form: "Bass Diagonal", tip: "Hold for 32 counts, then move right backward for 8 counts" },
-        { set: 3, measures: "2 - 13", counts: "8", leftRight: "Right: On 40 yd ln", homeVisitor: "12.0 steps Behind Visitor Hash", form: "Bass Line", tip: "Move right (13-to-5) for 8 counts" },
-        { set: 4, measures: "14 - 17", counts: "16", leftRight: "Right: 3.0 steps Outside 40 yd ln", homeVisitor: "12.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Move right (20-to-5) for 16 counts" },
-        { set: 5, measures: "18 - 20", counts: "12", leftRight: "Right: 3.0 steps Outside 40 yd ln", homeVisitor: "12.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Hold for 12 counts" },
-        { set: 6, measures: "21 - 22", counts: "8", leftRight: "Right: On 35 yd ln", homeVisitor: "5.0 steps Behind Visitor Hash", form: "Line full battery", tip: "Move right backward (9-to-5) for 8 counts" },
-        { set: 7, measures: "23", counts: "4", leftRight: "Right: 4.0 steps Outside 35 yd ln", homeVisitor: "2.0 steps Behind Visitor Hash", form: "Line full battery", tip: "Move right backward (9-to-5) for 4 counts" },
-        { set: 8, measures: "24 - 34", counts: "44", leftRight: "Right: 1.0 steps Inside 30 yd ln", homeVisitor: "1.0 steps In Front Of Visitor Hash", form: "Line full battery", tip: "Move right backward (9-to-5) for 4 counts, then hold for 40 counts" },
-        { set: 9, measures: "35 - 43", counts: "36", leftRight: "Right: 1.0 steps Inside 30 yd ln", homeVisitor: "20.0 steps Behind Home Hash", form: "Line full battery", tip: "Move backward (13-to-5) for 12 counts, then hold for 24 counts" }
+        { set: 1, measures: "0", counts: "", leftRight: "Right: On 50 yd ln", homeVisitor: "16.0 steps Behind Visitor Hash", form: "Scattered", tip: "Starting position", nextSet: "Hold, feet together" },
+        { set: 2, measures: "sub 40", counts: "40", leftRight: "Right: 2.0 steps Inside 45 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Bass Curve", tip: "Hold for 32 counts, then Crab Left foot behind 40 degrees left forward (11-to-5) for 8 counts", nextSet: "Step size smaller, direction changes to straight left" },
+        { set: 3, measures: "2 - 13", counts: "8", leftRight: "Right: On 40 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Bass Curve", tip: "Crab Left foot behind left (8-to-5) for 8 counts", nextSet: "Step size bigger, direction changes to straight right" },
+        { set: 4, measures: "14 - 17", counts: "16", leftRight: "Right: 1.0 steps Inside 40 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Crab Left foot in front right (19-to-5) for 16 counts", nextSet: "Hold, feet together" },
+        { set: 5, measures: "18 - 20", counts: "12", leftRight: "Right: 1.0 steps Inside 40 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Hold for 12 counts", nextSet: "Step size smaller, direction changes to left forward" },
+        { set: 6, measures: "21 - 22", counts: "8", leftRight: "Right: 3.0 steps Outside 35 yd ln", homeVisitor: "1.0 steps Behind Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 30 degrees left forward (10-to-5) for 8 counts", nextSet: "Step size smaller, direction changes more left" },
+        { set: 7, measures: "23", counts: "4", leftRight: "Right: 1.5 steps Inside 35 yd ln", homeVisitor: "2.0 steps In Front Of Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 50 degrees left forward (6-to-5) for 4 counts", nextSet: "Step size bigger, same direction then hold" },
+        { set: 8, measures: "24 - 34", counts: "44", leftRight: "Right: 2.0 steps Outside 30 yd ln", homeVisitor: "5.0 steps In Front Of Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 50 degrees left forward (14-to-5) for 4 counts, then hold for 40 counts", nextSet: "Step size bigger, direction changes to straight forward" },
+        { set: 9, measures: "35 - 43", counts: "36", leftRight: "Right: 2.0 steps Outside 30 yd ln", homeVisitor: "16.0 steps Behind Home Hash", form: "Line Full Battery", tip: "Forward (18-to-5) for 12 counts, then hold for 24 counts", nextSet: "End of drill" }
       ],
       "2": [
         { set: 1, measures: "0", counts: "", leftRight: "Left: 3.0 steps Inside 50 yd ln", homeVisitor: "10.0 steps Behind Home Hash", form: "Scattered", tip: "Starting position" }
@@ -361,15 +361,15 @@ export const performerData = {
     number: "76",
     movements: {
       "1": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: 2.0 steps Inside 50 yd ln", homeVisitor: "20.0 steps Behind Visitor Hash", form: "Scattered", tip: "Starting position" },
-        { set: 2, measures: "sub 40", counts: "40", leftRight: "Left: 1.0 steps Outside 45 yd ln", homeVisitor: "14.0 steps Behind Visitor Hash", form: "Bass Diagonal", tip: "Hold for 32 counts, then move left backward for 8 counts" },
-        { set: 3, measures: "2 - 13", counts: "8", leftRight: "Left: 2.0 steps Inside 40 yd ln", homeVisitor: "14.0 steps Behind Visitor Hash", form: "Bass Line", tip: "Move left (11-to-5) for 8 counts" },
-        { set: 4, measures: "14 - 17", counts: "16", leftRight: "Left: 1.0 steps Inside 40 yd ln", homeVisitor: "14.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Move left (15-to-5) for 16 counts" },
-        { set: 5, measures: "18 - 20", counts: "12", leftRight: "Left: 1.0 steps Inside 40 yd ln", homeVisitor: "14.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Hold for 12 counts" },
-        { set: 6, measures: "21 - 22", counts: "8", leftRight: "Left: 2.0 steps Inside 35 yd ln", homeVisitor: "7.0 steps Behind Visitor Hash", form: "Line full battery", tip: "Move left backward (7-to-5) for 8 counts" },
-        { set: 7, measures: "23", counts: "4", leftRight: "Left: 4.0 steps Inside 35 yd ln", homeVisitor: "4.0 steps Behind Visitor Hash", form: "Line full battery", tip: "Move left backward (7-to-5) for 4 counts" },
-        { set: 8, measures: "24 - 34", counts: "44", leftRight: "Left: 3.0 steps Outside 30 yd ln", homeVisitor: "1.0 steps Behind Visitor Hash", form: "Line full battery", tip: "Move left backward (7-to-5) for 4 counts, then hold for 40 counts" },
-        { set: 9, measures: "35 - 43", counts: "36", leftRight: "Left: 3.0 steps Outside 30 yd ln", homeVisitor: "On Back Sideline", form: "Line full battery", tip: "Move backward (13-to-5) for 12 counts, then hold for 24 counts" }
+        { set: 1, measures: "0", counts: "", leftRight: "Left: 1.5 steps Inside 50 yd ln", homeVisitor: "16.0 steps Behind Visitor Hash", form: "Scattered", tip: "Starting position", nextSet: "Hold, feet together" },
+        { set: 2, measures: "sub 40", counts: "40", leftRight: "Right: 1.0 steps Inside 45 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Bass Curve", tip: "Hold for 32 counts, then Crab Left foot behind 40 degrees left forward (11-to-5) for 8 counts", nextSet: "Step size smaller, direction changes to straight left" },
+        { set: 3, measures: "2 - 13", counts: "8", leftRight: "Right: 2.0 steps Outside 40 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Bass Curve", tip: "Crab Left foot behind left (8-to-5) for 8 counts", nextSet: "Step size bigger, direction changes to straight right" },
+        { set: 4, measures: "14 - 17", counts: "16", leftRight: "Right: 3.0 steps Inside 40 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Crab Left foot in front right (19-to-5) for 16 counts", nextSet: "Hold, feet together" },
+        { set: 5, measures: "18 - 20", counts: "12", leftRight: "Right: 3.0 steps Inside 40 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Hold for 12 counts", nextSet: "Step size smaller, direction changes to left forward" },
+        { set: 6, measures: "21 - 22", counts: "8", leftRight: "Right: 3.0 steps Inside 30 yd ln", homeVisitor: "1.0 steps Behind Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 30 degrees left forward (10-to-5) for 8 counts", nextSet: "Step size smaller, direction changes more left" },
+        { set: 7, measures: "23", counts: "4", leftRight: "Right: 3.5 steps Inside 35 yd ln", homeVisitor: "2.0 steps In Front Of Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 50 degrees left forward (6-to-5) for 4 counts", nextSet: "Step size bigger, same direction then hold" },
+        { set: 8, measures: "24 - 34", counts: "44", leftRight: "Right: 1.0 steps Inside 25 yd ln", homeVisitor: "5.0 steps In Front Of Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 50 degrees left forward (14-to-5) for 4 counts, then hold for 40 counts", nextSet: "Step size bigger, direction changes to straight forward" },
+        { set: 9, measures: "35 - 43", counts: "36", leftRight: "Right: 4.0 steps Outside 30 yd ln", homeVisitor: "16.0 steps Behind Home Hash", form: "Line Full Battery", tip: "Forward (18-to-5) for 12 counts, then hold for 24 counts", nextSet: "End of drill" }
       ],
       "2": [
         { set: 1, measures: "0", counts: "", leftRight: "Right: 1.0 steps Outside 50 yd ln", homeVisitor: "12.0 steps Behind Home Hash", form: "Scattered", tip: "Starting position" }
@@ -390,15 +390,15 @@ export const performerData = {
     number: "88",
     movements: {
       "1": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: 1.0 steps Outside 50 yd ln", homeVisitor: "On Back Sideline", form: "Scattered", tip: "Starting position" },
-        { set: 2, measures: "sub 40", counts: "40", leftRight: "Right: 4.0 steps Inside 45 yd ln", homeVisitor: "16.0 steps Behind Visitor Hash", form: "Bass Diagonal", tip: "Hold for 32 counts, then move right backward for 8 counts" },
-        { set: 3, measures: "2 - 13", counts: "8", leftRight: "Right: 4.0 steps Outside 40 yd ln", homeVisitor: "16.0 steps Behind Visitor Hash", form: "Bass Line", tip: "Move right (13-to-5) for 8 counts" },
-        { set: 4, measures: "14 - 17", counts: "16", leftRight: "Right: 1.0 steps Outside 40 yd ln", homeVisitor: "16.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Move right (20-to-5) for 16 counts" },
-        { set: 5, measures: "18 - 20", counts: "12", leftRight: "Right: 1.0 steps Outside 40 yd ln", homeVisitor: "16.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Hold for 12 counts" },
-        { set: 6, measures: "21 - 22", counts: "8", leftRight: "Right: 2.0 steps Outside 35 yd ln", homeVisitor: "9.0 steps Behind Visitor Hash", form: "Line full battery", tip: "Move right backward (10-to-5) for 8 counts" },
-        { set: 7, measures: "23", counts: "4", leftRight: "Right: 2.0 steps Outside 35 yd ln", homeVisitor: "6.0 steps Behind Visitor Hash", form: "Line full battery", tip: "Move right backward (10-to-5) for 4 counts" },
-        { set: 8, measures: "24 - 34", counts: "44", leftRight: "Right: 3.0 steps Inside 30 yd ln", homeVisitor: "3.0 steps Behind Visitor Hash", form: "Line full battery", tip: "Move right backward (10-to-5) for 4 counts, then hold for 40 counts" },
-        { set: 9, measures: "35 - 43", counts: "36", leftRight: "Right: 3.0 steps Inside 30 yd ln", homeVisitor: "2.0 steps In Front Of Back Sideline", form: "Line full battery", tip: "Move backward (13-to-5) for 12 counts, then hold for 24 counts" }
+        { set: 1, measures: "0", counts: "", leftRight: "Right: 1.0 steps Outside 50 yd ln", homeVisitor: "16.0 steps Behind Visitor Hash", form: "Scattered", tip: "Starting position", nextSet: "Hold, feet together" },
+        { set: 2, measures: "sub 40", counts: "40", leftRight: "Right: 3.5 steps Inside 45 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Bass Curve", tip: "Hold for 32 counts, then Crab Left foot behind 40 degrees left forward (11-to-5) for 8 counts", nextSet: "Step size smaller, direction changes to straight left" },
+        { set: 3, measures: "2 - 13", counts: "8", leftRight: "Right: 1.0 steps Outside 40 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Bass Curve", tip: "Crab Left foot behind left (8-to-5) for 8 counts", nextSet: "Step size bigger, direction changes to straight right" },
+        { set: 4, measures: "14 - 17", counts: "16", leftRight: "Right: 3.5 steps Outside 40 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Crab Left foot in front right (19-to-5) for 16 counts", nextSet: "Hold, feet together" },
+        { set: 5, measures: "18 - 20", counts: "12", leftRight: "Right: 3.5 steps Outside 40 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Line with Tenors", tip: "Hold for 12 counts", nextSet: "Step size smaller, direction changes to left forward" },
+        { set: 6, measures: "21 - 22", counts: "8", leftRight: "Right: On 30 yd ln", homeVisitor: "1.0 steps Behind Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 30 degrees left forward (10-to-5) for 8 counts", nextSet: "Step size smaller, direction changes more left" },
+        { set: 7, measures: "23", counts: "4", leftRight: "Right: 2.0 steps Outside 35 yd ln", homeVisitor: "2.0 steps In Front Of Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 50 degrees left forward (6-to-5) for 4 counts", nextSet: "Step size bigger, same direction then hold" },
+        { set: 8, measures: "24 - 34", counts: "44", leftRight: "Right: 1.5 steps Outside 25 yd ln", homeVisitor: "5.0 steps In Front Of Visitor Hash", form: "Line Full Battery", tip: "Crab Left foot behind 50 degrees left forward (14-to-5) for 4 counts, then hold for 40 counts", nextSet: "Step size bigger, direction changes to straight forward" },
+        { set: 9, measures: "35 - 43", counts: "36", leftRight: "Right: 2.5 steps Outside 30 yd ln", homeVisitor: "16.0 steps Behind Home Hash", form: "Line Full Battery", tip: "Forward (18-to-5) for 12 counts, then hold for 24 counts", nextSet: "End of drill" }
       ],
       "2": [
         { set: 1, measures: "0", counts: "", leftRight: "Left: 2.0 steps Outside 50 yd ln", homeVisitor: "14.0 steps Behind Home Hash", form: "Scattered", tip: "Starting position" }
