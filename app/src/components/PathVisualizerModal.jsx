@@ -39,13 +39,15 @@ const PathVisualizerModal = ({
   const FIELD_CONFIG = 'high_school'; // 'high_school', 'college', or 'pro'
   
   // Field dimensions (in pixels for rendering)
-  const FIELD_WIDTH = 800; // 53.33 yards wide
-  const FIELD_HEIGHT = 600; // For canvas height
-  const PIXELS_PER_YARD_WIDTH = FIELD_WIDTH / 53.33; // ~15 pixels per yard horizontally
-  const PIXELS_PER_YARD_LENGTH = FIELD_HEIGHT / 100; // 6 pixels per yard vertically
+  // Actual field: 120 yards long (with end zones) x 53.33 yards wide
+  // Aspect ratio: 120/53.33 = 2.25
+  const FIELD_LENGTH = 900; // 120 yards (including end zones)
+  const FIELD_WIDTH = 400; // 53.33 yards 
+  const PIXELS_PER_YARD_LENGTH = FIELD_LENGTH / 120; // 7.5 pixels per yard
+  const PIXELS_PER_YARD_WIDTH = FIELD_WIDTH / 53.33; // ~7.5 pixels per yard
   
   // Scale factor to make circles appear round
-  const ASPECT_RATIO = PIXELS_PER_YARD_WIDTH / PIXELS_PER_YARD_LENGTH; // ~2.5
+  const ASPECT_RATIO = PIXELS_PER_YARD_WIDTH / PIXELS_PER_YARD_LENGTH; // ~1.0 (should be equal now)
   
   // 8-to-5 step: 8 steps = 5 yards, so 1 step = 5/8 yards = 0.625 yards
   const STEP_SIZE_YARDS = 0.625;
@@ -83,7 +85,7 @@ const PathVisualizerModal = ({
       
       // Calculate x position (horizontal on field)
       // 50 yard line is at center, yards decrease going left
-      x = FIELD_HEIGHT / 2 + (50 - yardLineNum) * PIXELS_PER_YARD_LENGTH;
+      x = FIELD_LENGTH / 2 + (50 - yardLineNum) * PIXELS_PER_YARD_LENGTH;
     } else {
       // Regular position with steps
       const leftRightMatch = leftRight.match(/^(Left|Right):\s*([\d.]+)\s*steps?\s*(Inside|Outside)?\s*(\d+)\s*yd ln$/i);
@@ -93,7 +95,7 @@ const PathVisualizerModal = ({
         const yardLineNum = parseInt(yardLine);
         
         // Start at the yard line
-        x = FIELD_HEIGHT / 2 + (50 - yardLineNum) * PIXELS_PER_YARD_LENGTH;
+        x = FIELD_LENGTH / 2 + (50 - yardLineNum) * PIXELS_PER_YARD_LENGTH;
         
         // Apply step offset
         const stepOffsetPixels = stepsNum * STEP_SIZE_YARDS * PIXELS_PER_YARD_LENGTH;
@@ -219,19 +221,19 @@ const PathVisualizerModal = ({
     };
     
     // Clear canvas and reset context state
-    ctx.clearRect(0, 0, FIELD_HEIGHT, FIELD_WIDTH);
+    ctx.clearRect(0, 0, FIELD_LENGTH, FIELD_WIDTH);
     ctx.globalAlpha = 1;
     
     if (movementData.length === 0) return;
     
     // Draw field background
     ctx.fillStyle = '#0f5132';
-    ctx.fillRect(0, 0, FIELD_HEIGHT, FIELD_WIDTH);
+    ctx.fillRect(0, 0, FIELD_LENGTH, FIELD_WIDTH);
     
     // Draw end zones
     ctx.fillStyle = '#0d4429';
-    ctx.fillRect(0, 0, FIELD_HEIGHT / 10, FIELD_WIDTH);
-    ctx.fillRect(FIELD_HEIGHT * 9/10, 0, FIELD_HEIGHT / 10, FIELD_WIDTH);
+    ctx.fillRect(0, 0, FIELD_LENGTH / 12, FIELD_WIDTH);
+    ctx.fillRect(FIELD_LENGTH * 11/12, 0, FIELD_LENGTH / 12, FIELD_WIDTH);
     
     // Draw basic field representation
     ctx.strokeStyle = '#ffffff40';
@@ -239,7 +241,7 @@ const PathVisualizerModal = ({
     
     // Draw yard lines every 5 yards
     for (let yard = 0; yard <= 100; yard += 5) {
-      const x = (FIELD_HEIGHT / 2) + (50 - yard) * PIXELS_PER_YARD_LENGTH;
+      const x = (FIELD_LENGTH / 2) + (50 - yard) * PIXELS_PER_YARD_LENGTH;
       ctx.beginPath();
       ctx.moveTo(x, 0);
       ctx.lineTo(x, FIELD_WIDTH);
@@ -262,11 +264,11 @@ const PathVisualizerModal = ({
     ctx.setLineDash([5, 5]);
     ctx.beginPath();
     ctx.moveTo(0, HOME_HASH_Y);
-    ctx.lineTo(FIELD_HEIGHT, HOME_HASH_Y);
+    ctx.lineTo(FIELD_LENGTH, HOME_HASH_Y);
     ctx.stroke();
     ctx.beginPath();
     ctx.moveTo(0, VISITOR_HASH_Y);
-    ctx.lineTo(FIELD_HEIGHT, VISITOR_HASH_Y);
+    ctx.lineTo(FIELD_LENGTH, VISITOR_HASH_Y);
     ctx.stroke();
     ctx.setLineDash([]);
     
@@ -278,23 +280,31 @@ const PathVisualizerModal = ({
     
     // Add background for sideline labels
     ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-    ctx.fillRect(FIELD_HEIGHT/2 - 80, 0, 160, 20);
-    ctx.fillRect(FIELD_HEIGHT/2 - 80, FIELD_WIDTH - 20, 160, 20);
+    ctx.fillRect(FIELD_LENGTH/2 - 80, 0, 160, 20);
+    ctx.fillRect(FIELD_LENGTH/2 - 80, FIELD_WIDTH - 20, 160, 20);
+    
+    // Add background for LEFT and RIGHT labels
+    ctx.fillRect(FIELD_LENGTH * 0.15 - 30, 0, 60, 20);
+    ctx.fillRect(FIELD_LENGTH * 0.85 - 30, 0, 60, 20);
     
     ctx.fillStyle = '#ffffff90';
-    ctx.fillText('FRONT (HOME) SIDELINE', FIELD_HEIGHT / 2, 10);
-    ctx.fillText('BACK (VISITOR) SIDELINE', FIELD_HEIGHT / 2, FIELD_WIDTH - 10);
+    ctx.fillText('FRONT (HOME) SIDELINE', FIELD_LENGTH / 2, 10);
+    ctx.fillText('BACK (VISITOR) SIDELINE', FIELD_LENGTH / 2, FIELD_WIDTH - 10);
+    
+    // Draw LEFT and RIGHT labels at the top
+    ctx.fillText('RIGHT', FIELD_LENGTH * 0.15, 10);
+    ctx.fillText('LEFT', FIELD_LENGTH * 0.85, 10);
     
     // Draw end zone labels
     ctx.fillStyle = '#ffffffa0';
     ctx.font = 'bold 18px sans-serif';
     ctx.save();
-    ctx.translate(FIELD_HEIGHT / 20, FIELD_WIDTH / 2);
+    ctx.translate(FIELD_LENGTH / 24, FIELD_WIDTH / 2);
     ctx.rotate(-Math.PI / 2);
     ctx.fillText('END ZONE', 0, 0);
     ctx.restore();
     ctx.save();
-    ctx.translate(FIELD_HEIGHT * 19/20, FIELD_WIDTH / 2);
+    ctx.translate(FIELD_LENGTH * 23/24, FIELD_WIDTH / 2);
     ctx.rotate(Math.PI / 2);
     ctx.fillText('END ZONE', 0, 0);
     ctx.restore();
@@ -618,10 +628,15 @@ const PathVisualizerModal = ({
           {/* Canvas */}
           <canvas
             ref={canvasRef}
-            width={FIELD_HEIGHT}
+            width={FIELD_LENGTH}
             height={FIELD_WIDTH}
-            className="relative z-10 w-full"
-            style={{ maxHeight: '60vh', aspectRatio: `${FIELD_HEIGHT}/${FIELD_WIDTH}` }}
+            className="relative z-10 w-full h-auto"
+            style={{ 
+              maxWidth: '100%',
+              maxHeight: '60vh',
+              aspectRatio: `${FIELD_LENGTH}/${FIELD_WIDTH}`,
+              objectFit: 'contain'
+            }}
           />
         </div>
         
