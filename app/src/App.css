@@ -68,6 +68,10 @@
   margin-top: 2rem;
 }
 
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
 .ml-1 {
   margin-left: 0.25rem;
 }
@@ -331,6 +335,10 @@
 
 [class*="bg-green-600/30"] {
   background-color: rgba(22, 163, 74, 0.3);
+}
+
+[class*="bg-green-900/20"] {
+  background-color: rgba(20, 83, 45, 0.2);
 }
 
 [class*="bg-blue-600/20"] {
