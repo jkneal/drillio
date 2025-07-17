@@ -70,7 +70,8 @@ const MovementSelectionPage = () => {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-white mb-4">Select Movement:</h2>
+          <h2 className="text-xl font-semibold text-white">Select Movement:</h2>
+          <p className="text-white/60 text-sm mb-4">Tap a movement to view your drill sets</p>
           {Object.keys(currentPerformer.movements).map((movement) => (
             <div key={movement} className="flex items-center space-x-3">
               <button

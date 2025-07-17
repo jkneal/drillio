@@ -4,19 +4,19 @@ export const movementsConfig = {
     displayName: "1-Uninvited"
   },
   "2": {
-    name: "Opener",
-    displayName: "2-Opener"
+    name: "Reflections of Earth",
+    displayName: "2-Reflections of Earth"
   },
   "3": {
-    name: "Transition",
-    displayName: "3-Transition"
+    name: "What Was I Made For",
+    displayName: "3-What Was I Made For"
   },
   "4": {
-    name: "Ballad",
-    displayName: "4-Ballad"
+    name: "1000 Airplanes on the Roof",
+    displayName: "4-1000 Airplanes on the Roof"
   },
   "5": {
-    name: "Closer",
-    displayName: "5-Closer"
+    name: "Morning Passages",
+    displayName: "5-Morning Passages"
   }
 };
