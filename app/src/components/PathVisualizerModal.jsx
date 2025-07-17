@@ -323,16 +323,18 @@ const PathVisualizerModal = ({
         ctx.beginPath();
         ctx.save();
         ctx.scale(1, ASPECT_RATIO);
-        ctx.arc(x, y / ASPECT_RATIO, 3, 0, 2 * Math.PI);
+        ctx.arc(x, y / ASPECT_RATIO, 2, 0, 2 * Math.PI);
         ctx.restore();
         ctx.fill();
         
-        // Draw set numbers
+        // Draw set numbers - positioned to avoid dots and made bigger
         if (i % 5 === 0 || i === currentSetIndex) {
           ctx.fillStyle = '#ffffff';
-          ctx.font = '12px sans-serif';
-          ctx.textAlign = 'left';
-          ctx.fillText(set.set.toString(), x + 8, y - 8);
+          ctx.font = 'bold 16px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'bottom';
+          // Position above the dot with more clearance
+          ctx.fillText(set.set.toString(), x, y - 12);
         }
       }
       ctx.globalAlpha = 0.5;
@@ -374,7 +376,7 @@ const PathVisualizerModal = ({
       ctx.beginPath();
       ctx.save();
       ctx.scale(1, ASPECT_RATIO);
-      ctx.arc(drawX, drawY / ASPECT_RATIO, 4, 0, 2 * Math.PI);
+      ctx.arc(drawX, drawY / ASPECT_RATIO, 3, 0, 2 * Math.PI);
       ctx.restore();
       ctx.fill();
     }
@@ -388,29 +390,41 @@ const PathVisualizerModal = ({
         
         const otherPerformer = performerData[otherPerformerId];
         if (otherPerformer.movements && otherPerformer.movements[movement]) {
-          const otherPerformerSet = otherPerformer.movements[movement].find(s => s.set === currentSetNumber);
+          const otherPerformerCurrentSet = otherPerformer.movements[movement].find(s => s.set === currentSetNumber);
+          const otherPerformerNextSet = nextSet ? otherPerformer.movements[movement].find(s => s.set === currentSetNumber + 1) : null;
           
-          if (otherPerformerSet) {
-            const { x, y } = parsePosition(otherPerformerSet.leftRight, otherPerformerSet.homeVisitor);
+          if (otherPerformerCurrentSet) {
+            const { x: currentX, y: currentY } = parsePosition(otherPerformerCurrentSet.leftRight, otherPerformerCurrentSet.homeVisitor);
+            
+            let drawX = currentX;
+            let drawY = currentY;
+            
+            // If animating and next set exists for this performer, interpolate their position too
+            if (animationProgress > 0 && otherPerformerNextSet) {
+              const { x: nextX, y: nextY } = parsePosition(otherPerformerNextSet.leftRight, otherPerformerNextSet.homeVisitor);
+              drawX = currentX + (nextX - currentX) * animationProgress;
+              drawY = currentY + (nextY - currentY) * animationProgress;
+            }
             
             // Draw other performer dot with color coding
-            ctx.globalAlpha = 0.8;
+            // Fade more during animation for better visibility of current performer
+            ctx.globalAlpha = (isPlaying && animationProgress > 0) ? 0.4 : 0.8;
             ctx.fillStyle = getPerformerColor(otherPerformerId);
             ctx.beginPath();
             ctx.save();
             ctx.scale(1, ASPECT_RATIO);
-            ctx.arc(x, y / ASPECT_RATIO, 3, 0, 2 * Math.PI);
+            ctx.arc(drawX, drawY / ASPECT_RATIO, 2, 0, 2 * Math.PI);
             ctx.restore();
             ctx.fill();
             
             // Add a white border for better visibility
             ctx.strokeStyle = '#ffffff';
             ctx.lineWidth = 1;
-            ctx.globalAlpha = 0.5;
+            ctx.globalAlpha = (isPlaying && animationProgress > 0) ? 0.3 : 0.5;
             ctx.beginPath();
             ctx.save();
             ctx.scale(1, ASPECT_RATIO);
-            ctx.arc(x, y / ASPECT_RATIO, 3, 0, 2 * Math.PI);
+            ctx.arc(drawX, drawY / ASPECT_RATIO, 2, 0, 2 * Math.PI);
             ctx.restore();
             ctx.stroke();
           }
@@ -623,7 +637,6 @@ const PathVisualizerModal = ({
             {(isPlaying && movementData[currentSetIndex + 1]?.tip) ? (
               <div className="mt-2 text-yellow-300 text-sm flex items-start">
                 <span className="mr-1">💡</span>
-                <span className="font-semibold">Next: </span>
                 <span className="ml-1">{movementData[currentSetIndex + 1].tip}</span>
               </div>
             ) : (
@@ -705,19 +718,19 @@ const PathVisualizerModal = ({
           {showOtherPerformers && (
             <div className="flex items-center justify-center flex-wrap gap-x-4 gap-y-2 mt-3 text-xs">
               <div className="flex items-center">
-                <div className="w-3 h-3 rounded-full mr-2 ml-1" style={{ backgroundColor: '#ef4444' }}></div>
+                <div className="w-3 h-3 rounded-full mr-1 ml-1" style={{ backgroundColor: '#ef4444' }}></div>
                 <span className="text-white/80">Current</span>
               </div>
               <div className="flex items-center">
-                <div className="w-3 h-3 rounded-full mr-2 ml-1" style={{ backgroundColor: '#60a5fa' }}></div>
+                <div className="w-3 h-3 rounded-full mr-1 ml-2" style={{ backgroundColor: '#60a5fa' }}></div>
                 <span className="text-white/60">Snare</span>
               </div>
               <div className="flex items-center">
-                <div className="w-3 h-3 rounded-full mr-2 ml-1" style={{ backgroundColor: '#a78bfa' }}></div>
+                <div className="w-3 h-3 rounded-full mr-1 ml-2" style={{ backgroundColor: '#a78bfa' }}></div>
                 <span className="text-white/60">Tenor</span>
               </div>
               <div className="flex items-center">
-                <div className="w-3 h-3 rounded-full mr-2 ml-1" style={{ backgroundColor: '#f59e0b' }}></div>
+                <div className="w-3 h-3 rounded-full mr-1 ml-2" style={{ backgroundColor: '#f59e0b' }}></div>
                 <span className="text-white/60">Bass</span>
               </div>
             </div>
