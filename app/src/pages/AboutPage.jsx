@@ -109,7 +109,7 @@ const AboutPage = () => {
             <div className="flex items-start">
               <div className="text-white/80 text-sm">
                 <span className="font-semibold text-white">Form:</span> The type of formation 
-                you're in (e.g., "Line full battery", "Concert formation")
+                you're in (e.g., "Line full battery", "Battery Arc")
               </div>
             </div>
           </div>

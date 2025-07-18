@@ -85,10 +85,15 @@ const PathVisualizerModal = ({
       
       // Calculate x position (horizontal on field)
       // 50 yard line is at center
-      // Since we're viewing from BACK sideline (front is at top):
-      // Lower yard numbers (0-49) are on the LEFT side of screen
-      // Higher yard numbers (51-100) are on the RIGHT side of screen
-      x = FIELD_LENGTH / 2 - (50 - yardLineNum) * PIXELS_PER_YARD_LENGTH;
+      // Yard lines go: 0-10-20-30-40-50-40-30-20-10-0
+      // The direction (Left/Right) needs to be flipped from director's view to performer's view
+      if (direction === 'Right') {
+        // "Right" in director's view = left side on screen (visitor side)
+        x = FIELD_LENGTH / 2 - (50 - yardLineNum) * PIXELS_PER_YARD_LENGTH;
+      } else {
+        // "Left" in director's view = right side on screen (home side)
+        x = FIELD_LENGTH / 2 + (50 - yardLineNum) * PIXELS_PER_YARD_LENGTH;
+      }
     } else {
       // Regular position with steps
       const leftRightMatch = leftRight.match(/^(Left|Right):\s*([\d.]+)\s*steps?\s*(Inside|Outside)?\s*(\d+)\s*yd ln$/i);
@@ -98,8 +103,14 @@ const PathVisualizerModal = ({
         const yardLineNum = parseInt(yardLine);
         
         // Start at the yard line
-        // Same calculation: viewing from back, so lower yards on left, higher yards on right
-        x = FIELD_LENGTH / 2 - (50 - yardLineNum) * PIXELS_PER_YARD_LENGTH;
+        // The direction (Left/Right) needs to be flipped from director's view to performer's view
+        if (direction === 'Right') {
+          // "Right" in director's view = left side on screen (visitor side)
+          x = FIELD_LENGTH / 2 - (50 - yardLineNum) * PIXELS_PER_YARD_LENGTH;
+        } else {
+          // "Left" in director's view = right side on screen (home side)
+          x = FIELD_LENGTH / 2 + (50 - yardLineNum) * PIXELS_PER_YARD_LENGTH;
+        }
         
         // Apply step offset
         const stepOffsetPixels = stepsNum * STEP_SIZE_YARDS * PIXELS_PER_YARD_LENGTH;
@@ -108,30 +119,38 @@ const PathVisualizerModal = ({
         // Outside always means away from the 50 (toward the end zone)
         
         if (inOut === 'Inside') {
-          // Move toward the 50 (viewing from back, so directions are reversed)
-          if (yardLineNum < 50) {
-            x += stepOffsetPixels; // 50 is to the right from lower yards
-          } else if (yardLineNum > 50) {
-            x -= stepOffsetPixels; // 50 is to the left from higher yards
+          // Inside means toward the 50
+          if (direction === 'Right') {
+            // "Right" in director's view = left side on screen
+            // Inside from left side means moving right toward center
+            x += stepOffsetPixels;
+          } else {
+            // "Left" in director's view = right side on screen
+            // Inside from right side means moving left toward center
+            x -= stepOffsetPixels;
           }
-          // If on the 50, inside doesn't move horizontally
         } else if (inOut === 'Outside') {
-          // Move away from the 50 (toward the end zone)
-          if (yardLineNum < 50) {
-            x -= stepOffsetPixels; // Away from 50 is to the left (toward 0)
-          } else if (yardLineNum > 50) {
-            x += stepOffsetPixels; // Away from 50 is to the right (toward 100)
+          // Outside means away from the 50
+          if (direction === 'Right') {
+            // "Right" in director's view = left side on screen
+            // Outside from left side means moving left toward sideline
+            x -= stepOffsetPixels;
+          } else {
+            // "Left" in director's view = right side on screen
+            // Outside from right side means moving right toward sideline
+            x += stepOffsetPixels;
           }
-          // If on the 50, outside would mean toward either end zone
         } else {
           // No Inside/Outside specified, use Left/Right
-          // Viewing from BACK sideline:
-          // "Left" (performer's left) should appear on RIGHT side of our screen
-          // "Right" (performer's right) should appear on LEFT side of our screen
+          // Need to flip because data is from director's view
           if (direction === 'Left') {
-            x += stepOffsetPixels; // Left appears on right side of screen
+            // "Left" in director's view means move to director's left
+            // But since we flipped the sides, this affects the right side of screen
+            x += stepOffsetPixels;
           } else if (direction === 'Right') {
-            x -= stepOffsetPixels; // Right appears on left side of screen
+            // "Right" in director's view means move to director's right
+            // But since we flipped the sides, this affects the left side of screen
+            x -= stepOffsetPixels;
           }
         }
       }
@@ -245,22 +264,41 @@ const PathVisualizerModal = ({
     ctx.lineWidth = 2;
     
     // Draw yard lines every 5 yards
-    for (let yard = 0; yard <= 100; yard += 5) {
-      const x = (FIELD_LENGTH / 2) - (50 - yard) * PIXELS_PER_YARD_LENGTH;
+    // Draw right side (home side) yard lines: 50, 45, 40, 35, 30, 25, 20, 15, 10, 5, 0
+    for (let yard = 50; yard >= 0; yard -= 5) {
+      const x = FIELD_LENGTH / 2 + (50 - yard) * PIXELS_PER_YARD_LENGTH;
       ctx.beginPath();
       ctx.moveTo(x, 0);
       ctx.lineTo(x, FIELD_WIDTH);
       ctx.stroke();
       
-      // Draw yard numbers
-      if (yard % 10 === 0 && yard !== 0 && yard !== 100) {
+      // Draw yard numbers (all except 0)
+      if (yard !== 0) {
         ctx.fillStyle = '#ffffff80';
-        ctx.font = 'bold 16px sans-serif';
+        ctx.font = yard % 10 === 0 ? 'bold 16px sans-serif' : 'bold 12px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        const yardNum = yard <= 50 ? yard : 100 - yard;
-        ctx.fillText(yardNum.toString(), x, 30);
-        ctx.fillText(yardNum.toString(), x, FIELD_WIDTH - 30);
+        ctx.fillText(yard.toString(), x, 30);
+        ctx.fillText(yard.toString(), x, FIELD_WIDTH - 30);
+      }
+    }
+    
+    // Draw left side (visitor side) yard lines: 45, 40, 35, 30, 25, 20, 15, 10, 5, 0
+    for (let yard = 45; yard >= 0; yard -= 5) {
+      const x = FIELD_LENGTH / 2 - (50 - yard) * PIXELS_PER_YARD_LENGTH;
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, FIELD_WIDTH);
+      ctx.stroke();
+      
+      // Draw yard numbers (all except 0)
+      if (yard !== 0) {
+        ctx.fillStyle = '#ffffff80';
+        ctx.font = yard % 10 === 0 ? 'bold 16px sans-serif' : 'bold 12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(yard.toString(), x, 30);
+        ctx.fillText(yard.toString(), x, FIELD_WIDTH - 30);
       }
     }
     
