@@ -47,7 +47,7 @@ const HomePage = () => {
                     e.target.style.display = 'none';
                   }}
               />
-              <h2 className="text-2xl font-bold text-white text-center" style={{"marginTop": "0.2rem"}}>
+              <h2 className="text-2xl font-bold text-white text-center" style={{"marginTop": "0.2rem", "marginBottom": "0"}}>
                 <div>Edgewood 2025</div>
                 <img 
                   src="/transient.png" 

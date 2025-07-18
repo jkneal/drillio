@@ -8,12 +8,12 @@ const NicknameBadge = ({ movement, setNumber }) => {
   
   return (
     <div className="absolute top-4 left-4 z-10">
-      <div className="nickname-badge inline-flex items-center rounded-full px-2 py-0.5 backdrop-blur-sm">
-        <Sparkles className="w-2.5 h-2.5 text-yellow-300 mr-1 animate-pulse" />
-        <span className="nickname-text font-semibold text-xs">
+      <div className="nickname-badge inline-flex items-center rounded-full px-1.5 py-0.5">
+        <Sparkles className="w-2 h-2 text-white mr-0.5 opacity-80" />
+        <span className="nickname-text font-semibold text-[10px]">
           {nickname}
         </span>
-        <Sparkles className="w-2.5 h-2.5 text-yellow-300 ml-1 animate-pulse" />
+        <Sparkles className="w-2 h-2 text-white ml-0.5 opacity-80" />
       </div>
     </div>
   );

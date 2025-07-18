@@ -1,47 +1,25 @@
 import { useEffect, useRef } from 'react';
 
-const MovementVector = ({ tip, size = 'normal' }) => {
+const MovementVector = ({ tip, movementVector, size = 'normal' }) => {
   const canvasRef = useRef(null);
   
-  // Parse movement information from tip
-  const parseMovementData = (tipText) => {
-    if (!tipText) return null;
-    
-    // Look for direction immediately before the step pattern (X-to-5)
-    const directionPattern = /(left forward|right forward|left backward|right backward|forward|backward|left|right)\s*\((\d+)-to-5\)/i;
-    
-    const match = tipText.match(directionPattern);
-    if (match) {
-      const [, direction, stepSize] = match;
-      const isCrab = tipText.toLowerCase().includes('crab');
-      
-      return {
-        type: isCrab ? 'crab' : 'simple',
-        direction: direction.toLowerCase(),
-        stepSize: parseInt(stepSize)
-      };
-    }
-    
-    return null;
+  // Parse movement information from tip to check if we should show vector
+  const hasMovement = (tipText) => {
+    if (!tipText) return false;
+    // Check if tip contains "Move" with a direction
+    return /Move\s+(Forward|Right Forward|Right|Right Backward|Backward|Left Backward|Left|Left Forward)/i.test(tipText);
   };
   
-  // Convert direction to canvas angle
-  const getCanvasAngle = (movement) => {
-    if (!movement) return 0;
+  // Convert our angle system (0=forward, 90=right, 180=backward, 270=left) to canvas angle
+  const getCanvasAngle = (angle) => {
+    if (angle === null || angle === undefined) return 0;
     
-    // Canvas angles: 0 = right, 90 = down, 180 = left, 270 = up
-    const directionAngles = {
-      'forward': 270,
-      'backward': 90,
-      'left': 180,
-      'right': 0,
-      'left forward': 225,
-      'right forward': 315,
-      'left backward': 135,
-      'right backward': 45
-    };
-    
-    return directionAngles[movement.direction] || 0;
+    // Our system: 0 = forward (north), 90 = right (east), 180 = backward (south), 270 = left (west)
+    // Canvas: 0 = right, 90 = down, 180 = left, 270 = up
+    // So we need to rotate by -90 degrees: canvas_angle = our_angle - 90
+    let canvasAngle = angle - 90;
+    if (canvasAngle < 0) canvasAngle += 360;
+    return canvasAngle * Math.PI / 180;
   };
   
   useEffect(() => {
@@ -49,12 +27,11 @@ const MovementVector = ({ tip, size = 'normal' }) => {
     if (!canvas) return;
     
     const ctx = canvas.getContext('2d');
-    const movement = parseMovementData(tip);
     
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    if (!movement || movement.stepSize === 0) return;
+    if (movementVector === null || movementVector === undefined || !hasMovement(tip)) return;
     
     // Set canvas size based on size prop
     const canvasSize = size === 'small' ? 30 : 40;
@@ -68,7 +45,7 @@ const MovementVector = ({ tip, size = 'normal' }) => {
     const vectorLength = canvasSize * 0.45;
     
     // Get angle in radians
-    const angle = (getCanvasAngle(movement) * Math.PI) / 180;
+    const angle = getCanvasAngle(movementVector);
     
     // Calculate end point
     const endX = centerX + Math.cos(angle) * vectorLength;
@@ -78,7 +55,7 @@ const MovementVector = ({ tip, size = 'normal' }) => {
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
     ctx.lineTo(endX, endY);
-    ctx.strokeStyle = movement.type === 'crab' ? '#fbbf24' : '#60a5fa';
+    ctx.strokeStyle = '#60a5fa'; // Blue color for all movements
     ctx.lineWidth = 2.5;
     ctx.stroke();
     
@@ -99,11 +76,10 @@ const MovementVector = ({ tip, size = 'normal' }) => {
     );
     ctx.stroke();
     
-  }, [tip, size]);
+  }, [tip, movementVector, size]);
   
-  // Only render if tip contains movement information
-  const movement = parseMovementData(tip);
-  if (!movement || movement.stepSize === 0) return null;
+  // Only render if we have a movement vector and tip contains movement
+  if (movementVector === null || movementVector === undefined || !hasMovement(tip)) return null;
   
   return (
     <canvas 

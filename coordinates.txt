@@ -1,0 +1,201 @@
+Performer: Symbol: SD1 Label: 63 1-Skewed Perspective Intro
+
+Set Measure Counts Left-Right Home-Visitor
+1 0 Left: 3.0 steps Outside 50 yd ln 8.0 steps Behind Visitor Hash (HS)
+2 sub 40 40 Left: 2.0 steps Inside 45 yd ln On Visitor Hash (HS)
+3 2 - 13 8 Left: 4.0 steps Inside 40 yd ln On Visitor Hash (HS)
+4 14 - 17 16 Left: 3.0 steps Outside 40 yd ln On Visitor Hash (HS)
+5 18 - 20 12 Left: 3.0 steps Outside 40 yd ln On Visitor Hash (HS)
+6 21 - 22 8 Left: 1.0 steps Outside 35 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+7 23 4 Left: 3.5 steps Outside 35 yd ln 8.0 steps In Front Of Visitor Hash (HS)
+8 24 - 34 44 Left: 2.0 steps Inside 30 yd ln 11.0 steps In Front Of Visitor Hash (HS)
+9 35 - 43 36 Left: 2.0 steps Inside 30 yd ln 10.0 steps Behind Home Hash (HS)
+
+Performer: Symbol: SD2 Label: 64 1-Skewed Perspective Intro
+
+Set Measure Counts Left-Right Home-Visitor
+1 0 Right: 1.0 steps Outside 50 yd ln 9.0 steps Behind Visitor Hash (HS)
+2 sub 40 40 Left: 4.0 steps Inside 45 yd ln 2.0 steps Behind Visitor Hash (HS)
+3 2 - 13 8 Left: 2.0 steps Outside 45 yd ln On Visitor Hash (HS)
+4 14 - 17 16 Left: 1.0 steps Outside 40 yd ln On Visitor Hash (HS)
+5 18 - 20 12 Left: 1.0 steps Outside 40 yd ln On Visitor Hash (HS)
+6 21 - 22 8 Left: 1.0 steps Inside 35 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+7 23 4 Left: 1.5 steps Outside 35 yd ln 8.0 steps In Front Of Visitor Hash (HS)
+8 24 - 34 44 Left: 4.0 steps Inside 30 yd ln 11.0 steps In Front Of Visitor Hash (HS)
+9 35 - 43 36 Left: 4.0 steps Inside 30 yd ln 10.0 steps Behind Home Hash (HS)
+
+
+Performer: Symbol: SD3 Label: 65 1-Skewed Perspective Intro
+
+Set Measure Counts Left-Right Home-Visitor
+1 0 Right: 3.0 steps Inside 45 yd ln 8.0 steps Behind Visitor Hash (HS)
+2 sub 40 40 Left: 2.0 steps Outside 50 yd ln 4.0 steps Behind Visitor Hash (HS)
+3 2 - 13 8 Left: On 45 yd ln On Visitor Hash (HS)
+4 14 - 17 16 Left: 1.0 steps Inside 40 yd ln On Visitor Hash (HS)
+5 18 - 20 12 Left: 1.0 steps Inside 40 yd ln On Visitor Hash (HS)
+6 21 - 22 8 Left: 3.0 steps Inside 35 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+7 23 4 Left: 0.5 steps Inside 35 yd ln 8.0 steps In Front Of Visitor Hash (HS)
+8 24 - 34 44 Left: 2.0 steps Outside 35 yd ln 11.0 steps In Front Of Visitor Hash (HS)
+9 35 - 43 36 Left: 2.0 steps Outside 35 yd ln 10.0 steps Behind Home Hash (HS)
+
+Performer: Symbol: BD1 Label: 67 1-Skewed Perspective Intro
+
+Set Measure Counts Left-Right Home-Visitor
+1 0 Right: 1.0 steps Outside 45 yd ln 3.0 steps Behind Visitor Hash (HS)
+2 sub 40 40 Right: 1.0 steps Inside 45 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+3 2 - 13 8 Left: 1.0 steps Outside 50 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+4 14 - 17 16 Left: On 45 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+5 18 - 20 12 Left: On 45 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+6 21 - 22 8 Left: On 40 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+7 23 4 Left: 2.5 steps Outside 40 yd ln 8.0 steps In Front Of Visitor Hash (HS)
+8 24 - 34 44 Left: 3.0 steps Inside 35 yd ln 11.0 steps In Front Of Visitor Hash (HS)
+9 35 - 43 36 Left: 3.0 steps Inside 35 yd ln 10.0 steps Behind Home Hash (HS)
+
+Performer: Symbol: BD2 Label: 68 1-Skewed Perspective Intro
+
+Set Measure Counts Left-Right Home-Visitor
+1 0 Right: 3.0 steps Inside 40 yd ln 4.0 steps Behind Visitor Hash (HS)
+2 sub 40 40 Right: 1.0 steps Outside 45 yd ln 3.0 steps In Front Of Visitor Hash (HS)
+3 2 - 13 8 Right: 2.0 steps Outside 50 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+4 14 - 17 16 Left: 3.0 steps Inside 45 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+5 18 - 20 12 Left: 3.0 steps Inside 45 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+6 21 - 22 8 Left: 3.0 steps Inside 40 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+7 23 4 Left: 0.5 steps Inside 40 yd ln 8.0 steps In Front Of Visitor Hash (HS)
+8 24 - 34 44 Left: 2.0 steps Outside 40 yd ln 11.0 steps In Front Of Visitor Hash (HS)
+9 35 - 43 36 Left: 2.0 steps Outside 40 yd ln 10.0 steps Behind Home Hash (HS)
+
+Performer: Symbol: BD3 Label: 69 1-Skewed Perspective Intro
+
+Set Measure Counts Left-Right Home-Visitor
+1 0 Right: 2.0 steps Outside 40 yd ln On Visitor Hash (HS)
+2 sub 40 40 Right: 3.0 steps Outside 45 yd ln 1.0 steps In Front Of Visitor Hash (HS)
+3 2 - 13 8 Right: 3.0 steps Inside 45 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+4 14 - 17 16 Left: 2.0 steps Outside 50 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+5 18 - 20 12 Left: 2.0 steps Outside 50 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+6 21 - 22 8 Left: 2.0 steps Outside 45 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+7 23 4 Left: 3.5 steps Inside 40 yd ln 8.0 steps In Front Of Visitor Hash (HS)
+8 24 - 34 44 Left: 1.0 steps Inside 40 yd ln 11.0 steps In Front Of Visitor Hash (HS)
+9 35 - 43 36 Left: 1.0 steps Inside 40 yd ln 10.0 steps Behind Home Hash (HS)
+
+Performer: Symbol: BD4 Label: 70 1-Skewed Perspective Intro
+
+Set Measure Counts Left-Right Home-Visitor
+1 0 Right: 3.0 steps Inside 35 yd ln 4.0 steps Behind Visitor Hash (HS)
+2 sub 40 40 Right: 3.0 steps Inside 40 yd ln 1.0 steps Behind Visitor Hash (HS)
+3 2 - 13 8 Right: On 45 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+4 14 - 17 16 Right: 1.0 steps Outside 50 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+5 18 - 20 12 Right: 1.0 steps Outside 50 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+6 21 - 22 8 Left: 1.0 steps Inside 45 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+7 23 4 Left: 1.5 steps Outside 45 yd ln 8.0 steps In Front Of Visitor Hash (HS)
+8 24 - 34 44 Left: 4.0 steps Inside 40 yd ln 11.0 steps In Front Of Visitor Hash (HS)
+9 35 - 43 36 Left: 4.0 steps Inside 40 yd ln 10.0 steps Behind Home Hash (HS)
+
+Performer: Symbol: BD5 Label: 71 1-Skewed Perspective Intro
+
+Set Measure Counts Left-Right Home-Visitor
+1 0 Right: On 40 yd ln 8.0 steps Behind Visitor Hash (HS)
+2 sub 40 40 Right: 1.0 steps Inside 40 yd ln 3.0 steps Behind Visitor Hash (HS)
+3 2 - 13 8 Right: 3.0 steps Outside 45 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+4 14 - 17 16 Right: 4.0 steps Outside 50 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+5 18 - 20 12 Right: 4.0 steps Outside 50 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+6 21 - 22 8 Left: 4.0 steps Inside 45 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+7 23 4 Left: 1.5 steps Inside 45 yd ln 8.0 steps In Front Of Visitor Hash (HS)
+8 24 - 34 44 Left: 1.0 steps Outside 45 yd ln 11.0 steps In Front Of Visitor Hash (HS)
+9 35 - 43 36 Left: 1.0 steps Outside 45 yd ln 10.0 steps Behind Home Hash (HS)
+
+Performer: Symbol: TD1 Label: 61 1-Skewed Perspective Intro
+
+Set Measure Counts Left-Right Home-Visitor
+1 0 Left: 4.0 steps Inside 40 yd ln 14.0 steps In Front Of Visitor side line
+2 sub 40 40 Left: 1.0 steps Inside 40 yd ln 6.0 steps Behind Visitor Hash (HS)
+3 2 - 13 8 Left: 2.0 steps Inside 35 yd ln 4.0 steps Behind Visitor Hash (HS)
+4 14 - 17 16 Left: 1.0 steps Outside 35 yd ln On Visitor Hash (HS)
+5 18 - 20 12 Left: 1.0 steps Outside 35 yd ln On Visitor Hash (HS)
+6 21 - 22 8 Left: 1.0 steps Inside 30 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+7 23 4 Left: 1.5 steps Outside 30 yd ln 8.0 steps In Front Of Visitor Hash (HS)
+8 24 - 34 44 Left: 4.0 steps Inside 25 yd ln 11.0 steps In Front Of Visitor Hash (HS)
+9 35 - 43 36 Left: 4.0 steps Inside 25 yd ln 10.0 steps Behind Home Hash (HS)
+
+Performer: Symbol: TD2 Label: 62 1-Skewed Perspective Intro
+
+Set Measure Counts Left-Right Home-Visitor
+1 0 Left: 1.0 steps Inside 45 yd ln 13.0 steps Behind Visitor Hash (HS)
+2 sub 40 40 Left: 3.0 steps Inside 40 yd ln 8.0 steps Behind Visitor Hash (HS)
+3 2 - 13 8 Left: 3.0 steps Outside 40 yd ln 4.0 steps Behind Visitor Hash (HS)
+4 14 - 17 16 Left: 2.0 steps Inside 35 yd ln On Visitor Hash (HS)
+5 18 - 20 12 Left: 2.0 steps Inside 35 yd ln On Visitor Hash (HS)
+6 21 - 22 8 Left: 4.0 steps Inside 30 yd ln 5.0 steps In Front Of Visitor Hash (HS)
+7 23 4 Left: 1.5 steps Inside 30 yd ln 8.0 steps In Front Of Visitor Hash (HS)
+8 24 - 34 44 Left: 1.0 steps Outside 30 yd ln 11.0 steps In Front Of Visitor Hash (HS)
+9 35 - 43 36 Left: 1.0 steps Outside 30 yd ln 10.0 steps Behind Home Hash (HS)
+
+Form Snare
+1-Skewed Perspective Intro
+1 Scattered
+2 Snare Diagonal
+3 Snare Line
+4 Line with Tenors
+5 Line with Tenors
+6 Line Full Battery
+7 Line Full Battery
+8 Line Full Battery
+9 Line Full Battery
+
+Form Tenor
+1-Skewed Perspective Intro
+1 Scattered
+2 Tenor Diagonal
+3 Tenor Line
+4 Line with Snares
+5 Line with Snares
+6 Line Full Battery
+7 Line Full Battery
+8 Line Full Battery
+9 Line Full Battery
+
+Form Bass Drum
+1-Skewed Perspective Intro
+1 Scattered
+2 Bass Drum Diagonal
+3 Bass Drum Line
+4 Bass Drum Line
+5 Bass Drum Line
+6 Line Full Battery
+7 Line Full Battery
+8 Line Full Battery
+9 Line Full Battery
+
+Counts Snare
+1-Skewed Perspective Intro
+1 0
+2 Hold 32, Move 8
+3 Move 8
+4 Move 16
+5 Hold 12
+6 Move 8
+7 Move 4
+8 Move 4, Hold 40
+9 Move 12, Hold 24
+Counts Tenor
+1-Skewed Perspective Intro
+1 0
+2 Hold 32, Move 8
+3 Move 8
+4 Move 16
+5 Hold 12
+6 Move 8
+7 Move 4
+8 Move 4, Hold 40
+9 Move 12, Hold 24
+
+Counts Bass Drum
+1-Skewed Perspective Intro
+1 0
+2 Hold 32, Move 8
+3 Move 8
+4 Move 16
+5 Hold 12
+6 Move 8
+7 Move 4
+8 Move 4, Hold 40
+9 Move 12, Hold 24

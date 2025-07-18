@@ -230,11 +230,12 @@ const DrillPage = () => {
                       <span className="text-white/60">F-B:</span> {performer.homeVisitor}
                     </div>
                   </div>
-                  {(performer.tip || performer.nextSet) && (
+                  {performer.tip && (
                     <div className="mt-2">
                       <TipDisplay 
                         tip={performer.tip} 
-                        nextSet={performer.nextSet}
+                        nextSet={null}
+                        movementVector={performer.movementVector}
                         size="small"
                       />
                     </div>
@@ -369,7 +370,8 @@ const DrillPage = () => {
 
             <TipDisplay 
               tip={currentSetData.tip} 
-              nextSet={currentSetData.nextSet}
+              nextSet={currentSet < currentMovement.length - 1 ? currentMovement[currentSet + 1].tip : null}
+              movementVector={currentSetData.movementVector}
               size="normal"
             />
           </div>

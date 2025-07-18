@@ -639,12 +639,16 @@
   height: 2rem;
 }
 
+.h-10 {
+  height: 2.5rem;
+}
+
 .h-12 {
   height: 3rem;
 }
 
 .h-16 {
-  height: 4rem;
+  height: 12rem;
 }
 
 .h-32 {
@@ -861,11 +865,13 @@ select option {
 
 /* Nickname badge styles */
 .nickname-badge {
-  background: linear-gradient(135deg, rgba(127, 29, 29, 0.9), rgba(185, 28, 28, 0.9), rgba(127, 29, 29, 0.9));
-  border: 2px solid rgba(251, 191, 36, 0.8);
-  box-shadow: 0 0 15px rgba(251, 191, 36, 0.4), 
-              0 0 30px rgba(239, 68, 68, 0.3),
-              inset 0 0 10px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(to right, 
+    rgba(30, 58, 138, 0.75) 0%, 
+    rgba(37, 99, 235, 0.75) 30%, 
+    rgba(234, 88, 12, 0.75) 70%, 
+    rgba(220, 38, 38, 0.75) 100%);
+  border: 2px solid rgba(71, 85, 105, 0.8);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   position: relative;
   overflow: hidden;
 }
@@ -880,29 +886,19 @@ select option {
   background: linear-gradient(
     45deg,
     transparent 30%,
-    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.1) 50%,
     transparent 70%
   );
   transform: rotate(45deg);
-  animation: shimmer 3s infinite;
-}
-
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%) translateY(-100%) rotate(45deg);
-  }
-  100% {
-    transform: translateX(100%) translateY(100%) rotate(45deg);
-  }
 }
 
 .nickname-text {
-  background: linear-gradient(to right, #ffffff, #fbbf24, #ffffff);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  color: #ffffff;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8),
+               0 0 20px rgba(255, 255, 255, 0.3);
   position: relative;
   z-index: 1;
 }
