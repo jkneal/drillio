@@ -84,8 +84,11 @@ const PathVisualizerModal = ({
       const yardLineNum = parseInt(yardLine);
       
       // Calculate x position (horizontal on field)
-      // 50 yard line is at center, yards decrease going left
-      x = FIELD_LENGTH / 2 + (50 - yardLineNum) * PIXELS_PER_YARD_LENGTH;
+      // 50 yard line is at center
+      // Since we're viewing from BACK sideline (front is at top):
+      // Lower yard numbers (0-49) are on the LEFT side of screen
+      // Higher yard numbers (51-100) are on the RIGHT side of screen
+      x = FIELD_LENGTH / 2 - (50 - yardLineNum) * PIXELS_PER_YARD_LENGTH;
     } else {
       // Regular position with steps
       const leftRightMatch = leftRight.match(/^(Left|Right):\s*([\d.]+)\s*steps?\s*(Inside|Outside)?\s*(\d+)\s*yd ln$/i);
@@ -95,7 +98,8 @@ const PathVisualizerModal = ({
         const yardLineNum = parseInt(yardLine);
         
         // Start at the yard line
-        x = FIELD_LENGTH / 2 + (50 - yardLineNum) * PIXELS_PER_YARD_LENGTH;
+        // Same calculation: viewing from back, so lower yards on left, higher yards on right
+        x = FIELD_LENGTH / 2 - (50 - yardLineNum) * PIXELS_PER_YARD_LENGTH;
         
         // Apply step offset
         const stepOffsetPixels = stepsNum * STEP_SIZE_YARDS * PIXELS_PER_YARD_LENGTH;
@@ -104,29 +108,30 @@ const PathVisualizerModal = ({
         // Outside always means away from the 50 (toward the end zone)
         
         if (inOut === 'Inside') {
-          // Move toward the 50
+          // Move toward the 50 (viewing from back, so directions are reversed)
           if (yardLineNum < 50) {
-            x -= stepOffsetPixels; // 50 is to the left (because lower yards are on right)
+            x += stepOffsetPixels; // 50 is to the right from lower yards
           } else if (yardLineNum > 50) {
-            x += stepOffsetPixels; // 50 is to the right (because higher yards are on left)
+            x -= stepOffsetPixels; // 50 is to the left from higher yards
           }
           // If on the 50, inside doesn't move horizontally
         } else if (inOut === 'Outside') {
           // Move away from the 50 (toward the end zone)
           if (yardLineNum < 50) {
-            x += stepOffsetPixels; // Away from 50 is to the right (toward 0)
+            x -= stepOffsetPixels; // Away from 50 is to the left (toward 0)
           } else if (yardLineNum > 50) {
-            x -= stepOffsetPixels; // Away from 50 is to the left (toward 100)
+            x += stepOffsetPixels; // Away from 50 is to the right (toward 100)
           }
           // If on the 50, outside would mean toward either end zone
         } else {
           // No Inside/Outside specified, use Left/Right
-          // Left means toward the lower yard numbers (0 end)
-          // Right means toward the higher yard numbers (100 end)
+          // Viewing from BACK sideline:
+          // "Left" (performer's left) should appear on RIGHT side of our screen
+          // "Right" (performer's right) should appear on LEFT side of our screen
           if (direction === 'Left') {
-            x -= stepOffsetPixels;
+            x += stepOffsetPixels; // Left appears on right side of screen
           } else if (direction === 'Right') {
-            x += stepOffsetPixels;
+            x -= stepOffsetPixels; // Right appears on left side of screen
           }
         }
       }
@@ -241,7 +246,7 @@ const PathVisualizerModal = ({
     
     // Draw yard lines every 5 yards
     for (let yard = 0; yard <= 100; yard += 5) {
-      const x = (FIELD_LENGTH / 2) + (50 - yard) * PIXELS_PER_YARD_LENGTH;
+      const x = (FIELD_LENGTH / 2) - (50 - yard) * PIXELS_PER_YARD_LENGTH;
       ctx.beginPath();
       ctx.moveTo(x, 0);
       ctx.lineTo(x, FIELD_WIDTH);

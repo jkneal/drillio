@@ -373,6 +373,10 @@
   background-color: #1f2937;
 }
 
+[class*="bg-gray-600/20"] {
+  background-color: rgba(75, 85, 99, 0.2);
+}
+
 .bg-red-500 {
   background-color: #ef4444;
 }
@@ -404,6 +408,10 @@
 
 [class*="border-yellow-500/30"] {
   border-color: rgba(245, 158, 11, 0.3);
+}
+
+[class*="border-gray-500/30"] {
+  border-color: rgba(107, 114, 128, 0.3);
 }
 
 /* Border radius */
@@ -635,6 +643,10 @@
   height: 3rem;
 }
 
+.h-16 {
+  height: 4rem;
+}
+
 .h-32 {
   height: 8rem;
 }
@@ -737,6 +749,14 @@
 
 .pb-1\.5 {
   padding-bottom: 0.375rem;
+}
+
+.pb-3 {
+  padding-bottom: 0.75rem;
+}
+
+.pb-4 {
+  padding-bottom: 0.85rem;
 }
 
 /* Custom component styles */

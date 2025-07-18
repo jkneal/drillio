@@ -49,7 +49,14 @@ const HomePage = () => {
               />
               <h2 className="text-2xl font-bold text-white text-center" style={{"marginTop": "0.2rem"}}>
                 <div>Edgewood 2025</div>
-                <div className="text-xl mt-1">- Transient -</div>
+                <img 
+                  src="/transient.png" 
+                  alt="Transient" 
+                  className="h-16 mt-1 mx-auto"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                  }}
+                />
               </h2>
             </div>
             <p className="text-white text-lg mb-4" style={{"marginTop": "0.2rem"}}>

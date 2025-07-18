@@ -28,7 +28,14 @@ const AboutPage = () => {
               />
               <div className="text-white text-center text-sm">
                 <div>Edgewood 2025</div>
-                <div className="text-xs">- Transient -</div>
+                <img 
+                  src="/transient.png" 
+                  alt="Transient" 
+                  className="h-8 mt-0.5 mx-auto"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                  }}
+                />
               </div>
             </div>
           </div>

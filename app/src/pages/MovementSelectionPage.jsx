@@ -72,7 +72,14 @@ const MovementSelectionPage = () => {
             />
             <div className="text-white text-center">
               <div>Edgewood 2025</div>
-              <div className="text-sm">- Transient -</div>
+              <img 
+                src="/transient.png" 
+                alt="Transient" 
+                className="h-8 mt-1 mx-auto"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                }}
+              />
             </div>
           </div>
         </div>
@@ -80,42 +87,48 @@ const MovementSelectionPage = () => {
         <div className="space-y-4">
           <h2 className="text-xl font-semibold text-white">Select Movement:</h2>
           <p className="text-white/60 text-sm mb-4">Tap a movement to view your drill sets</p>
-          {Object.keys(currentPerformer.movements).map((movement) => (
-            <div key={movement} className="bg-red-600/20 hover:bg-red-600/30 rounded-lg backdrop-blur-sm transition-all duration-200 border border-red-500/30 overflow-hidden">
-              <button
-                onClick={() => handleMovementSelect(movement)}
-                className="w-full text-white p-4 text-left"
-              >
-                <div className="font-semibold text-lg">{movementsConfig[movement]?.displayName || movement}</div>
-                <div className="text-sm opacity-80">
-                  {currentPerformer.movements[movement].length} sets
-                </div>
-              </button>
-              <div className="flex items-center justify-end space-x-2 px-4 pb-3">
+          {Object.keys(currentPerformer.movements).map((movement) => {
+            const hasSets = currentPerformer.movements[movement].length > 0;
+            return (
+              <div key={movement} className={`${hasSets ? 'bg-red-600/20 hover:bg-red-600/30' : 'bg-gray-600/20'} rounded-lg backdrop-blur-sm transition-all duration-200 border ${hasSets ? 'border-red-500/30' : 'border-gray-500/30'} overflow-hidden`}>
                 <button
-                  onClick={() => handleMovementVideoClick(movement)}
-                  className="flex items-center text-green-300 hover:text-green-200 text-sm transition-colors"
-                  title="View movement animation"
+                  onClick={() => hasSets && handleMovementSelect(movement)}
+                  className={`w-full text-white p-4 text-left ${!hasSets && 'cursor-not-allowed opacity-50'}`}
+                  disabled={!hasSets}
                 >
-                  <Play className="w-4 h-4 mr-1" />
-                  <span>Preview</span>
+                  <div className="font-semibold text-lg">{movementsConfig[movement]?.displayName || movement}</div>
+                  <div className="text-sm opacity-80">
+                    {currentPerformer.movements[movement].length} sets
+                  </div>
                 </button>
-                {selectedPerformer !== 'Staff' && (
-                  <>
-                    <span className="text-white/30">|</span>
+                {hasSets && (
+                  <div className="flex items-center justify-end space-x-2 px-4 pb-4">
                     <button
-                      onClick={() => handlePathVisualizerClick(movement)}
-                      className="flex items-center text-blue-300 hover:text-blue-200 text-sm transition-colors"
-                      title="View movement path"
+                      onClick={() => handleMovementVideoClick(movement)}
+                      className="flex items-center text-green-300 hover:text-green-200 text-sm transition-colors"
+                      title="View movement animation"
                     >
-                      <Route className="w-4 h-4 mr-1" />
-                      <span>Path</span>
+                      <Play className="w-4 h-4 mr-1" />
+                      <span>Preview</span>
                     </button>
-                  </>
+                    {selectedPerformer !== 'Staff' && (
+                      <>
+                        <span className="text-white/30">|</span>
+                        <button
+                          onClick={() => handlePathVisualizerClick(movement)}
+                          className="flex items-center text-blue-300 hover:text-blue-200 text-sm transition-colors"
+                          title="View movement path"
+                        >
+                          <Route className="w-4 h-4 mr-1" />
+                          <span>Path</span>
+                        </button>
+                      </>
+                    )}
+                  </div>
                 )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div className="mt-6">

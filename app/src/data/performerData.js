@@ -96,37 +96,13 @@ export const performerData = {
         }
       ],
       "2": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: On 50 yd ln", homeVisitor: "On Home Hash", form: "Scattered", tip: "Starting position", nextSet: "Move diagonally forward right" },
-        { set: 2, measures: "1 - 8", counts: "32", leftRight: "Right: 2.0 steps Inside 45 yd ln", homeVisitor: "4.0 steps Behind Home Hash", form: "Block formation", tip: "Move into position for 32 counts", nextSet: "Adjust spacing, prepare for company front" },
-        { set: 3, measures: "9 - 16", counts: "32", leftRight: "Right: 1.0 steps Outside 40 yd ln", homeVisitor: "6.0 steps In Front Of Home Hash", form: "Company front", tip: "Adjust spacing and hold for 32 counts", nextSet: "End of movement" }
+
       ],
       "3": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: 2.0 steps Outside 35 yd ln", homeVisitor: "On Visitor Hash", form: "Line full battery", tip: "Transition starting position", nextSet: "Diagonal flow pattern begins" },
-        { set: 2, measures: "1 - 4", counts: "16", leftRight: "Right: 4.0 steps Inside 30 yd ln", homeVisitor: "2.0 steps Behind Visitor Hash", form: "Diagonal formation", tip: "Move into diagonal for 16 counts", nextSet: "Flow into arc shape" },
-        { set: 3, measures: "5 - 8", counts: "16", leftRight: "Right: 1.0 steps Outside 25 yd ln", homeVisitor: "6.0 steps In Front Of Visitor Hash", form: "Arc formation", tip: "Flow into arc shape for 16 counts", nextSet: "Transition to wedge formation" },
-        { set: 4, measures: "9 - 12", counts: "16", leftRight: "Right: 3.0 steps Inside 20 yd ln", homeVisitor: "4.0 steps Behind Home Hash", form: "Wedge formation", tip: "Form wedge shape for 16 counts", nextSet: "Reform battery line" },
-        { set: 5, measures: "13 - 16", counts: "16", leftRight: "Right: On 15 yd ln", homeVisitor: "8.0 steps In Front Of Home Hash", form: "Line full battery", tip: "Reform battery line for 16 counts", nextSet: "End of transition" }
       ],
       "4": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: 1.5 steps Outside 40 yd ln", homeVisitor: "12.0 steps Behind Visitor Hash", form: "Concert formation", tip: "Ballad starting position" },
-        { set: 2, measures: "1 - 8", counts: "32", leftRight: "Left: 2.5 steps Inside 35 yd ln", homeVisitor: "10.0 steps Behind Visitor Hash", form: "Concert formation", tip: "Slow drift movement for 32 counts" },
-        { set: 3, measures: "9 - 16", counts: "32", leftRight: "Left: 4.0 steps Outside 30 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Concert formation", tip: "Continue drift for 32 counts" },
-        { set: 4, measures: "17 - 24", counts: "32", leftRight: "Left: 1.0 steps Inside 25 yd ln", homeVisitor: "6.0 steps Behind Visitor Hash", form: "Concert formation", tip: "Gradual movement for 32 counts" },
-        { set: 5, measures: "25 - 32", counts: "32", leftRight: "Left: 3.0 steps Outside 20 yd ln", homeVisitor: "4.0 steps Behind Visitor Hash", form: "Concert formation", tip: "Slow approach for 32 counts" },
-        { set: 6, measures: "33 - 40", counts: "32", leftRight: "Left: 2.0 steps Inside 15 yd ln", homeVisitor: "2.0 steps Behind Visitor Hash", form: "Concert formation", tip: "Final approach for 32 counts" },
-        { set: 7, measures: "41 - 48", counts: "32", leftRight: "Left: On 10 yd ln", homeVisitor: "On Visitor Hash", form: "Concert formation", tip: "Hold final position for 32 counts" }
       ],
       "5": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: 3.0 steps Inside 45 yd ln", homeVisitor: "15.0 steps In Front Of Home Hash", form: "Scattered", tip: "Closer starting position" },
-        { set: 2, measures: "1 - 6", counts: "24", leftRight: "Right: 1.0 steps Outside 40 yd ln", homeVisitor: "12.0 steps In Front Of Home Hash", form: "Moving formation", tip: "Begin closer sequence for 24 counts" },
-        { set: 3, measures: "7 - 12", counts: "24", leftRight: "Right: 4.0 steps Inside 35 yd ln", homeVisitor: "9.0 steps In Front Of Home Hash", form: "Line with Tenors", tip: "Form drumline for 24 counts" },
-        { set: 4, measures: "13 - 18", counts: "24", leftRight: "Right: 2.0 steps Outside 30 yd ln", homeVisitor: "6.0 steps In Front Of Home Hash", form: "Line full battery", tip: "Full battery line for 24 counts" },
-        { set: 5, measures: "19 - 24", counts: "24", leftRight: "Right: On 25 yd ln", homeVisitor: "3.0 steps In Front Of Home Hash", form: "Line full battery", tip: "Hold formation for 24 counts" },
-        { set: 6, measures: "25 - 30", counts: "24", leftRight: "Right: 3.5 steps Inside 20 yd ln", homeVisitor: "On Home Hash", form: "Line full battery", tip: "Powerful movement for 24 counts" },
-        { set: 7, measures: "31 - 36", counts: "24", leftRight: "Right: 1.5 steps Outside 15 yd ln", homeVisitor: "3.0 steps Behind Home Hash", form: "Line full battery", tip: "Drive backwards for 24 counts" },
-        { set: 8, measures: "37 - 42", counts: "24", leftRight: "Right: 2.5 steps Inside 10 yd ln", homeVisitor: "6.0 steps Behind Home Hash", form: "Line full battery", tip: "Continue drive for 24 counts" },
-        { set: 9, measures: "43 - 48", counts: "24", leftRight: "Right: On 5 yd ln", homeVisitor: "9.0 steps Behind Home Hash", form: "Line full battery", tip: "Approach finale for 24 counts" },
-        { set: 10, measures: "49 - 54", counts: "24", leftRight: "Right: 4.0 steps Outside Goal Line", homeVisitor: "12.0 steps Behind Home Hash", form: "Line full battery", tip: "Final position - hold for impact!" }
       ]
     }
   },
@@ -139,17 +115,16 @@ export const performerData = {
         { set: 6 }, { set: 7 }, { set: 8 }, { set: 9 }
       ],
       "2": [
-        { set: 1 }, { set: 2 }, { set: 3 }
+
       ],
       "3": [
-        { set: 1 }, { set: 2 }, { set: 3 }, { set: 4 }, { set: 5 }
+
       ],
       "4": [
-        { set: 1 }, { set: 2 }, { set: 3 }, { set: 4 }, { set: 5 }, { set: 6 }, { set: 7 }
+
       ],
       "5": [
-        { set: 1 }, { set: 2 }, { set: 3 }, { set: 4 }, { set: 5 },
-        { set: 6 }, { set: 7 }, { set: 8 }, { set: 9 }, { set: 10 }
+
       ]
     }
   },
@@ -169,17 +144,13 @@ export const performerData = {
         { set: 9, measures: "35 - 43", counts: "36", leftRight: "Left: 4.0 steps Inside 30 yd ln", homeVisitor: "10.0 steps Behind Home Hash", form: "Line Full Battery", tip: "Forward (18-to-5) for 12 counts, then hold for 24 counts", nextSet: "End of drill" }
       ],
       "2": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: 1.0 steps Outside 50 yd ln", homeVisitor: "On Home Hash", form: "Scattered", tip: "Starting position", nextSet: "Movement complete" }
-      ],
+        ],
       "3": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: 1.0 steps Outside 35 yd ln", homeVisitor: "2.0 steps Behind Visitor Hash", form: "Line full battery", tip: "Transition starting position", nextSet: "Movement complete" }
-      ],
+       ],
       "4": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: 2.5 steps Outside 40 yd ln", homeVisitor: "10.0 steps Behind Visitor Hash", form: "Concert formation", tip: "Ballad starting position", nextSet: "Movement complete" }
-      ],
+        ],
       "5": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: 2.0 steps Inside 45 yd ln", homeVisitor: "13.0 steps In Front Of Home Hash", form: "Scattered", tip: "Closer starting position", nextSet: "Movement complete" }
-      ]
+       ]
     }
   },
   TD1: {
@@ -198,17 +169,13 @@ export const performerData = {
         { set: 9, measures: "35 - 43", counts: "36", leftRight: "Left: 4.0 steps Inside 25 yd ln", homeVisitor: "10.0 steps Behind Home Hash", form: "Line Full Battery", tip: "Forward (18-to-5) for 12 counts, then hold for 24 counts", nextSet: "End of drill" }
       ],
       "2": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: 3.0 steps Outside 50 yd ln", homeVisitor: "2.0 steps Behind Home Hash", form: "Scattered", tip: "Starting position", nextSet: "Movement complete" }
-      ],
+        ],
       "3": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: On 35 yd ln", homeVisitor: "4.0 steps Behind Visitor Hash", form: "Line full battery", tip: "Transition starting position", nextSet: "Movement complete" }
-      ],
+        ],
       "4": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: On 40 yd ln", homeVisitor: "14.0 steps Behind Visitor Hash", form: "Concert formation", tip: "Ballad starting position", nextSet: "Movement complete" }
-      ],
+         ],
       "5": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: 1.0 steps Inside 45 yd ln", homeVisitor: "17.0 steps In Front Of Home Hash", form: "Scattered", tip: "Closer starting position", nextSet: "Movement complete" }
-      ]
+          ]
     }
   },
   SD3: {
@@ -227,17 +194,13 @@ export const performerData = {
         { set: 9, measures: "35 - 43", counts: "36", leftRight: "Left: 2.0 steps Outside 35 yd ln", homeVisitor: "10.0 steps Behind Home Hash", form: "Line Full Battery", tip: "Forward (18-to-5) for 12 counts, then hold for 24 counts", nextSet: "End of drill" }
       ],
       "2": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: 2.0 steps Inside 50 yd ln", homeVisitor: "2.0 steps Behind Home Hash", form: "Scattered", tip: "Starting position" }
-      ],
+          ],
       "3": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: 3.0 steps Inside 35 yd ln", homeVisitor: "4.0 steps Behind Visitor Hash", form: "Line full battery", tip: "Transition starting position" }
-      ],
+        ],
       "4": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: 3.5 steps Outside 40 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Concert formation", tip: "Ballad starting position" }
-      ],
+         ],
       "5": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: On 45 yd ln", homeVisitor: "11.0 steps In Front Of Home Hash", form: "Scattered", tip: "Closer starting position" }
-      ]
+        ]
     }
   },
   TD2: {
@@ -256,17 +219,13 @@ export const performerData = {
         { set: 9, measures: "35 - 43", counts: "36", leftRight: "Left: 1.0 steps Outside 30 yd ln", homeVisitor: "10.0 steps Behind Home Hash", form: "Line Full Battery", tip: "Forward (18-to-5) for 12 counts, then hold for 24 counts", nextSet: "End of drill" }
       ],
       "2": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: 1.0 steps Inside 50 yd ln", homeVisitor: "4.0 steps Behind Home Hash", form: "Scattered", tip: "Starting position" }
-      ],
+         ],
       "3": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: 2.0 steps Outside 35 yd ln", homeVisitor: "6.0 steps Behind Visitor Hash", form: "Line full battery", tip: "Transition starting position" }
-      ],
+         ],
       "4": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: 2.0 steps Inside 40 yd ln", homeVisitor: "16.0 steps Behind Visitor Hash", form: "Concert formation", tip: "Ballad starting position" }
-      ],
+        ],
       "5": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: 3.0 steps Outside 45 yd ln", homeVisitor: "19.0 steps In Front Of Home Hash", form: "Scattered", tip: "Closer starting position" }
-      ]
+        ]
     }
   },
   BD1: {
@@ -285,17 +244,13 @@ export const performerData = {
         { set: 9, measures: "35 - 43", counts: "36", leftRight: "Left: 3.0 steps Inside 35 yd ln", homeVisitor: "10.0 steps Behind Home Hash", form: "Line Full Battery", tip: "Forward (18-to-5) for 12 counts, then hold for 24 counts", nextSet: "End of drill" }
       ],
       "2": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: On 50 yd ln", homeVisitor: "6.0 steps Behind Home Hash", form: "Scattered", tip: "Starting position" }
-      ],
+       ],
       "3": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: 1.0 steps Inside 35 yd ln", homeVisitor: "8.0 steps Behind Visitor Hash", form: "Line full battery", tip: "Transition starting position" }
-      ],
+        ],
       "4": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: 1.0 steps Outside 40 yd ln", homeVisitor: "18.0 steps Behind Visitor Hash", form: "Concert formation", tip: "Ballad starting position" }
-      ],
+        ],
       "5": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: 2.0 steps Inside 45 yd ln", homeVisitor: "21.0 steps In Front Of Home Hash", form: "Scattered", tip: "Closer starting position" }
-      ]
+        ]
     }
   },
   BD2: {
@@ -314,17 +269,13 @@ export const performerData = {
         { set: 9, measures: "35 - 43", counts: "36", leftRight: "Left: 2.0 steps Outside 40 yd ln", homeVisitor: "10.0 steps Behind Home Hash", form: "Line Full Battery", tip: "Forward (18-to-5) for 12 counts, then hold for 24 counts", nextSet: "End of drill" }
       ],
       "2": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: 2.0 steps Outside 50 yd ln", homeVisitor: "8.0 steps Behind Home Hash", form: "Scattered", tip: "Starting position" }
-      ],
+        ],
       "3": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: 3.0 steps Outside 35 yd ln", homeVisitor: "10.0 steps Behind Visitor Hash", form: "Line full battery", tip: "Transition starting position" }
-      ],
+        ],
       "4": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: 3.0 steps Inside 40 yd ln", homeVisitor: "20.0 steps Behind Visitor Hash", form: "Concert formation", tip: "Ballad starting position" }
-      ],
+        ],
       "5": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: 1.0 steps Outside 45 yd ln", homeVisitor: "On Front Sideline", form: "Scattered", tip: "Closer starting position" }
-      ]
+         ]
     }
   },
   BD3: {
@@ -343,17 +294,13 @@ export const performerData = {
         { set: 9, measures: "35 - 43", counts: "36", leftRight: "Left: 1.0 steps Inside 40 yd ln", homeVisitor: "10.0 steps Behind Home Hash", form: "Line Full Battery", tip: "Forward (18-to-5) for 12 counts, then hold for 24 counts", nextSet: "End of drill" }
       ],
       "2": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: 3.0 steps Inside 50 yd ln", homeVisitor: "10.0 steps Behind Home Hash", form: "Scattered", tip: "Starting position" }
-      ],
+        ],
       "3": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: On 35 yd ln", homeVisitor: "12.0 steps Behind Visitor Hash", form: "Line full battery", tip: "Transition starting position" }
-      ],
+         ],
       "4": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: On 40 yd ln", homeVisitor: "On Back Sideline", form: "Concert formation", tip: "Ballad starting position" }
-      ],
+       ],
       "5": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: 4.0 steps Inside 45 yd ln", homeVisitor: "2.0 steps In Front Of Front Sideline", form: "Scattered", tip: "Closer starting position" }
-      ]
+         ]
     }
   },
   BD4: {
@@ -372,17 +319,13 @@ export const performerData = {
         { set: 9, measures: "35 - 43", counts: "36", leftRight: "Left: 4.0 steps Inside 40 yd ln", homeVisitor: "10.0 steps Behind Home Hash", form: "Line Full Battery", tip: "Forward (18-to-5) for 12 counts, then hold for 24 counts", nextSet: "End of drill" }
       ],
       "2": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: 1.0 steps Outside 50 yd ln", homeVisitor: "12.0 steps Behind Home Hash", form: "Scattered", tip: "Starting position" }
-      ],
+         ],
       "3": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: 2.0 steps Inside 35 yd ln", homeVisitor: "14.0 steps Behind Visitor Hash", form: "Line full battery", tip: "Transition starting position" }
-      ],
+       ],
       "4": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: 2.0 steps Outside 40 yd ln", homeVisitor: "2.0 steps In Front Of Back Sideline", form: "Concert formation", tip: "Ballad starting position" }
-      ],
+        ],
       "5": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: 3.0 steps Outside 45 yd ln", homeVisitor: "4.0 steps In Front Of Front Sideline", form: "Scattered", tip: "Closer starting position" }
-      ]
+         ]
     }
   },
   BD5: {
@@ -401,17 +344,13 @@ export const performerData = {
         { set: 9, measures: "35 - 43", counts: "36", leftRight: "Left: 1.0 steps Outside 45 yd ln", homeVisitor: "10.0 steps Behind Home Hash", form: "Line Full Battery", tip: "Forward (18-to-5) for 12 counts, then hold for 24 counts", nextSet: "End of drill" }
       ],
       "2": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: 2.0 steps Outside 50 yd ln", homeVisitor: "14.0 steps Behind Home Hash", form: "Scattered", tip: "Starting position" }
-      ],
+         ],
       "3": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: 1.0 steps Outside 35 yd ln", homeVisitor: "16.0 steps Behind Visitor Hash", form: "Line full battery", tip: "Transition starting position" }
-      ],
+         ],
       "4": [
-        { set: 1, measures: "0", counts: "", leftRight: "Right: 4.0 steps Inside 40 yd ln", homeVisitor: "4.0 steps In Front Of Back Sideline", form: "Concert formation", tip: "Ballad starting position" }
-      ],
+       ],
       "5": [
-        { set: 1, measures: "0", counts: "", leftRight: "Left: On 45 yd ln", homeVisitor: "6.0 steps In Front Of Front Sideline", form: "Scattered", tip: "Closer starting position" }
-      ]
+       ]
     }
   }
 };
