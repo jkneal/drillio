@@ -75,7 +75,7 @@ const MovementSelectionPage = () => {
               <img 
                 src="/transient.png" 
                 alt="Transient" 
-                className="h-8 mt-1 mx-auto"
+                className="h-8 mx-auto"
                 onError={(e) => {
                   e.target.style.display = 'none';
                 }}

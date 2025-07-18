@@ -52,7 +52,7 @@ const HomePage = () => {
                 <img 
                   src="/transient.png" 
                   alt="Transient" 
-                  className="h-16 mt-1 mx-auto"
+                  className="h-16 mx-auto"
                   onError={(e) => {
                     e.target.style.display = 'none';
                   }}

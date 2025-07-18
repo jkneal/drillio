@@ -31,7 +31,7 @@ const AboutPage = () => {
                 <img 
                   src="/transient.png" 
                   alt="Transient" 
-                  className="h-8 mt-0.5 mx-auto"
+                  className="h-8 mx-auto"
                   onError={(e) => {
                     e.target.style.display = 'none';
                   }}
