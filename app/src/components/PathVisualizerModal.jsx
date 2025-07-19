@@ -741,6 +741,10 @@ const PathVisualizerModal = ({
           // Same position, add to current group
           currentGroup.sets.push(set.set);
           currentGroup.endIndex = i;
+          // Update orientation to the last set's orientation in the group
+          if (set.orientation) {
+            currentGroup.orientation = set.orientation;
+          }
         } else {
           // New position, create new group
           currentGroup = {
@@ -748,7 +752,8 @@ const PathVisualizerModal = ({
             y,
             sets: [set.set],
             startIndex: i,
-            endIndex: i
+            endIndex: i,
+            orientation: set.orientation || 'Front'
           };
           groupedSets.push(currentGroup);
         }
@@ -796,6 +801,48 @@ const PathVisualizerModal = ({
         ctx.arc(group.x, group.y / ASPECT_RATIO, 8, 0, 2 * Math.PI);
         ctx.restore();
         ctx.fill();
+        
+        // Draw orientation arrow
+        if (group.orientation) {
+          ctx.save();
+          ctx.translate(group.x, group.y);
+          
+          // Map orientation to angle
+          // Note: 0 radians points right, PI/2 points down, PI points left, -PI/2 points up
+          let angle = 0;
+          switch (group.orientation) {
+            case 'Front':
+              angle = -Math.PI / 2; // Points up (toward front/home sideline)
+              break;
+            case 'Back':
+              angle = Math.PI / 2; // Points down (toward back/visitor sideline)
+              break;
+            case 'Left End Zone':
+              angle = Math.PI; // Points left (facing left end zone)
+              break;
+            case 'Right End Zone':
+              angle = 0; // Points right (facing right end zone)
+              break;
+          }
+          
+          ctx.rotate(angle);
+          
+          // Draw arrow pointing right before rotation
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2;
+          ctx.globalAlpha = isCurrentPosition ? 1 : 0.7;
+          ctx.beginPath();
+          // Arrow pointing right (positive x direction)
+          ctx.moveTo(12, 0);
+          ctx.lineTo(8, -4);
+          ctx.moveTo(12, 0);
+          ctx.lineTo(8, 4);
+          ctx.moveTo(12, 0);
+          ctx.lineTo(4, 0);
+          ctx.stroke();
+          
+          ctx.restore();
+        }
         
         // Draw set number(s)
         ctx.fillStyle = '#ffffff';

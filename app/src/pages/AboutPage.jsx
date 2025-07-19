@@ -192,6 +192,7 @@ const AboutPage = () => {
                   <li>Zoom mode to focus on specific areas with detailed navigation</li>
                   <li>Yellow 4-step interval marks on yard lines for precise positioning</li>
                   <li>Staff view with performer selection dropdown</li>
+                  <li>Orientation arrows indicating which direction performers are facing at each position</li>
                 </ul>
               </div>
             </div>

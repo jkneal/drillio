@@ -1,52 +1,43 @@
 const fs = require('fs');
 const path = require('path');
 
-// Helper function to parse yard line position to numeric value
+// Helper: convert a "Left: 3 steps Inside 40 yd ln" string
+//          → x-coordinate on 0-to-120 drill grid
 function parseYardLineToPosition(leftRight) {
-  const match = leftRight.match(/^(Left|Right):\s*(?:(\d+(?:\.\d+)?)\s*steps?\s*(Inside|Outside))?\s*(?:On\s+)?(\d+)\s*yd\s*ln$/i);
+  // Same pattern, still case-insensitive (note the /i flag)
+  const match = leftRight.match(
+      /^(Left|Right):\s*(?:(\d+(?:\.\d+)?)\s*steps?\s*(Inside|Outside))?\s*(?:On\s+)?(\d+)\s*yd\s*ln$/i
+  );
   if (!match) return null;
-  
-  const [, side, steps = '0', inOut, yardLine] = match;
-  const yardLineNum = parseInt(yardLine);
-  const stepsNum = parseFloat(steps);
-  
-  // Use the same coordinate system as PathVisualizerModal
-  // Field center = 60, range 0-120 
-  // "Left" coordinates = higher x values (right side of screen in visualizer)
-  // "Right" coordinates = lower x values (left side of screen in visualizer)
+
+  // ─── Normalise capture groups ────────────────────────────────
+  const [, rawSide, steps = '0', rawInOut = '', yardLine] = match;
+  const side  = rawSide.toLowerCase();      // 'left' | 'right'
+  const inOut = rawInOut.toLowerCase();     // 'inside' | 'outside' | ''
+  const yardLineNum  = parseInt(yardLine, 10);
+  const stepsNum     = parseFloat(steps);
+
+  // ─── Base position (no offset yet) ───────────────────────────
+  // Field centre = 60 (0-120 grid); left = higher x on visualiser
   let position;
-  
-  if (side === 'Left') {
-    // Left = right side of screen in visualizer
-    position = 60 + (50 - yardLineNum) * 1.6;
-  } else {
-    // Right = left side of screen in visualizer  
-    position = 60 - (50 - yardLineNum) * 1.6;
+  if (side === 'left') {
+    position = 60 + (50 - yardLineNum) * 1.6;  // left side of field
+  } else { // 'right'
+    position = 60 - (50 - yardLineNum) * 1.6;  // right side of field
   }
-  
-  // Apply step offset - convert steps to coordinate units (0.625 yards per step * 1.6 steps per yard = 1.0)
-  const stepOffsetCoords = stepsNum * 0.625 * 1.6; // 1 step = 0.625 yards, 1 yard = 1.6 coord units
-  
-  if (inOut === 'Inside') {
-    // Inside means toward the 50
-    if (side === 'Left') {
-      // Left side: Inside goes toward center (smaller x)
-      position -= stepOffsetCoords;
-    } else {
-      // Right side: Inside goes toward center (larger x)
-      position += stepOffsetCoords;
-    }
-  } else if (inOut === 'Outside') {
-    // Outside means away from the 50
-    if (side === 'Left') {
-      // Left side: Outside goes away from center (larger x)
-      position += stepOffsetCoords;
-    } else {
-      // Right side: Outside goes away from center (smaller x)
-      position -= stepOffsetCoords;
-    }
+
+  // ─── Step offsets (convert steps → coordinate units) ─────────
+  // 1 step = 0.625 yd; 1 yd = 1.6 coord units → 1 step = 1 coord
+  const stepOffsetCoords = stepsNum * 0.625 * 1.6; // == stepsNum * 1.0
+
+  if (inOut === 'inside') {
+    // Inside = toward the 50-yd line (centre of field)
+    position += (side === 'left' ? -1 : 1) * stepOffsetCoords;
+  } else if (inOut === 'outside') {
+    // Outside = away from the 50-yd line
+    position += (side === 'left' ? 1 : -1) * stepOffsetCoords;
   }
-  
+
   return position;
 }
 
@@ -159,56 +150,31 @@ function getDirectionDescription(angle) {
   angle = angle % 360;
   if (angle < 0) angle += 360;
   
-  // Use pure directions for angles within 10 degrees of cardinal directions
-  if (angle >= 350 || angle <= 10) {
+  // Use pure directions for angles within 5 degrees of cardinal directions
+  if (angle >= 355 || angle <= 5) {
     return 'Forward';
-  } else if (angle >= 80 && angle <= 100) {
+  } else if (angle >= 85 && angle <= 95) {
     return 'Right';
-  } else if (angle >= 170 && angle <= 190) {
+  } else if (angle >= 175 && angle <= 185) {
     return 'Backward';
-  } else if (angle >= 260 && angle <= 280) {
+  } else if (angle >= 265 && angle <= 275) {
     return 'Left';
   }
   
-  // For diagonal directions, use tighter ranges
-  // Each diagonal gets a 30-degree range centered on the 45-degree marks
+  // For diagonal directions, fill in the gaps between pure directions
   
-  if (angle > 10 && angle < 80) {
-    // 10-80 degrees: Right Forward quadrant
-    if (angle <= 30) {
-      return 'Right Forward';  // Mostly forward with right
-    } else if (angle >= 60) {
-      return 'Right Forward';  // Mostly right with forward
-    } else {
-      return 'Right Forward';  // True diagonal
-    }
-  } else if (angle > 100 && angle < 170) {
-    // 100-170 degrees: Right Backward quadrant
-    if (angle <= 120) {
-      return 'Right Backward';  // Mostly right with backward
-    } else if (angle >= 150) {
-      return 'Right Backward';  // Mostly backward with right
-    } else {
-      return 'Right Backward';  // True diagonal
-    }
-  } else if (angle > 190 && angle < 260) {
-    // 190-260 degrees: Left Backward quadrant
-    if (angle <= 210) {
-      return 'Left Backward';  // Mostly backward with left
-    } else if (angle >= 240) {
-      return 'Left Backward';  // Mostly left with backward
-    } else {
-      return 'Left Backward';  // True diagonal
-    }
-  } else if (angle > 280 && angle < 350) {
-    // 280-350 degrees: Left Forward quadrant
-    if (angle <= 300) {
-      return 'Left Forward';  // Mostly left with forward
-    } else if (angle >= 330) {
-      return 'Left Forward';  // Mostly forward with left
-    } else {
-      return 'Left Forward';  // True diagonal
-    }
+  if (angle > 5 && angle < 85) {
+    // 5-85 degrees: Right Forward quadrant
+    return 'Right Forward';
+  } else if (angle > 95 && angle < 175) {
+    // 95-175 degrees: Right Backward quadrant
+    return 'Right Backward';
+  } else if (angle > 185 && angle < 265) {
+    // 185-265 degrees: Left Backward quadrant
+    return 'Left Backward';
+  } else if (angle > 275 && angle < 355) {
+    // 275-355 degrees: Left Forward quadrant
+    return 'Left Forward';
   }
   
   // Fallback (should not reach here)
@@ -249,7 +215,8 @@ function parsePerformerSection(lines) {
     
     // Parse set data - now includes optional Title column
     // First try new format with Title column - updated to handle decimal measures like "28.5" and "Opening S"
-    let setMatch = line.match(/^(\d+)\s+[\w-]+\s+([\d\s\-.]+|Opening\s+S)\s+(Left|Right):\s*(.+?)\s+((?:\d+\.?\d*\s*steps?\s*.+|On\s+.+))$/);
+    // Also handle "46 to End" format by allowing spaces in title column
+    let setMatch = line.match(/^(\d+)\s+[\w\s-]+\s+([\d\s\-.]+|Opening\s+S|46\s+to\s+End)\s+(Left|Right):\s*(.+?)\s+((?:\d+\.?\d*\s*steps?\s*.+|On\s+.+))$/);
     
     if (!setMatch) {
       // Try old format without Title column (for backward compatibility)
@@ -621,12 +588,16 @@ function updatePerformerData(coordinatesPath, existingData) {
           result.form = forms[performerType][movement][set.set];
         }
         
+        // Add orientation for the current set
+        const currentOrientation = orientations[performerType]?.[movement]?.[set.set] || 'Front';
+        result.orientation = currentOrientation;
+        
         // Generate tip and movement vector
         if (index > 0) {
           const prevSet = sets[index - 1];
           // Get orientation for the PREVIOUS set (where we're moving FROM)
-          const orientation = orientations[performerType]?.[movement]?.[prevSet.set] || 'Front';
-          const { tip, movementVector } = generateTipAndVector(set, prevSet, countInfo, forms, counts, orientation);
+          const prevOrientation = orientations[performerType]?.[movement]?.[prevSet.set] || 'Front';
+          const { tip, movementVector } = generateTipAndVector(set, prevSet, countInfo, forms, counts, prevOrientation);
           result.tip = tip;
           if (movementVector !== null) {
             result.movementVector = movementVector;
