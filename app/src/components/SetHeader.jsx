@@ -1,4 +1,4 @@
-import { Map, Music, Sparkles, StickyNote } from 'lucide-react';
+import { Map, Music, Sparkles, StickyNote, Route } from 'lucide-react';
 import { setNicknamesConfig } from '../data/setNicknamesConfig';
 
 const SetHeader = ({ 
@@ -8,8 +8,10 @@ const SetHeader = ({
   onDrillChartClick,
   onMusicClick,
   onNotesClick,
+  onPathVisualizerClick,
   movement,
-  hasNote = false
+  hasNote = false,
+  musicAvailable = false
 }) => {
   // Convert setNumber to string for config lookup
   const nickname = movement && setNumber && setNicknamesConfig[movement]?.[String(setNumber)];
@@ -25,7 +27,7 @@ const SetHeader = ({
         >
           <Map className="w-5 h-5 text-blue-300" />
         </button>
-        {showMusicIcon && setNumber > 1 && (
+        {showMusicIcon && setNumber > 1 && musicAvailable && (
           <button
             onClick={onMusicClick}
             className="ml-2 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg p-icon transition-all duration-200"
@@ -44,6 +46,15 @@ const SetHeader = ({
             {hasNote && (
               <div className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-400 rounded-full"></div>
             )}
+          </button>
+        )}
+        {onPathVisualizerClick && (
+          <button
+            onClick={onPathVisualizerClick}
+            className="ml-2 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg p-icon transition-all duration-200"
+            title="Path visualization"
+          >
+            <Route className="w-5 h-5 text-blue-300" />
           </button>
         )}
       </div>

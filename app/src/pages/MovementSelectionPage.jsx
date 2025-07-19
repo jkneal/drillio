@@ -93,7 +93,7 @@ const MovementSelectionPage = () => {
               <div key={movement} className={`${hasSets ? 'bg-red-600/20 hover:bg-red-600/30' : 'bg-gray-600/20'} rounded-lg backdrop-blur-sm transition-all duration-200 border ${hasSets ? 'border-red-500/30' : 'border-gray-500/30'} overflow-hidden`}>
                 <button
                   onClick={() => hasSets && handleMovementSelect(movement)}
-                  className={`w-full text-white px-4 pt-4 pb-2 text-left ${!hasSets && 'cursor-not-allowed opacity-50'}`}
+                  className={`w-full text-white px-4 pt-4 ${hasSets ? 'pb-2' : 'pb-4'} text-left ${!hasSets && 'cursor-not-allowed opacity-50'}`}
                   disabled={!hasSets}
                 >
                   <div className="font-semibold text-lg">{movementsConfig[movement]?.displayName || movement}</div>
@@ -111,19 +111,15 @@ const MovementSelectionPage = () => {
                       <Play className="w-4 h-4 mr-1" />
                       <span>Preview</span>
                     </button>
-                    {selectedPerformer !== 'Staff' && (
-                      <>
-                        <span className="text-white/30">|</span>
-                        <button
-                          onClick={() => handlePathVisualizerClick(movement)}
-                          className="flex items-center text-blue-300 hover:text-blue-200 text-sm transition-colors"
-                          title="View movement path"
-                        >
-                          <Route className="w-4 h-4 mr-1" />
-                          <span>Path</span>
-                        </button>
-                      </>
-                    )}
+                    <span className="text-white/30">|</span>
+                    <button
+                      onClick={() => handlePathVisualizerClick(movement)}
+                      className="flex items-center text-blue-300 hover:text-blue-200 text-sm transition-colors"
+                      title="View movement path"
+                    >
+                      <Route className="w-4 h-4 mr-1" />
+                      <span>Path</span>
+                    </button>
                   </div>
                 )}
               </div>
@@ -211,9 +207,10 @@ const MovementSelectionPage = () => {
         <PathVisualizerModal
           show={showPathVisualizer}
           onClose={() => setShowPathVisualizer(false)}
-          performerData={performerData[selectedPerformer]}
+          performerData={selectedPerformer === 'Staff' ? null : performerData[selectedPerformer]}
           movement={currentMovementPath}
-          performerId={selectedPerformer}
+          performerId={selectedPerformer === 'Staff' ? null : selectedPerformer}
+          isStaffView={selectedPerformer === 'Staff'}
         />
       </div>
     </div>

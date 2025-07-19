@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Home, SkipBack, SkipForward, Users } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Home, SkipBack, SkipForward, Users, Route } from 'lucide-react';
 import { performerData } from '../data/performerData';
 import { movementsConfig } from '../data/movementsConfig';
+import { musicConfig } from '../data/musicConfig';
 import MusicModal from '../components/MusicModal';
 import DrillChartModal from '../components/DrillChartModal';
 import SetHeader from '../components/SetHeader';
@@ -29,6 +30,7 @@ const DrillPage = () => {
       navigate('/');
     }
   }, [navigate]);
+
 
   if (!selectedPerformer || !performerData[selectedPerformer] || !movement) {
     return null;
@@ -65,9 +67,46 @@ const DrillPage = () => {
     setCurrentSet(currentMovement.length - 1);
   };
 
+  const getMusicAvailability = (movement, performerKey, setNumber) => {
+    // Movement should be a string like "1", "2", etc.
+    const movementNum = movement.match(/\d+/)?.[0] || '1';
+    
+    // Determine the instrument prefix
+    let prefix = performerKey;
+    if (performerKey.startsWith('SD')) {
+      prefix = 'SD';
+    } else if (performerKey.startsWith('TD')) {
+      prefix = 'TD';
+    } else if (performerKey.startsWith('BD')) {
+      prefix = 'BD';
+    }
+    
+    // Check if music is available in the config
+    return musicConfig[movementNum]?.[prefix]?.[String(setNumber)] || false;
+  };
 
   const getDrillChartPath = (movementNum, setNumber) => {
     return `/drill/${movementNum}-${setNumber}.png`;
+  };
+
+
+  const getMusicImagePath = (setNum) => {
+    const movementNum = movement.match(/\d+/)?.[0] || '1';
+    if (selectedPerformer === 'Staff') {
+      return `/music/Staff${movementNum}-${setNum}.png`;
+    }
+    
+    // Determine prefix based on performer key
+    let prefix = selectedPerformer;
+    if (selectedPerformer.startsWith('SD')) {
+      prefix = 'SD';
+    } else if (selectedPerformer.startsWith('TD')) {
+      prefix = 'TD';
+    } else if (selectedPerformer.startsWith('BD')) {
+      prefix = 'BD';
+    }
+    
+    return `/music/${prefix}${movementNum}-${setNum}.png`;
   };
 
   const handleMusicClick = () => {
@@ -83,6 +122,7 @@ const DrillPage = () => {
   const handleNotesClick = () => {
     setShowNotes(true);
   };
+
 
   const checkHasNote = (performerId, movement, setNumber) => {
     const key = `note_${performerId}_${movement}_${setNumber}`;
@@ -203,9 +243,11 @@ const DrillPage = () => {
               subtitle="All Performers"
               onDrillChartClick={handleDrillChartClick}
               onMusicClick={handleMusicClick}
+              onPathVisualizerClick={null}
               movement={movement}
               onNotesClick={null}
               hasNote={false}
+              musicAvailable={getMusicAvailability(movement, 'Staff', setNumber)}
             />
 
             <div className="space-y-3">
@@ -272,6 +314,7 @@ const DrillPage = () => {
             performerKey={selectedPerformer}
             totalSets={currentMovement.length}
           />
+
         </div>
       </div>
     );
@@ -330,8 +373,10 @@ const DrillPage = () => {
             onDrillChartClick={handleDrillChartClick}
             onMusicClick={handleMusicClick}
             onNotesClick={handleNotesClick}
+            onPathVisualizerClick={null}
             movement={movement}
             hasNote={checkHasNote(selectedPerformer, movement, currentSetData.set)}
+            musicAvailable={getMusicAvailability(movement, selectedPerformer, currentSetData.set)}
           />
 
           <div className="space-y-4">
@@ -413,6 +458,7 @@ const DrillPage = () => {
           setNumber={currentSetData.set}
           performerId={selectedPerformer}
         />
+
       </div>
     </div>
   );

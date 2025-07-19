@@ -109,25 +109,45 @@ function getDirectionDescription(angle) {
   angle = angle % 360;
   if (angle < 0) angle += 360;
   
+  // Only use "Right" or "Left" if within 1 degree of exactly 90° or 270°
+  if (angle >= 89 && angle <= 91) {
+    return 'Right';
+  } else if (angle >= 269 && angle <= 271) {
+    return 'Left';
+  }
+  
   // Define the 8 cardinal/intercardinal directions
   // Each direction covers 45 degrees (22.5 on each side)
+  // 0° = Forward, 90° = Right, 180° = Backward, 270° = Left
+  // Think of it as: which primary direction are you mostly going, with what modifier?
+  
   if ((angle >= 337.5) || (angle < 22.5)) {
     return 'Forward';
   } else if (angle >= 22.5 && angle < 67.5) {
-    return 'Right Forward';
+    return 'Right Forward';  // Mostly forward, slightly right
   } else if (angle >= 67.5 && angle < 112.5) {
-    return 'Right';
+    // Mostly right - but need to determine forward or backward
+    if (angle < 90) {
+      return 'Right Forward';  // 67.5-89: mostly right, slightly forward
+    } else {
+      return 'Right Backward'; // 91-112.5: mostly right, slightly backward
+    }
   } else if (angle >= 112.5 && angle < 157.5) {
-    return 'Right Backward';
+    return 'Right Backward';  // Mostly backward, slightly right
   } else if (angle >= 157.5 && angle < 202.5) {
     return 'Backward';
   } else if (angle >= 202.5 && angle < 247.5) {
-    return 'Left Backward';
+    return 'Left Backward';  // Mostly backward, slightly left
   } else if (angle >= 247.5 && angle < 292.5) {
-    return 'Left';
+    // Mostly left - but need to determine forward or backward
+    if (angle < 270) {
+      return 'Left Backward';  // 247.5-269: mostly left, slightly backward
+    } else {
+      return 'Left Forward';   // 271-292.5: mostly left, slightly forward
+    }
   } else {
     // 292.5 to 337.5
-    return 'Left Forward';
+    return 'Left Forward';  // Mostly forward, slightly left
   }
 }
 
@@ -160,23 +180,34 @@ function parsePerformerSection(lines) {
     }
     
     // Skip header lines
-    if (line.includes('Set Measure Counts Left-Right Home-Visitor')) continue;
+    if (line.includes('Set Title Measure Left-Right Home-Visitor') || 
+        line.includes('Set Measure Counts Left-Right Home-Visitor')) continue;
     
-    // Parse set data
-    // Try to match set data - the home-visitor part can start with either a number or "On"
-    let setMatch = line.match(/^(\d+)\s+(sub\s+\d+)\s*(\d+)\s+(Left|Right):\s*(.+?)\s+((?:\d+\.?\d*\s*steps?\s*.+|On\s+.+))$/);
+    // Parse set data - now includes optional Title column
+    // First try new format with Title column - updated to handle decimal measures like "28.5" and "Opening S"
+    let setMatch = line.match(/^(\d+)\s+[\w-]+\s+([\d\s\-.]+|Opening\s+S)\s+(Left|Right):\s*(.+?)\s+((?:\d+\.?\d*\s*steps?\s*.+|On\s+.+))$/);
+    
     if (!setMatch) {
-      // Try pattern for normal measures like "2 - 13"
-      setMatch = line.match(/^(\d+)\s+([\d\s-]+)\s+(\d+)\s+(Left|Right):\s*(.+?)\s+((?:\d+\.?\d*\s*steps?\s*.+|On\s+.+))$/);
-    }
-    if (!setMatch) {
-      // Try pattern for set 1 with no counts
-      setMatch = line.match(/^(\d+)\s+(\d+)\s+(Left|Right):\s*(.+?)\s+((?:\d+\.?\d*\s*steps?\s*.+|On\s+.+))$/);
-      if (setMatch) {
-        // Rearrange to match expected format
-        const [, setNum, measures, side, leftRight, homeVisitor] = setMatch;
-        setMatch = [setMatch[0], setNum, measures, '', side, leftRight, homeVisitor];
+      // Try old format without Title column (for backward compatibility)
+      // Try to match set data - the home-visitor part can start with either a number or "On"
+      setMatch = line.match(/^(\d+)\s+(sub\s+\d+)\s*(\d+)\s+(Left|Right):\s*(.+?)\s+((?:\d+\.?\d*\s*steps?\s*.+|On\s+.+))$/);
+      if (!setMatch) {
+        // Try pattern for normal measures like "2 - 13"
+        setMatch = line.match(/^(\d+)\s+([\d\s-]+)\s+(\d+)\s+(Left|Right):\s*(.+?)\s+((?:\d+\.?\d*\s*steps?\s*.+|On\s+.+))$/);
       }
+      if (!setMatch) {
+        // Try pattern for set 1 with no counts
+        setMatch = line.match(/^(\d+)\s+(\d+)\s+(Left|Right):\s*(.+?)\s+((?:\d+\.?\d*\s*steps?\s*.+|On\s+.+))$/);
+        if (setMatch) {
+          // Rearrange to match expected format
+          const [, setNum, measures, side, leftRight, homeVisitor] = setMatch;
+          setMatch = [setMatch[0], setNum, measures, '', side, leftRight, homeVisitor];
+        }
+      }
+    } else {
+      // New format detected - extract without counts (Title format doesn't have counts column)
+      const [, setNum, measures, side, leftRight, homeVisitor] = setMatch;
+      setMatch = [setMatch[0], setNum, measures, '', side, leftRight, homeVisitor];
     }
     
     if (setMatch && currentPerformer && currentMovement) {
@@ -429,10 +460,33 @@ function updatePerformerData(coordinatesPath, existingData) {
       
       // Process new/updated sets
       sets.forEach((set, index) => {
+        // Get count information from count tables
+        const countInfo = counts[performerType]?.[movement]?.[set.set] || '';
+        
+        // Calculate total counts from the count info
+        let totalCounts = '';
+        if (countInfo) {
+          let total = 0;
+          // Extract hold counts
+          const holdMatches = countInfo.matchAll(/Hold\s+(\d+)/g);
+          for (const match of holdMatches) {
+            total += parseInt(match[1]);
+          }
+          // Extract move counts
+          const moveMatch = countInfo.match(/Move\s+(\d+)/);
+          if (moveMatch) {
+            total += parseInt(moveMatch[1]);
+          }
+          // Only set counts if we found any
+          if (total > 0) {
+            totalCounts = total.toString();
+          }
+        }
+        
         const result = {
           set: set.set,
           measures: set.measures,
-          counts: set.counts,
+          counts: totalCounts,
           leftRight: set.leftRight,
           homeVisitor: set.homeVisitor
         };
@@ -445,7 +499,6 @@ function updatePerformerData(coordinatesPath, existingData) {
         // Generate tip and movement vector
         if (index > 0) {
           const prevSet = sets[index - 1];
-          const countInfo = counts[performerType]?.[movement]?.[set.set] || '';
           const { tip, movementVector } = generateTipAndVector(set, prevSet, countInfo, forms, counts);
           result.tip = tip;
           if (movementVector !== null) {
