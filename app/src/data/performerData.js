@@ -39,9 +39,6 @@ export const performerData = {
         },
         {
           "set": 12
-        },
-        {
-          "set": 13
         }
       ],
       "2": [],
@@ -139,8 +136,8 @@ export const performerData = {
           "leftRight": "Left: 3.75 steps inside 45 yd ln",
           "homeVisitor": "8.5 steps in front of Visitor Hash",
           "form": "Scattered, Turn backfield",
-          "tip": "Move Left Forward (7-to-5) for 16 counts",
-          "movementVector": 292
+          "tip": "Move Right Backward (7-to-5) for 16 counts",
+          "movementVector": 112
         },
         {
           "set": 10,
@@ -149,8 +146,8 @@ export const performerData = {
           "leftRight": "Right: 2.0 steps outside 50 yd ln",
           "homeVisitor": "8.0 steps in front of Visitor Hash",
           "form": "Battery Line, Turn to end zone",
-          "tip": "Move Left Backward (8-to-5) for 8 counts, then hold for 6 counts",
-          "movementVector": 266
+          "tip": "Move Right (8-to-5) for 8 counts, then hold for 6 counts",
+          "movementVector": 86
         },
         {
           "set": 11,
@@ -159,8 +156,8 @@ export const performerData = {
           "leftRight": "Right: On 45 yd ln",
           "homeVisitor": "11.0 steps behind Home Hash",
           "form": "Battery Line, Turn to front first 2 counts",
-          "tip": "Move Right Forward (6-to-5) for 10 counts, then hold for 40 counts",
-          "movementVector": 40
+          "tip": "Move Left Forward (6-to-5) for 10 counts, then hold for 40 counts",
+          "movementVector": 320
         },
         {
           "set": 12,
@@ -169,8 +166,8 @@ export const performerData = {
           "leftRight": "Left: 1.5 steps inside 45 yd ln",
           "homeVisitor": "7.75 steps behind Home Hash",
           "form": "Battery Arc",
-          "tip": "Move Forward (39-to-5) for 16 counts",
-          "movementVector": 0
+          "tip": "Move Right Forward (8-to-5) for 16 counts",
+          "movementVector": 79
         },
         {
           "set": 13,
@@ -277,8 +274,8 @@ export const performerData = {
           "leftRight": "Left: 2.0 steps outside 50 yd ln",
           "homeVisitor": "4.0 steps in front of Visitor Hash",
           "form": "Scattered, Turn backfield",
-          "tip": "Move Left Forward (8-to-5) for 16 counts",
-          "movementVector": 287
+          "tip": "Move Right Backward (8-to-5) for 16 counts",
+          "movementVector": 107
         },
         {
           "set": 10,
@@ -287,8 +284,8 @@ export const performerData = {
           "leftRight": "Right: 4.0 steps outside 50 yd ln",
           "homeVisitor": "8.0 steps in front of Visitor Hash",
           "form": "Battery Line, Turn to end zone",
-          "tip": "Move Forward (16-to-5) for 8 counts, then hold for 6 counts",
-          "movementVector": 0
+          "tip": "Move Backward (16-to-5) for 8 counts, then hold for 6 counts",
+          "movementVector": 180
         },
         {
           "set": 11,
@@ -297,8 +294,8 @@ export const performerData = {
           "leftRight": "Right: 2.0 steps outside 45 yd ln",
           "homeVisitor": "11.0 steps behind Home Hash",
           "form": "Battery Line, Turn to front first 2 counts",
-          "tip": "Move Right Forward (6-to-5) for 10 counts, then hold for 40 counts",
-          "movementVector": 40
+          "tip": "Move Left Forward (6-to-5) for 10 counts, then hold for 40 counts",
+          "movementVector": 320
         },
         {
           "set": 12,
@@ -307,8 +304,8 @@ export const performerData = {
           "leftRight": "Left: 3.25 steps inside 45 yd ln",
           "homeVisitor": "8.25 steps behind Home Hash",
           "form": "Battery Arc",
-          "tip": "Move Forward (47-to-5) for 16 counts",
-          "movementVector": 0
+          "tip": "Move Right (8-to-5) for 16 counts",
+          "movementVector": 80
         },
         {
           "set": 13,
@@ -416,8 +413,8 @@ export const performerData = {
           "leftRight": "Right: 2.5 steps outside 50 yd ln",
           "homeVisitor": "3.0 steps in front of Visitor Hash",
           "form": "Scattered, Turn backfield",
-          "tip": "Move Left Forward (14-to-5) for 16 counts",
-          "movementVector": 302
+          "tip": "Move Right Backward (14-to-5) for 16 counts",
+          "movementVector": 122
         },
         {
           "set": 10,
@@ -426,8 +423,8 @@ export const performerData = {
           "leftRight": "Right: 2.0 steps inside 45 yd ln",
           "homeVisitor": "8.0 steps in front of Visitor Hash",
           "form": "Battery Line, Turn to end zone",
-          "tip": "Move Right Forward (7-to-5) for 8 counts, then hold for 6 counts",
-          "movementVector": 58
+          "tip": "Move Right Backward (7-to-5) for 8 counts, then hold for 6 counts",
+          "movementVector": 122
         },
         {
           "set": 11,
@@ -446,8 +443,8 @@ export const performerData = {
           "leftRight": "Left: 2.75 steps outside 50 yd ln",
           "homeVisitor": "8.75 steps behind Home Hash",
           "form": "Battery Arc",
-          "tip": "Move Left Forward (15-to-5) for 16 counts",
-          "movementVector": 286
+          "tip": "Move Right Forward (15-to-5) for 16 counts",
+          "movementVector": 74
         },
         {
           "set": 13,
@@ -553,8 +550,8 @@ export const performerData = {
           "leftRight": "Left: 4.0 steps inside 40 yd ln",
           "homeVisitor": "11.0 steps in front of Visitor Hash",
           "form": "Tenor Line, Turn backfield",
-          "tip": "Move Left (8-to-5) for 16 counts",
-          "movementVector": 270
+          "tip": "Move Right (8-to-5) for 16 counts",
+          "movementVector": 90
         },
         {
           "set": 10,
@@ -563,8 +560,8 @@ export const performerData = {
           "leftRight": "Left: 4.0 steps inside 45 yd ln",
           "homeVisitor": "8.0 steps in front of Visitor Hash",
           "form": "Battery Line, Turn to end zone",
-          "tip": "Move Left Backward (7-to-5) for 8 counts, then hold for 6 counts",
-          "movementVector": 249
+          "tip": "Move Right Forward (7-to-5) for 8 counts, then hold for 6 counts",
+          "movementVector": 69
         },
         {
           "set": 11,
@@ -691,8 +688,8 @@ export const performerData = {
           "leftRight": "Left: On 45 yd ln",
           "homeVisitor": "11.0 steps in front of Visitor Hash",
           "form": "Tenor Line, Turn backfield",
-          "tip": "Move Left (8-to-5) for 16 counts",
-          "movementVector": 270
+          "tip": "Move Right (8-to-5) for 16 counts",
+          "movementVector": 90
         },
         {
           "set": 10,
@@ -701,8 +698,8 @@ export const performerData = {
           "leftRight": "Left: 1.0 steps outside 50 yd ln",
           "homeVisitor": "8.0 steps in front of Visitor Hash",
           "form": "Battery Line, Turn to end zone",
-          "tip": "Move Left Backward (7-to-5) for 8 counts, then hold for 6 counts",
-          "movementVector": 249
+          "tip": "Move Right Forward (7-to-5) for 8 counts, then hold for 6 counts",
+          "movementVector": 69
         },
         {
           "set": 11,
@@ -711,8 +708,8 @@ export const performerData = {
           "leftRight": "Right: 3.0 steps inside 45 yd ln",
           "homeVisitor": "11.0 steps behind Home Hash",
           "form": "Battery Line, Turn to front first 2 counts",
-          "tip": "Move Right Forward (6-to-5) for 10 counts, then hold for 40 counts",
-          "movementVector": 40
+          "tip": "Move Left Forward (6-to-5) for 10 counts, then hold for 40 counts",
+          "movementVector": 320
         },
         {
           "set": 12,
@@ -721,8 +718,8 @@ export const performerData = {
           "leftRight": "Left: 1.25 steps outside 45 yd ln",
           "homeVisitor": "6.25 steps behind Home Hash",
           "form": "Battery Arc",
-          "tip": "Move Forward (27-to-5) for 16 counts",
-          "movementVector": 0
+          "tip": "Move Right Forward (8-to-5) for 16 counts",
+          "movementVector": 73
         },
         {
           "set": 13,
@@ -807,8 +804,8 @@ export const performerData = {
           "leftRight": "Left: 0.5 steps outside 40 yd ln",
           "homeVisitor": "5.5 steps in front of Visitor Hash",
           "form": "Scattered",
-          "tip": "Move Left Forward (8-to-5) for 8 counts",
-          "movementVector": 287
+          "tip": "Move Right Forward (8-to-5) for 8 counts",
+          "movementVector": 17
         },
         {
           "set": 8,
@@ -817,8 +814,8 @@ export const performerData = {
           "leftRight": "Left: 3.0 steps inside 45 yd ln",
           "homeVisitor": "6.0 steps in front of Visitor Hash",
           "form": "Scattered",
-          "tip": "Move Left Forward (8-to-5) for 8 counts, then hold for 8 counts",
-          "movementVector": 274
+          "tip": "Move Forward (8-to-5) for 8 counts, then hold for 8 counts",
+          "movementVector": 4
         },
         {
           "set": 9,
@@ -827,8 +824,8 @@ export const performerData = {
           "leftRight": "Right: 4.0 steps outside 50 yd ln",
           "homeVisitor": "8.0 steps in front of Visitor Hash",
           "form": "Scattered, Turn backfield",
-          "tip": "Move Left Forward (16-to-5) for 16 counts",
-          "movementVector": 284
+          "tip": "Move Right Backward (16-to-5) for 16 counts",
+          "movementVector": 104
         },
         {
           "set": 10,
@@ -847,8 +844,8 @@ export const performerData = {
           "leftRight": "Right: 1.0 steps inside 40 yd ln",
           "homeVisitor": "11.0 steps behind Home Hash",
           "form": "Battery Line, Turn to front first 2 counts, Turn to end zone next 4",
-          "tip": "Move Right Forward (6-to-5) for 10 counts, then hold for 40 counts",
-          "movementVector": 40
+          "tip": "Move Left Backward (6-to-5) for 10 counts, then hold for 40 counts",
+          "movementVector": 230
         },
         {
           "set": 12,
@@ -857,8 +854,8 @@ export const performerData = {
           "leftRight": "Right: 0.25 steps outside 50 yd ln",
           "homeVisitor": "9.0 steps behind Home Hash",
           "form": "Battery Arc",
-          "tip": "Move Left Forward (8-to-5) for 16 counts",
-          "movementVector": 277
+          "tip": "Move Forward (8-to-5) for 16 counts",
+          "movementVector": 353
         },
         {
           "set": 13,
@@ -943,8 +940,8 @@ export const performerData = {
           "leftRight": "Left: 2.0 steps outside 45 yd ln",
           "homeVisitor": "3.0 steps in front of Visitor Hash",
           "form": "Scattered",
-          "tip": "Move Left (8-to-5) for 8 counts",
-          "movementVector": 270
+          "tip": "Move Forward (8-to-5) for 8 counts",
+          "movementVector": 0
         },
         {
           "set": 8,
@@ -953,8 +950,8 @@ export const performerData = {
           "leftRight": "Left: 1.0 steps outside 50 yd ln",
           "homeVisitor": "3.0 steps in front of Visitor Hash",
           "form": "Scattered",
-          "tip": "Move Left (8-to-5) for 8 counts, then hold for 8 counts",
-          "movementVector": 270
+          "tip": "Move Forward (8-to-5) for 8 counts, then hold for 8 counts",
+          "movementVector": 0
         },
         {
           "set": 9,
@@ -963,8 +960,8 @@ export const performerData = {
           "leftRight": "Right: On 45 yd ln",
           "homeVisitor": "6.0 steps in front of Visitor Hash",
           "form": "Scattered, Turn backfield",
-          "tip": "Move Right Forward (15-to-5) for 16 counts",
-          "movementVector": 69
+          "tip": "Move Right Backward (15-to-5) for 16 counts",
+          "movementVector": 111
         },
         {
           "set": 10,
@@ -973,8 +970,8 @@ export const performerData = {
           "leftRight": "Right: 4.0 steps outside 45 yd ln",
           "homeVisitor": "8.0 steps in front of Visitor Hash",
           "form": "Battery Line, Turn to end zone",
-          "tip": "Move Forward (32-to-5) for 8 counts, then hold for 6 counts",
-          "movementVector": 0
+          "tip": "Move Backward (32-to-5) for 8 counts, then hold for 6 counts",
+          "movementVector": 180
         },
         {
           "set": 11,
@@ -983,8 +980,8 @@ export const performerData = {
           "leftRight": "Right: 2.0 steps outside 40 yd ln",
           "homeVisitor": "11.0 steps behind Home Hash",
           "form": "Battery Line, Turn to front first 2 counts, Turn to end zone next 4",
-          "tip": "Move Right Forward (6-to-5) for 10 counts, then hold for 40 counts",
-          "movementVector": 40
+          "tip": "Move Left Backward (6-to-5) for 10 counts, then hold for 40 counts",
+          "movementVector": 230
         },
         {
           "set": 12,
@@ -993,8 +990,8 @@ export const performerData = {
           "leftRight": "Right: 3.25 steps outside 50 yd ln",
           "homeVisitor": "9.0 steps behind Home Hash",
           "form": "Battery Arc",
-          "tip": "Move Left Forward (8-to-5) for 16 counts",
-          "movementVector": 277
+          "tip": "Move Forward (8-to-5) for 16 counts",
+          "movementVector": 353
         },
         {
           "set": 13,
@@ -1088,8 +1085,8 @@ export const performerData = {
           "leftRight": "Right: 1.5 steps outside 50 yd ln",
           "homeVisitor": "0.5 steps behind Visitor Hash",
           "form": "Scattered",
-          "tip": "Move Left Forward (8-to-5) for 8 counts, then hold for 8 counts",
-          "movementVector": 277
+          "tip": "Move Forward (8-to-5) for 8 counts, then hold for 8 counts",
+          "movementVector": 7
         },
         {
           "set": 9,
@@ -1098,8 +1095,8 @@ export const performerData = {
           "leftRight": "Right: 2.0 steps inside 40 yd ln",
           "homeVisitor": "7.0 steps in front of Visitor Hash",
           "form": "Scattered, Turn backfield",
-          "tip": "Move Right Forward (7-to-5) for 16 counts",
-          "movementVector": 65
+          "tip": "Move Right Backward (7-to-5) for 16 counts",
+          "movementVector": 115
         },
         {
           "set": 10,
@@ -1108,8 +1105,8 @@ export const performerData = {
           "leftRight": "Right: 1.0 steps inside 40 yd ln",
           "homeVisitor": "8.0 steps in front of Visitor Hash",
           "form": "Battery Line, Turn to end zone",
-          "tip": "Move Forward (64-to-5) for 8 counts, then hold for 6 counts",
-          "movementVector": 0
+          "tip": "Move Backward (64-to-5) for 8 counts, then hold for 6 counts",
+          "movementVector": 180
         },
         {
           "set": 11,
@@ -1118,8 +1115,8 @@ export const performerData = {
           "leftRight": "Right: 3.0 steps inside 35 yd ln",
           "homeVisitor": "11.0 steps behind Home Hash",
           "form": "Battery Line, Turn to front first 2 counts, Turn to end zone next 4",
-          "tip": "Move Right Forward (6-to-5) for 10 counts, then hold for 40 counts",
-          "movementVector": 40
+          "tip": "Move Left Backward (6-to-5) for 10 counts, then hold for 40 counts",
+          "movementVector": 230
         },
         {
           "set": 12,
@@ -1128,8 +1125,8 @@ export const performerData = {
           "leftRight": "Right: 1.75 steps inside 45 yd ln",
           "homeVisitor": "8.5 steps behind Home Hash",
           "form": "Battery Arc",
-          "tip": "Move Left Forward (8-to-5) for 16 counts",
-          "movementVector": 279
+          "tip": "Move Forward (8-to-5) for 16 counts",
+          "movementVector": 351
         },
         {
           "set": 13,
@@ -1223,8 +1220,8 @@ export const performerData = {
           "leftRight": "Right: 1.5 steps inside 45 yd ln",
           "homeVisitor": "1.0 steps behind Visitor Hash",
           "form": "Scattered",
-          "tip": "Move Forward (32-to-5) for 8 counts, then hold for 8 counts",
-          "movementVector": 0
+          "tip": "Move Forward (4-to-5) for 8 counts, then hold for 8 counts",
+          "movementVector": 7
         },
         {
           "set": 9,
@@ -1233,8 +1230,8 @@ export const performerData = {
           "leftRight": "Right: 1.0 steps outside 40 yd ln",
           "homeVisitor": "5.5 steps in front of Visitor Hash",
           "form": "Scattered, Turn backfield",
-          "tip": "Move Right Forward (12-to-5) for 16 counts",
-          "movementVector": 51
+          "tip": "Move Right Backward (12-to-5) for 16 counts",
+          "movementVector": 129
         },
         {
           "set": 10,
@@ -1243,8 +1240,8 @@ export const performerData = {
           "leftRight": "Right: 2.0 steps outside 40 yd ln",
           "homeVisitor": "8.0 steps in front of Visitor Hash",
           "form": "Battery Line, Turn to end zone",
-          "tip": "Move Forward (26-to-5) for 8 counts, then hold for 6 counts",
-          "movementVector": 0
+          "tip": "Move Backward (26-to-5) for 8 counts, then hold for 6 counts",
+          "movementVector": 180
         },
         {
           "set": 11,
@@ -1253,8 +1250,8 @@ export const performerData = {
           "leftRight": "Right: On 35 yd ln",
           "homeVisitor": "11.0 steps behind Home Hash",
           "form": "Battery Line, Turn to front first 2 counts, Turn to end zone next 4",
-          "tip": "Move Right Forward (6-to-5) for 10 counts, then hold for 40 counts",
-          "movementVector": 40
+          "tip": "Move Left Backward (6-to-5) for 10 counts, then hold for 40 counts",
+          "movementVector": 230
         },
         {
           "set": 12,
@@ -1264,7 +1261,7 @@ export const performerData = {
           "homeVisitor": "7.5 steps behind Home Hash",
           "form": "Battery Arc",
           "tip": "Move Left Forward (8-to-5) for 16 counts",
-          "movementVector": 282
+          "movementVector": 348
         },
         {
           "set": 13,
@@ -1349,8 +1346,8 @@ export const performerData = {
           "leftRight": "Right: 1.5 steps outside 50 yd ln",
           "homeVisitor": "1.5 steps behind Visitor Hash",
           "form": "Scattered",
-          "tip": "Move Left (8-to-5) for 8 counts",
-          "movementVector": 270
+          "tip": "Move Forward (8-to-5) for 8 counts",
+          "movementVector": 0
         },
         {
           "set": 8,
@@ -1360,7 +1357,7 @@ export const performerData = {
           "homeVisitor": "0.5 steps in front of Visitor Hash",
           "form": "Scattered",
           "tip": "Move Right Forward (8-to-5) for 8 counts, then hold for 8 counts",
-          "movementVector": 76
+          "movementVector": 14
         },
         {
           "set": 9,
@@ -1369,8 +1366,8 @@ export const performerData = {
           "leftRight": "Right: 4.0 steps outside 40 yd ln",
           "homeVisitor": "7.5 steps in front of Visitor Hash",
           "form": "Scattered, Turn backfield",
-          "tip": "Move Right Forward (12-to-5) for 16 counts",
-          "movementVector": 49
+          "tip": "Move Right Backward (12-to-5) for 16 counts",
+          "movementVector": 131
         },
         {
           "set": 10,
@@ -1379,8 +1376,8 @@ export const performerData = {
           "leftRight": "Right: 3.0 steps inside 35 yd ln",
           "homeVisitor": "8.0 steps in front of Visitor Hash",
           "form": "Battery Line, Turn to end zone",
-          "tip": "Move Right Forward (8-to-5) for 8 counts, then hold for 6 counts",
-          "movementVector": 86
+          "tip": "Move Right (8-to-5) for 8 counts, then hold for 6 counts",
+          "movementVector": 94
         },
         {
           "set": 11,
@@ -1389,8 +1386,8 @@ export const performerData = {
           "leftRight": "Right: 3.0 steps outside 35 yd ln",
           "homeVisitor": "11.0 steps behind Home Hash",
           "form": "Battery Line, Turn to front first 2 counts, Turn to end zone next 4",
-          "tip": "Move Forward (8-to-5) for 10 counts, then hold for 40 counts",
-          "movementVector": 0
+          "tip": "Move Left (8-to-5) for 10 counts, then hold for 40 counts",
+          "movementVector": 270
         },
         {
           "set": 12,
@@ -1400,7 +1397,7 @@ export const performerData = {
           "homeVisitor": "6.25 steps behind Home Hash",
           "form": "Battery Arc",
           "tip": "Move Left Forward (8-to-5) for 16 counts",
-          "movementVector": 287
+          "movementVector": 343
         },
         {
           "set": 13,

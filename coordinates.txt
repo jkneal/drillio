@@ -266,14 +266,17 @@ Counts Bass Drum
 13 Move 12, Hold 16
 
 Orientation Snare
+1-Transient
 8 Back
 9 Back
 
 Orientation Tenor
+1-Transient
 8 Back
 9 Back
 
 Orientation Bass Drum
+1-Transient
 1 Left End Zone
 2 Left End Zone
 3 Left End Zone

@@ -10,30 +10,40 @@ function parseYardLineToPosition(leftRight) {
   const yardLineNum = parseInt(yardLine);
   const stepsNum = parseFloat(steps);
   
-  // Convert to position from left side of field (0 = left end zone, 120 = right end zone)
+  // Use the same coordinate system as PathVisualizerModal
+  // Field center = 60, range 0-120 
+  // "Left" coordinates = higher x values (right side of screen in visualizer)
+  // "Right" coordinates = lower x values (left side of screen in visualizer)
   let position;
-  if (yardLineNum <= 50) {
-    // On right side of field
-    position = 60 + (50 - yardLineNum) * 1.6; // 1.6 steps per yard (8 steps / 5 yards)
+  
+  if (side === 'Left') {
+    // Left = right side of screen in visualizer
+    position = 60 + (50 - yardLineNum) * 1.6;
   } else {
-    // On left side of field
-    position = 60 - (yardLineNum - 50) * 1.6;
+    // Right = left side of screen in visualizer  
+    position = 60 - (50 - yardLineNum) * 1.6;
   }
   
-  // Apply step offset
+  // Apply step offset - convert steps to coordinate units (0.625 yards per step * 1.6 steps per yard = 1.0)
+  const stepOffsetCoords = stepsNum * 0.625 * 1.6; // 1 step = 0.625 yards, 1 yard = 1.6 coord units
+  
   if (inOut === 'Inside') {
-    // Toward 50
-    if (yardLineNum < 50) {
-      position -= stepsNum; // Move left toward 50
+    // Inside means toward the 50
+    if (side === 'Left') {
+      // Left side: Inside goes toward center (smaller x)
+      position -= stepOffsetCoords;
     } else {
-      position += stepsNum; // Move right toward 50
+      // Right side: Inside goes toward center (larger x)
+      position += stepOffsetCoords;
     }
   } else if (inOut === 'Outside') {
-    // Away from 50
-    if (yardLineNum < 50) {
-      position += stepsNum; // Move right away from 50
+    // Outside means away from the 50
+    if (side === 'Left') {
+      // Left side: Outside goes away from center (larger x)
+      position += stepOffsetCoords;
     } else {
-      position -= stepsNum; // Move left away from 50
+      // Right side: Outside goes away from center (smaller x)
+      position -= stepOffsetCoords;
     }
   }
   
@@ -52,6 +62,7 @@ function parseFrontBackToPosition(homeVisitor) {
   const stepsNum = parseFloat(steps);
   
   // Define reference positions (in steps from front sideline)
+  // Using same coordinate system as PathVisualizerModal: smaller y = front, larger y = back
   const references = {
     'Front side line': 0,
     'Front Sideline': 0,
@@ -75,6 +86,8 @@ function parseFrontBackToPosition(homeVisitor) {
   if (basePosition === null) return null;
   
   // Apply offset
+  // "Behind" means toward back field (larger y)
+  // "In front of" means toward front field (smaller y)
   if (direction.toLowerCase() === 'behind') {
     return basePosition + stepsNum;
   } else if (direction.toLowerCase().includes('front')) {
@@ -96,42 +109,48 @@ function calculateDirection(pos1, pos2) {
   const dx = (pos2.x || 0) - (pos1.x || 0);
   const dy = (pos2.y || 0) - (pos1.y || 0);
   
-  // Convert to degrees (0 = forward/north)
+  // In the coordinate system:
+  // - Decreasing y = toward front (0°)
+  // - Decreasing x = toward "Left" coordinates = right on field (270°)
+  // - Increasing y = toward back (180°)
+  // - Increasing x = toward "Right" coordinates = left on field (90°)
+  
+  // We need to map our coordinate movements to field angles:
+  // Movement vector (0, -1) [front] should give 0°
+  // Movement vector (1, 0) [toward "Right"/left] should give 90°
+  // Movement vector (0, 1) [back] should give 180°
+  // Movement vector (-1, 0) [toward "Left"/right] should give 270°
+  
+  // Using atan2(dx, -dy) gives us:
+  // (0, -1) → atan2(0, 1) = 0° ✓
+  // (1, 0) → atan2(1, 0) = 90° ✓
+  // (0, 1) → atan2(0, -1) = 180° ✓
+  // (-1, 0) → atan2(-1, 0) = -90° → 270° ✓
+  
   let angle = Math.atan2(dx, -dy) * 180 / Math.PI;
+  
+  // Normalize to 0-360
   if (angle < 0) angle += 360;
   
   return angle;
 }
 
 // Convert absolute field angle to relative angle based on performer orientation
-function adjustAngleForOrientation(absoluteAngle, orientation) {
-  // Default orientation is facing front (0 degrees adjustment)
-  let adjustment = 0;
+function adjustAngleForOrientation(absoluteAngle, orientationRaw = 'Front') {
+  // Normalize orientation string (remove (HS) suffix and trim)
+  const orientation = orientationRaw.replace(/\s*\(HS\)$/i, '').trim();
   
-  switch(orientation) {
-    case 'Left End Zone':
-      // Facing left = -90 degrees from front
-      adjustment = -90;
-      break;
-    case 'Right End Zone':
-      // Facing right = 90 degrees from front
-      adjustment = 90;
-      break;
-    case 'Back':
-      // Facing back = 180 degrees from front
-      adjustment = 180;
-      break;
-    default:
-      // Front or unspecified = no adjustment
-      adjustment = 0;
-  }
+  // Map orientations to their facing angles in field coordinates
+  // 0° = front sideline, 90° = right sideline, 180° = back sideline, 270° = left sideline
+  const facingDeg = ({
+    'Front': 0,
+    'Right End Zone': 90,   // facing right sideline (east)
+    'Back': 180,
+    'Left End Zone': 270    // facing left sideline (west)
+  })[orientation] ?? 0;     // default to Front if not recognized
   
-  // Apply adjustment and normalize to 0-360
-  let relativeAngle = absoluteAngle - adjustment;
-  while (relativeAngle < 0) relativeAngle += 360;
-  while (relativeAngle >= 360) relativeAngle -= 360;
-  
-  return relativeAngle;
+  // Convert to performer-relative angle by subtracting their facing direction
+  return (absoluteAngle - facingDeg + 360) % 360;
 }
 
 // Get simplified direction description
@@ -140,46 +159,60 @@ function getDirectionDescription(angle) {
   angle = angle % 360;
   if (angle < 0) angle += 360;
   
-  // Only use "Right" or "Left" if within 1 degree of exactly 90° or 270°
-  if (angle >= 89 && angle <= 91) {
+  // Use pure directions for angles within 10 degrees of cardinal directions
+  if (angle >= 350 || angle <= 10) {
+    return 'Forward';
+  } else if (angle >= 80 && angle <= 100) {
     return 'Right';
-  } else if (angle >= 269 && angle <= 271) {
+  } else if (angle >= 170 && angle <= 190) {
+    return 'Backward';
+  } else if (angle >= 260 && angle <= 280) {
     return 'Left';
   }
   
-  // Define the 8 cardinal/intercardinal directions
-  // Each direction covers 45 degrees (22.5 on each side)
-  // 0° = Forward, 90° = Right, 180° = Backward, 270° = Left
-  // Think of it as: which primary direction are you mostly going, with what modifier?
+  // For diagonal directions, use tighter ranges
+  // Each diagonal gets a 30-degree range centered on the 45-degree marks
   
-  if ((angle >= 337.5) || (angle < 22.5)) {
-    return 'Forward';
-  } else if (angle >= 22.5 && angle < 67.5) {
-    return 'Right Forward';  // Mostly forward, slightly right
-  } else if (angle >= 67.5 && angle < 112.5) {
-    // Mostly right - but need to determine forward or backward
-    if (angle < 90) {
-      return 'Right Forward';  // 67.5-89: mostly right, slightly forward
+  if (angle > 10 && angle < 80) {
+    // 10-80 degrees: Right Forward quadrant
+    if (angle <= 30) {
+      return 'Right Forward';  // Mostly forward with right
+    } else if (angle >= 60) {
+      return 'Right Forward';  // Mostly right with forward
     } else {
-      return 'Right Backward'; // 91-112.5: mostly right, slightly backward
+      return 'Right Forward';  // True diagonal
     }
-  } else if (angle >= 112.5 && angle < 157.5) {
-    return 'Right Backward';  // Mostly backward, slightly right
-  } else if (angle >= 157.5 && angle < 202.5) {
-    return 'Backward';
-  } else if (angle >= 202.5 && angle < 247.5) {
-    return 'Left Backward';  // Mostly backward, slightly left
-  } else if (angle >= 247.5 && angle < 292.5) {
-    // Mostly left - but need to determine forward or backward
-    if (angle < 270) {
-      return 'Left Backward';  // 247.5-269: mostly left, slightly backward
+  } else if (angle > 100 && angle < 170) {
+    // 100-170 degrees: Right Backward quadrant
+    if (angle <= 120) {
+      return 'Right Backward';  // Mostly right with backward
+    } else if (angle >= 150) {
+      return 'Right Backward';  // Mostly backward with right
     } else {
-      return 'Left Forward';   // 271-292.5: mostly left, slightly forward
+      return 'Right Backward';  // True diagonal
     }
-  } else {
-    // 292.5 to 337.5
-    return 'Left Forward';  // Mostly forward, slightly left
+  } else if (angle > 190 && angle < 260) {
+    // 190-260 degrees: Left Backward quadrant
+    if (angle <= 210) {
+      return 'Left Backward';  // Mostly backward with left
+    } else if (angle >= 240) {
+      return 'Left Backward';  // Mostly left with backward
+    } else {
+      return 'Left Backward';  // True diagonal
+    }
+  } else if (angle > 280 && angle < 350) {
+    // 280-350 degrees: Left Forward quadrant
+    if (angle <= 300) {
+      return 'Left Forward';  // Mostly left with forward
+    } else if (angle >= 330) {
+      return 'Left Forward';  // Mostly forward with left
+    } else {
+      return 'Left Forward';  // True diagonal
+    }
   }
+  
+  // Fallback (should not reach here)
+  return 'Forward';
 }
 
 // Parse performer data section
@@ -323,6 +356,11 @@ function parseCountTables(lines) {
   let currentMovement = null;
   
   for (const line of lines) {
+    // Stop parsing if we hit orientation tables
+    if (line.includes('Orientation Snare') || line.includes('Orientation Tenor') || line.includes('Orientation Bass Drum')) {
+      break;
+    }
+    
     // Check for count table headers
     if (line.includes('Counts Snare')) {
       currentTable = 'Snare';
@@ -500,6 +538,10 @@ function updatePerformerData(coordinatesPath, existingData) {
   const counts = parseCountTables(lines);
   const orientations = parseOrientationTables(lines);
   
+  // Debug: Log bass drum orientations immediately after parsing
+  console.log('\n=== Bass Drum Orientation Debug ===');
+  console.log('Bass Drum orientations parsed:', JSON.stringify(orientations['Bass Drum'], null, 2));
+  
   // Clone existing data
   const performerData = JSON.parse(JSON.stringify(existingData));
   
@@ -545,6 +587,7 @@ function updatePerformerData(coordinatesPath, existingData) {
         // Get count information from count tables
         const countInfo = counts[performerType]?.[movement]?.[set.set] || '';
         
+        
         // Calculate total counts from the count info
         let totalCounts = '';
         if (countInfo) {
@@ -581,7 +624,9 @@ function updatePerformerData(coordinatesPath, existingData) {
         // Generate tip and movement vector
         if (index > 0) {
           const prevSet = sets[index - 1];
-          const { tip, movementVector } = generateTipAndVector(set, prevSet, countInfo, forms, counts);
+          // Get orientation for the PREVIOUS set (where we're moving FROM)
+          const orientation = orientations[performerType]?.[movement]?.[prevSet.set] || 'Front';
+          const { tip, movementVector } = generateTipAndVector(set, prevSet, countInfo, forms, counts, orientation);
           result.tip = tip;
           if (movementVector !== null) {
             result.movementVector = movementVector;
@@ -700,20 +745,6 @@ if (require.main === module) {
     if (newPerformers.length > 0) {
       console.log('New performers added:', newPerformers.join(', '));
     }
-    
-    // Debug: Check for Crab references
-    let crabCount = 0;
-    for (const [performer, data] of Object.entries(performerData)) {
-      for (const [movement, sets] of Object.entries(data.movements)) {
-        for (const set of sets) {
-          if (set.tip && set.tip.includes('Crab')) {
-            crabCount++;
-            console.log(`WARNING: ${performer} Movement ${movement} Set ${set.set} still has Crab reference: ${set.tip}`);
-          }
-        }
-      }
-    }
-    console.log(`Total Crab references remaining: ${crabCount}`);
     
   } catch (error) {
     console.error('Error updating coordinates:', error);
