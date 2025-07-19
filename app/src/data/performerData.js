@@ -89,7 +89,8 @@ export const performerData = {
           "leftRight": "Left: 3.5 steps inside 15 yd ln",
           "homeVisitor": "7.5 steps in front of Visitor Hash",
           "form": "Behind Props, 2 Snares out",
-          "tip": "Hold for 8 counts"
+          "tip": "Move Backward (32-to-5) for 8 counts",
+          "movementVector": 180
         },
         {
           "set": 5,
@@ -98,7 +99,8 @@ export const performerData = {
           "leftRight": "Left: 1.5 steps inside 20 yd ln",
           "homeVisitor": "2.0 steps in front of Visitor Hash",
           "form": "Behind Props, 2 Snares out",
-          "tip": "Hold for 16 counts"
+          "tip": "Move Left Backward (7-to-5) for 8 counts, then hold for 8 counts",
+          "movementVector": 235
         },
         {
           "set": 6,
@@ -226,7 +228,7 @@ export const performerData = {
           "leftRight": "Left: 1.0 steps outside 25 yd ln",
           "homeVisitor": "7.0 steps in front of Visitor Hash",
           "form": "Behind Props, 2 Snares out",
-          "tip": "Hold for 8 counts"
+          "tip": "Hold"
         },
         {
           "set": 5,
@@ -235,7 +237,8 @@ export const performerData = {
           "leftRight": "Left: 2.5 steps inside 25 yd ln",
           "homeVisitor": "1.0 steps in front of Visitor Hash",
           "form": "Behind Props, 2 Snares out",
-          "tip": "Hold for 16 counts"
+          "tip": "Move Backward (11-to-5) for 8 counts, then hold for 8 counts",
+          "movementVector": 180
         },
         {
           "set": 6,
@@ -363,7 +366,8 @@ export const performerData = {
           "leftRight": "Left: 2.5 steps inside 25 yd ln",
           "homeVisitor": "4.5 steps in front of Visitor Hash",
           "form": "Behind Props, 2 Snares out",
-          "tip": "Hold for 8 counts"
+          "tip": "Move Backward (26-to-5) for 8 counts",
+          "movementVector": 180
         },
         {
           "set": 5,
@@ -372,7 +376,8 @@ export const performerData = {
           "leftRight": "Left: On 30 yd ln",
           "homeVisitor": "On Visitor Hash",
           "form": "Behind Props, 2 Snares out",
-          "tip": "Hold for 16 counts"
+          "tip": "Move Left Backward (7-to-5) for 8 counts, then hold for 8 counts",
+          "movementVector": 241
         },
         {
           "set": 6,
@@ -841,7 +846,7 @@ export const performerData = {
           "counts": "50",
           "leftRight": "Right: 1.0 steps inside 40 yd ln",
           "homeVisitor": "11.0 steps behind Home Hash",
-          "form": "Battery Line, Turn to front first 2 counts",
+          "form": "Battery Line, Turn to front first 2 counts, Turn to end zone next 4",
           "tip": "Move Right Forward (6-to-5) for 10 counts, then hold for 40 counts",
           "movementVector": 40
         },
@@ -977,7 +982,7 @@ export const performerData = {
           "counts": "50",
           "leftRight": "Right: 2.0 steps outside 40 yd ln",
           "homeVisitor": "11.0 steps behind Home Hash",
-          "form": "Battery Line, Turn to front first 2 counts",
+          "form": "Battery Line, Turn to front first 2 counts, Turn to end zone next 4",
           "tip": "Move Right Forward (6-to-5) for 10 counts, then hold for 40 counts",
           "movementVector": 40
         },
@@ -1112,7 +1117,7 @@ export const performerData = {
           "counts": "50",
           "leftRight": "Right: 3.0 steps inside 35 yd ln",
           "homeVisitor": "11.0 steps behind Home Hash",
-          "form": "Battery Line, Turn to front first 2 counts",
+          "form": "Battery Line, Turn to front first 2 counts, Turn to end zone next 4",
           "tip": "Move Right Forward (6-to-5) for 10 counts, then hold for 40 counts",
           "movementVector": 40
         },
@@ -1247,7 +1252,7 @@ export const performerData = {
           "counts": "50",
           "leftRight": "Right: On 35 yd ln",
           "homeVisitor": "11.0 steps behind Home Hash",
-          "form": "Battery Line, Turn to front first 2 counts",
+          "form": "Battery Line, Turn to front first 2 counts, Turn to end zone next 4",
           "tip": "Move Right Forward (6-to-5) for 10 counts, then hold for 40 counts",
           "movementVector": 40
         },
@@ -1383,7 +1388,7 @@ export const performerData = {
           "counts": "50",
           "leftRight": "Right: 3.0 steps outside 35 yd ln",
           "homeVisitor": "11.0 steps behind Home Hash",
-          "form": "Battery Line, Turn to front first 2 counts",
+          "form": "Battery Line, Turn to front first 2 counts, Turn to end zone next 4",
           "tip": "Move Forward (8-to-5) for 10 counts, then hold for 40 counts",
           "movementVector": 0
         },

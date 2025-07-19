@@ -182,10 +182,17 @@ const AboutPage = () => {
             <div className="flex items-start">
               <Route className="w-4 h-4 text-blue-300 mr-2 flex-shrink-0" />
               <div className="text-white/80 text-sm">
-                <span className="font-semibold text-white">Path Visualization:</span> View your complete 
-                movement path for any drill segment. Watch animated transitions between sets with accurate 
-                timing based on counts. Toggle to see other performers' positions and movements color-coded 
-                by instrument type. Perfect for understanding complex drill patterns and spatial relationships.
+                <span className="font-semibold text-white">Path Visualization:</span> Access from the movement 
+                selection screen to view your complete movement path for any drill segment. Features include:
+                <ul className="mt-2 ml-4 list-disc list-inside text-white/70">
+                  <li>White-bordered circles with set numbers showing all your positions</li>
+                  <li>Blue dashed lines connecting your path through the drill</li>
+                  <li>Animated transitions with count-based timing and hold indicators</li>
+                  <li>Toggle other performers to see color-coded positions by instrument</li>
+                  <li>Zoom mode to focus on specific areas with detailed navigation</li>
+                  <li>Yellow 4-step interval marks on yard lines for precise positioning</li>
+                  <li>Staff view with performer selection dropdown</li>
+                </ul>
               </div>
             </div>
 

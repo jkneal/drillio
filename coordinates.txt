@@ -213,7 +213,7 @@ Form Bass Drum
 8 Scattered
 9 Scattered, Turn backfield
 10 Battery Line, Turn to end zone
-11 Battery Line, Turn to front first 2 counts
+11 Battery Line, Turn to front first 2 counts, Turn to end zone next 4
 12 Battery Arc
 13 Battery Arc
 
@@ -222,8 +222,8 @@ Counts Snare
 1 0
 2 Hold 16
 3 Hold 8
-4 Hold 8
-5 Hold 16
+4 Move 8
+5 Move 8, Hold 8
 6 Move 8
 7 Move 8
 8 Move 8, Hold 8
@@ -264,3 +264,26 @@ Counts Bass Drum
 11 Move 10, Hold 40
 12 Move 16
 13 Move 12, Hold 16
+
+Orientation Snare
+8 Back
+9 Back
+
+Orientation Tenor
+8 Back
+9 Back
+
+Orientation Bass Drum
+1 Left End Zone
+2 Left End Zone
+3 Left End Zone
+4 Left End Zone
+5 Left End Zone
+6 Left End Zone
+7 Left End Zone
+8 Back
+9 Back
+10 Right End Zone
+11 Right End Zone
+12 Right End Zone
+13 Right End Zone

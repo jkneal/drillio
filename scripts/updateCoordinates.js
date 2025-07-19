@@ -103,6 +103,37 @@ function calculateDirection(pos1, pos2) {
   return angle;
 }
 
+// Convert absolute field angle to relative angle based on performer orientation
+function adjustAngleForOrientation(absoluteAngle, orientation) {
+  // Default orientation is facing front (0 degrees adjustment)
+  let adjustment = 0;
+  
+  switch(orientation) {
+    case 'Left End Zone':
+      // Facing left = -90 degrees from front
+      adjustment = -90;
+      break;
+    case 'Right End Zone':
+      // Facing right = 90 degrees from front
+      adjustment = 90;
+      break;
+    case 'Back':
+      // Facing back = 180 degrees from front
+      adjustment = 180;
+      break;
+    default:
+      // Front or unspecified = no adjustment
+      adjustment = 0;
+  }
+  
+  // Apply adjustment and normalize to 0-360
+  let relativeAngle = absoluteAngle - adjustment;
+  while (relativeAngle < 0) relativeAngle += 360;
+  while (relativeAngle >= 360) relativeAngle -= 360;
+  
+  return relativeAngle;
+}
+
 // Get simplified direction description
 function getDirectionDescription(angle) {
   // Normalize angle to 0-360
@@ -327,8 +358,55 @@ function parseCountTables(lines) {
   return counts;
 }
 
+// Parse orientation tables
+function parseOrientationTables(lines) {
+  const orientations = {
+    Snare: {},
+    Tenor: {},
+    'Bass Drum': {}
+  };
+  
+  let currentTable = null;
+  let currentMovement = null;
+  
+  for (const line of lines) {
+    // Check for orientation table headers
+    if (line.includes('Orientation Snare')) {
+      currentTable = 'Snare';
+      continue;
+    } else if (line.includes('Orientation Tenor')) {
+      currentTable = 'Tenor';
+      continue;
+    } else if (line.includes('Orientation Bass Drum')) {
+      currentTable = 'Bass Drum';
+      continue;
+    }
+    
+    // Check for movement header
+    const movementMatch = line.match(/(\d+)-/);
+    if (movementMatch) {
+      currentMovement = movementMatch[1];
+      continue;
+    }
+    
+    // Parse orientation data
+    if (currentTable && currentMovement) {
+      const orientationMatch = line.match(/^(\d+)\s+(.+)$/);
+      if (orientationMatch) {
+        const [, setNum, orientation] = orientationMatch;
+        if (!orientations[currentTable][currentMovement]) {
+          orientations[currentTable][currentMovement] = {};
+        }
+        orientations[currentTable][currentMovement][setNum] = orientation.trim();
+      }
+    }
+  }
+  
+  return orientations;
+}
+
 // Generate tip and movement vector based on movement details
-function generateTipAndVector(set, prevSet, countInfo, forms, counts) {
+function generateTipAndVector(set, prevSet, countInfo, forms, counts, orientation) {
   // First set is always starting position
   if (set.set === 1) {
     return { tip: 'Starting position', movementVector: null };
@@ -352,7 +430,10 @@ function generateTipAndVector(set, prevSet, countInfo, forms, counts) {
   
   // Calculate movement details FROM previous TO current
   const distance = calculateDistance(prevPos, currentPos);
-  const angle = calculateDirection(prevPos, currentPos);
+  const absoluteAngle = calculateDirection(prevPos, currentPos);
+  
+  // Adjust angle based on performer orientation
+  const relativeAngle = adjustAngleForOrientation(absoluteAngle, orientation);
   
   // Calculate step size
   let stepSize = 8; // default
@@ -364,8 +445,8 @@ function generateTipAndVector(set, prevSet, countInfo, forms, counts) {
     stepSize = Math.round(5 / yardsPerCount);
   }
   
-  // Get simplified direction description
-  const direction = getDirectionDescription(angle);
+  // Get simplified direction description using relative angle
+  const direction = getDirectionDescription(relativeAngle);
   
   // Build tip
   let tip = '';
@@ -375,11 +456,11 @@ function generateTipAndVector(set, prevSet, countInfo, forms, counts) {
     tip += `Hold for ${holdStartCounts} counts`;
     if (moveCounts > 0 && distance > 0.1) {
       tip += `, then Move ${direction} (${stepSize}-to-5) for ${moveCounts} counts`;
-      movementVector = Math.round(angle);
+      movementVector = Math.round(relativeAngle); // Use relative angle for performer's perspective
     }
   } else if (moveCounts > 0 && distance > 0.1) {
     tip += `Move ${direction} (${stepSize}-to-5) for ${moveCounts} counts`;
-    movementVector = Math.round(angle);
+    movementVector = Math.round(relativeAngle); // Use relative angle for performer's perspective
     if (holdEndCounts) {
       tip += `, then hold for ${holdEndCounts} counts`;
     }
@@ -417,6 +498,7 @@ function updatePerformerData(coordinatesPath, existingData) {
   const performers = parsePerformerSection(lines);
   const forms = parseFormTables(lines);
   const counts = parseCountTables(lines);
+  const orientations = parseOrientationTables(lines);
   
   // Clone existing data
   const performerData = JSON.parse(JSON.stringify(existingData));
