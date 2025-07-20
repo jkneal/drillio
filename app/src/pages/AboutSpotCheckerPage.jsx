@@ -193,7 +193,7 @@ const AboutSpotCheckerPage = () => {
 
         <div className="text-center mt-6">
           <p className="text-white/60 text-xs">
-            Spot Checker Beta • Precision meets performance
+            Spot Checker Beta • Precision meets performance&nbsp;
           </p>
         </div>
       </div>
