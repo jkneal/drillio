@@ -14,6 +14,26 @@ import NotesModal from '../components/NotesModal';
 const DrillPage = () => {
   const { movement } = useParams();
   const navigate = useNavigate();
+  
+  // Function to highlight numbers in position text
+  const highlightNumbers = (text) => {
+    if (!text) return null;
+    
+    // Split by numbers (including decimals) while keeping the delimiters
+    const parts = text.split(/(\d+\.?\d*)/);
+    
+    return parts.map((part, index) => {
+      // Check if this part is a number
+      if (/^\d+\.?\d*$/.test(part)) {
+        return (
+          <span key={index} className="text-yellow-300 font-bold">
+            {part}
+          </span>
+        );
+      }
+      return part;
+    });
+  };
   const [selectedPerformer, setSelectedPerformer] = useState(null);
   const [currentSet, setCurrentSet] = useState(0);
   const [showMusicImage, setShowMusicImage] = useState(false);
@@ -266,10 +286,10 @@ const DrillPage = () => {
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                     <div className="text-white/90">
-                      <span className="text-white/60">L-R:</span> {performer.leftRight}
+                      <span className="text-white/60">L-R:</span> {highlightNumbers(performer.leftRight)}
                     </div>
                     <div className="text-white/90">
-                      <span className="text-white/60">F-B:</span> {performer.homeVisitor}
+                      <span className="text-white/60">F-B:</span> {highlightNumbers(performer.homeVisitor)}
                     </div>
                   </div>
                   {performer.tip && (
@@ -383,14 +403,14 @@ const DrillPage = () => {
             <div className="bg-red-700/20 border border-red-500/30 rounded-lg p-4">
               <div className="text-white/80 text-sm mb-1">LEFT-RIGHT POSITION</div>
               <div className="text-white text-lg font-semibold">
-                {currentSetData.leftRight}
+                {highlightNumbers(currentSetData.leftRight)}
               </div>
             </div>
 
             <div className="bg-red-700/20 border border-red-500/30 rounded-lg p-4">
               <div className="text-white/80 text-sm mb-1">FRONT-BACK POSITION</div>
               <div className="text-white text-lg font-semibold">
-                {currentSetData.homeVisitor}
+                {highlightNumbers(currentSetData.homeVisitor)}
               </div>
             </div>
           </div>

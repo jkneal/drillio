@@ -24,6 +24,26 @@ const PathVisualizerModal = ({
   const [animatedCenter, setAnimatedCenter] = useState({ x: 0, y: 0 });
   const [selectedPerformerId, setSelectedPerformerId] = useState(isStaffView ? null : performerId);
   
+  // Function to highlight numbers in position text
+  const highlightNumbers = (text) => {
+    if (!text) return null;
+    
+    // Split by numbers (including decimals) while keeping the delimiters
+    const parts = text.split(/(\d+\.?\d*)/);
+    
+    return parts.map((part, index) => {
+      // Check if this part is a number
+      if (/^\d+\.?\d*$/.test(part)) {
+        return (
+          <span key={index} className="text-yellow-300 font-bold">
+            {part}
+          </span>
+        );
+      }
+      return part;
+    });
+  };
+  
   // Load logo image
   useEffect(() => {
     const img = new Image();
@@ -1629,7 +1649,7 @@ const PathVisualizerModal = ({
             <div className="bg-red-700/20 border border-red-500/30 rounded-lg p-3 mb-4">
               <div className="text-white text-sm">
                 <span className="font-semibold">Set {currentSet.set}:</span>{' '}
-                {currentSet.leftRight} | {currentSet.homeVisitor}
+                {highlightNumbers(currentSet.leftRight)} | {highlightNumbers(currentSet.homeVisitor)}
                 {currentSet.counts && <span className="ml-2">({currentSet.counts} counts)</span>}
               </div>
               {/* Show current tip normally, or next tip during animation */}
