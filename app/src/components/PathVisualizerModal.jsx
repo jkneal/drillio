@@ -4,6 +4,7 @@ import { performerData } from '../data/performerData';
 import DrillChartModal from './DrillChartModal';
 import MusicModal from './MusicModal';
 import NotesModal from './NotesModal';
+import NicknameBadge from './NicknameBadge';
 import { musicConfig } from '../data/musicConfig';
 
 const PathVisualizerModal = ({ 
@@ -1696,7 +1697,7 @@ const PathVisualizerModal = ({
                   <div className="flex items-center space-x-2">
                     <button
                       onClick={() => setShowDrillChart(true)}
-                      className="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg p-icon transition-all duration-200"
+                      className="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg p-icon-sm transition-all duration-200"
                       title="View drill chart"
                     >
                       <Map className="w-5 h-5 text-blue-300" />
@@ -1704,7 +1705,7 @@ const PathVisualizerModal = ({
                     {getMusicAvailability(currentSet.set) && currentSet.set > 1 && (
                       <button
                         onClick={() => setShowMusic(true)}
-                        className="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg p-icon transition-all duration-200"
+                        className="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg p-icon-sm transition-all duration-200"
                         title="View music snippet"
                       >
                         <Music className="w-5 h-5 text-blue-300" />
@@ -1712,7 +1713,7 @@ const PathVisualizerModal = ({
                     )}
                     <button
                       onClick={() => setShowNotes(true)}
-                      className={`${checkHasNote(currentSet.set) ? 'bg-yellow-600/20 hover:bg-yellow-600/30 border border-yellow-500/30' : 'bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30'} rounded-lg p-icon transition-all duration-200 relative`}
+                      className={`${checkHasNote(currentSet.set) ? 'bg-yellow-600/20 hover:bg-yellow-600/30 border border-yellow-500/30' : 'bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30'} rounded-lg p-icon-sm transition-all duration-200 relative`}
                       title="Personal notes"
                     >
                       <StickyNote className={`w-5 h-5 ${checkHasNote(currentSet.set) ? 'text-yellow-300' : 'text-blue-300'}`} />
@@ -1724,19 +1725,25 @@ const PathVisualizerModal = ({
                 )}
               </div>
               {/* Show current tip normally, or next tip during animation */}
-              {(isPlaying && movementData[currentSetIndex + 1]?.tip) ? (
-                <div className="mt-2 text-yellow-300 text-sm flex items-start">
-                  <span className="mr-1">💡</span>
-                  <span className="ml-1">{movementData[currentSetIndex + 1].tip}</span>
-                </div>
-              ) : (
-                currentSet.tip && (
-                  <div className="mt-2 text-yellow-300 text-sm flex items-start">
+              <div className="flex items-center justify-between mt-2">
+                {(isPlaying && movementData[currentSetIndex + 1]?.tip) ? (
+                  <div className="text-yellow-300 text-sm flex items-start">
                     <span className="mr-1">💡</span>
-                    <span>{currentSet.tip}</span>
+                    <span className="ml-1">{movementData[currentSetIndex + 1].tip}</span>
                   </div>
-                )
-              )}
+                ) : (
+                  currentSet.tip ? (
+                    <div className="text-yellow-300 text-sm flex items-start">
+                      <span className="mr-1">💡</span>
+                      <span>{currentSet.tip}</span>
+                    </div>
+                  ) : (
+                    <div></div>
+                  )
+                )}
+                {/* Nickname badge */}
+                <NicknameBadge movement={movement} setNumber={currentSet.set} />
+              </div>
             </div>
           )}
           
