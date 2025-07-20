@@ -1,4 +1,4 @@
-import { Map, Music, Sparkles, StickyNote, Route } from 'lucide-react';
+import { Map, Music, Sparkles, StickyNote, Route, Crosshair } from 'lucide-react';
 import { setNicknamesConfig } from '../data/setNicknamesConfig';
 
 const SetHeader = ({ 
@@ -9,6 +9,7 @@ const SetHeader = ({
   onMusicClick,
   onNotesClick,
   onPathVisualizerClick,
+  onSpotCheckerClick,
   movement,
   hasNote = false,
   musicAvailable = false
@@ -55,6 +56,15 @@ const SetHeader = ({
             title="Path visualization"
           >
             <Route className="w-5 h-5 text-blue-300" />
+          </button>
+        )}
+        {onSpotCheckerClick && (
+          <button
+            onClick={onSpotCheckerClick}
+            className="ml-2 bg-green-600/20 hover:bg-green-600/30 border border-green-500/30 rounded-lg p-icon transition-all duration-200"
+            title="Spot Checker (Beta)"
+          >
+            <Crosshair className="w-5 h-5 text-green-300" />
           </button>
         )}
       </div>

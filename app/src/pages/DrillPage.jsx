@@ -142,6 +142,10 @@ const DrillPage = () => {
   const handleNotesClick = () => {
     setShowNotes(true);
   };
+  
+  const handleSpotCheckerClick = () => {
+    navigate(`/spotchecker/${movement}/${currentSetData.set}`);
+  };
 
 
   const checkHasNote = (performerId, movement, setNumber) => {
@@ -264,6 +268,7 @@ const DrillPage = () => {
               onDrillChartClick={handleDrillChartClick}
               onMusicClick={handleMusicClick}
               onPathVisualizerClick={null}
+              onSpotCheckerClick={null}
               movement={movement}
               onNotesClick={null}
               hasNote={false}
@@ -394,6 +399,7 @@ const DrillPage = () => {
             onMusicClick={handleMusicClick}
             onNotesClick={handleNotesClick}
             onPathVisualizerClick={null}
+            onSpotCheckerClick={handleSpotCheckerClick}
             movement={movement}
             hasNote={checkHasNote(selectedPerformer, movement, currentSetData.set)}
             musicAvailable={getMusicAvailability(movement, selectedPerformer, currentSetData.set)}
