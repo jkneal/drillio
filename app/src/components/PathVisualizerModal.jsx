@@ -27,7 +27,29 @@ const PathVisualizerModal = ({
   const animationRef = useRef(null);
   const [logoImage, setLogoImage] = useState(null);
   const [animatedCenter, setAnimatedCenter] = useState({ x: 0, y: 0 });
-  const [selectedPerformerId, setSelectedPerformerId] = useState(isStaffView ? null : performerId);
+  // Initialize selectedPerformerId with a saved value if in staff view
+  const [selectedPerformerId, setSelectedPerformerId] = useState(() => {
+    if (isStaffView) {
+      // Try to get saved performer for this movement from localStorage
+      const savedPerformer = localStorage.getItem(`pathViz_staffPerformer_${movement}`);
+      return savedPerformer || null;
+    }
+    return performerId;
+  });
+
+  // Update selectedPerformerId when component remounts with different props
+  useEffect(() => {
+    if (isStaffView && show) {
+      // When modal opens in staff view, restore saved performer
+      const savedPerformer = localStorage.getItem(`pathViz_staffPerformer_${movement}`);
+      if (savedPerformer) {
+        setSelectedPerformerId(savedPerformer);
+      }
+    } else if (!isStaffView && performerId !== selectedPerformerId) {
+      // In non-staff view, sync with performerId prop
+      setSelectedPerformerId(performerId);
+    }
+  }, [show, movement, isStaffView]);
   const [showDrillChart, setShowDrillChart] = useState(false);
   const [showMusic, setShowMusic] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -58,6 +80,13 @@ const PathVisualizerModal = ({
     img.onload = () => setLogoImage(img);
     img.src = '/HSlogo.png';
   }, []);
+
+  // Save selected performer for staff view
+  useEffect(() => {
+    if (isStaffView && selectedPerformerId) {
+      localStorage.setItem(`pathViz_staffPerformer_${movement}`, selectedPerformerId);
+    }
+  }, [isStaffView, selectedPerformerId, movement]);
   
   // Cleanup animation when modal closes
   useEffect(() => {
