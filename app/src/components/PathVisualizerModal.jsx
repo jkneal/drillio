@@ -72,8 +72,7 @@ const PathVisualizerModal = ({
       setCurrentSetIndex(0);
       setAnimationProgress(0);
       setCurrentCount(0);
-      // Reset zoom
-      setZoomToFit(false);
+      // Don't reset zoom - preserve user's preference
     }
   }, [show]);
   
