@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Play, Pause, SkipBack, SkipForward, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
+import { X, Play, Pause, SkipBack, SkipForward, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Maximize2, Map, Music, StickyNote } from 'lucide-react';
 import { performerData } from '../data/performerData';
+import DrillChartModal from './DrillChartModal';
+import MusicModal from './MusicModal';
+import NotesModal from './NotesModal';
+import { musicConfig } from '../data/musicConfig';
 
 const PathVisualizerModal = ({ 
   show, 
@@ -23,6 +27,9 @@ const PathVisualizerModal = ({
   const [logoImage, setLogoImage] = useState(null);
   const [animatedCenter, setAnimatedCenter] = useState({ x: 0, y: 0 });
   const [selectedPerformerId, setSelectedPerformerId] = useState(isStaffView ? null : performerId);
+  const [showDrillChart, setShowDrillChart] = useState(false);
+  const [showMusic, setShowMusic] = useState(false);
+  const [showNotes, setShowNotes] = useState(false);
   
   // Function to highlight numbers in position text
   const highlightNumbers = (text) => {
@@ -262,6 +269,39 @@ const PathVisualizerModal = ({
     // Otherwise use passed performer data
     if (!currentPerformerData?.movements?.[movement]) return [];
     return currentPerformerData.movements[movement];
+  };
+  
+  // Check if music is available for the current set
+  const getMusicAvailability = (setNumber) => {
+    if (!movement || !musicConfig[movement]) return false;
+    
+    // Use selectedPerformerId for staff view
+    const currentPerformerId = isStaffView ? selectedPerformerId : performerId;
+    
+    // If in staff view without a selected performer, use Staff prefix
+    let prefix = 'Staff';
+    
+    if (currentPerformerId) {
+      if (currentPerformerId.startsWith('SD')) {
+        prefix = 'SD';
+      } else if (currentPerformerId.startsWith('TD')) {
+        prefix = 'TD';
+      } else if (currentPerformerId.startsWith('BD')) {
+        prefix = 'BD';
+      }
+    }
+    
+    // Check if music is available for this specific set
+    return musicConfig[movement]?.[prefix]?.[String(setNumber)] || false;
+  };
+
+  // Check if there's a note for the current set
+  const checkHasNote = (setNumber) => {
+    const currentPerformerId = isStaffView ? selectedPerformerId : performerId;
+    if (!currentPerformerId || currentPerformerId === 'Staff') return false;
+    
+    const key = `note_${currentPerformerId}_${movement}_${setNumber}`;
+    return localStorage.getItem(key) !== null;
   };
   
   // Calculate bounding box for zoom to fit - includes current and next positions for smooth transitions
@@ -1647,10 +1687,42 @@ const PathVisualizerModal = ({
           {/* Current set info */}
           {currentSet && (
             <div className="bg-red-700/20 border border-red-500/30 rounded-lg p-3 mb-4">
-              <div className="text-white text-sm">
-                <span className="font-semibold">Set {currentSet.set}:</span>{' '}
-                {highlightNumbers(currentSet.leftRight)} | {highlightNumbers(currentSet.homeVisitor)}
-                {currentSet.counts && <span className="ml-2">({currentSet.counts} counts)</span>}
+              <div className="flex items-center justify-between">
+                <div className="text-white text-sm">
+                  <span className="font-semibold">Set {currentSet.set}:</span>{' '}
+                  {highlightNumbers(currentSet.leftRight)} | {highlightNumbers(currentSet.homeVisitor)}
+                  {currentSet.counts && <span className="ml-2">({currentSet.counts} counts)</span>}
+                </div>
+                {(!isStaffView || selectedPerformerId) && (
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={() => setShowDrillChart(true)}
+                      className="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg p-icon transition-all duration-200"
+                      title="View drill chart"
+                    >
+                      <Map className="w-5 h-5 text-blue-300" />
+                    </button>
+                    {getMusicAvailability(currentSet.set) && currentSet.set > 1 && (
+                      <button
+                        onClick={() => setShowMusic(true)}
+                        className="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg p-icon transition-all duration-200"
+                        title="View music snippet"
+                      >
+                        <Music className="w-5 h-5 text-blue-300" />
+                      </button>
+                    )}
+                    <button
+                      onClick={() => setShowNotes(true)}
+                      className={`${checkHasNote(currentSet.set) ? 'bg-yellow-600/20 hover:bg-yellow-600/30 border border-yellow-500/30' : 'bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30'} rounded-lg p-icon transition-all duration-200 relative`}
+                      title="Personal notes"
+                    >
+                      <StickyNote className={`w-5 h-5 ${checkHasNote(currentSet.set) ? 'text-yellow-300' : 'text-blue-300'}`} />
+                      {checkHasNote(currentSet.set) && (
+                        <div className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-400 rounded-full"></div>
+                      )}
+                    </button>
+                  </div>
+                )}
               </div>
               {/* Show current tip normally, or next tip during animation */}
               {(isPlaying && movementData[currentSetIndex + 1]?.tip) ? (
@@ -1774,6 +1846,38 @@ const PathVisualizerModal = ({
           )}
         </div>
       </div>
+      
+      {/* Drill Chart Modal */}
+      <DrillChartModal
+        show={showDrillChart}
+        onClose={() => setShowDrillChart(false)}
+        imagePath={`/drill/${movement}-${currentSet?.set || 1}.png`}
+        movement={movement}
+        setNumber={currentSet?.set || 1}
+        totalSets={movementData.length}
+      />
+      
+      {/* Music Modal */}
+      <MusicModal
+        show={showMusic}
+        onClose={() => setShowMusic(false)}
+        movement={movement}
+        setNumber={currentSet?.set || 1}
+        isStaffView={isStaffView}
+        performerKey={isStaffView ? 'Staff' : performerId}
+        totalSets={movementData.length}
+      />
+      
+      {/* Notes Modal */}
+      {showNotes && currentSet && (
+        <NotesModal
+          show={showNotes}
+          onClose={() => setShowNotes(false)}
+          performerId={isStaffView ? selectedPerformerId : performerId}
+          movement={movement}
+          setNumber={currentSet.set}
+        />
+      )}
     </div>
   );
 };
