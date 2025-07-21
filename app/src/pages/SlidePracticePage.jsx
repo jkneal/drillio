@@ -48,17 +48,24 @@ const SlidePracticePage = () => {
     if (!hasPermission || !isSupported) return;
 
     const handleOrientation = (event) => {
+      // Alpha represents the compass direction (rotation around z-axis)
       // Beta represents the front-to-back tilt in degrees
       // Gamma represents the left-to-right tilt in degrees
-      // We'll use gamma for horn slide movement (left-right rotation)
-      const angle = event.gamma || 0;
+      
+      // For horn players, we want to detect rotation (yaw) not tilt
+      // Using alpha for left-right rotation detection
+      const angle = event.alpha || 0;
       setCurrentAngle(angle);
       
       if (isCalibrated) {
         // Calculate relative angle from calibration point
         let relative = angle - calibrationAngle;
         
-        // Normalize to -90 to 90 range
+        // Handle wrap-around (e.g., 359° to 1° should be 2°, not -358°)
+        if (relative > 180) relative -= 360;
+        if (relative < -180) relative += 360;
+        
+        // Normalize to -90 to 90 range for display
         if (relative > 90) relative = 90;
         if (relative < -90) relative = -90;
         
