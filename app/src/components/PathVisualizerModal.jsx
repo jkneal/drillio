@@ -916,6 +916,10 @@ const PathVisualizerModal = ({
           
           ctx.rotate(angle);
           
+          // Draw black background box with more padding
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+          ctx.fillRect(-2, -10, 20, 20);
+          
           // Draw arrow pointing right before rotation
           ctx.strokeStyle = '#ffffff';
           ctx.lineWidth = 2;

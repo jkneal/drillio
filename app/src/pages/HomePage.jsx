@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trophy } from 'lucide-react';
+import { Trophy, Gauge } from 'lucide-react';
 import { performerData } from '../data/performerData';
 
 const HomePage = () => {
@@ -113,7 +113,14 @@ const HomePage = () => {
             </div>
           </div>
           
-          <div className="text-center mt-8">
+          <div className="text-center mt-8 space-y-2">
+            <button
+              onClick={() => navigate('/slide-practice')}
+              className="flex items-center justify-center text-white/60 hover:text-white text-sm transition-colors mx-auto"
+            >
+              <Gauge className="w-4 h-4 mr-1" />
+              Slide Practice
+            </button>
             <button
               onClick={() => navigate('/about')}
               className="text-white/60 hover:text-white text-sm transition-colors"
