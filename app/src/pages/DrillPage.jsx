@@ -67,6 +67,9 @@ const DrillPage = () => {
     ? { set: currentMovement[currentSet].set }
     : currentMovement[currentSet];
 
+  // Calculate the maximum set number in the current movement
+  const maxSetNumber = Math.max(...currentMovement.map(s => s.set));
+
   const goToNextSet = () => {
     if (currentSet < currentMovement.length - 1) {
       setCurrentSet(currentSet + 1);
@@ -238,7 +241,7 @@ const DrillPage = () => {
           <div className="text-center mb-6">
             <h2 className="text-xl font-bold text-white mb-2">{movementsConfig[movement]?.displayName || movement} - Staff View</h2>
             <div className="text-white/80">
-              Set {setNumber} of {currentMovement.length}
+              Set {currentSet + 1} of {currentMovement.length}
             </div>
           </div>
 
@@ -333,6 +336,7 @@ const DrillPage = () => {
             isStaffView={true}
             performerKey={selectedPerformer}
             totalSets={currentMovement.length}
+            maxSetNumber={maxSetNumber}
           />
 
         </div>
@@ -362,7 +366,7 @@ const DrillPage = () => {
         <div className="text-center mb-6">
           <h2 className="text-xl font-bold text-white mb-2">{movementsConfig[movement]?.displayName || movement}</h2>
           <div className="text-white/80">
-            Set {currentSetData.set} of {currentMovement.length}
+            Set {currentSet + 1} of {currentMovement.length}
           </div>
         </div>
 
@@ -469,6 +473,7 @@ const DrillPage = () => {
           isStaffView={false}
           performerKey={selectedPerformer}
           totalSets={currentMovement.length}
+          maxSetNumber={maxSetNumber}
         />
 
         <NotesModal

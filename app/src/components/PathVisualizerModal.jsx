@@ -1730,6 +1730,9 @@ const PathVisualizerModal = ({
   
   const movementData = getMovementData();
   const currentSet = movementData[currentSetIndex];
+  
+  // Calculate the maximum set number in the current movement
+  const maxSetNumber = Math.max(...movementData.map(s => s.set));
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -2028,6 +2031,7 @@ const PathVisualizerModal = ({
         isStaffView={isStaffView}
         performerKey={isStaffView ? 'Staff' : performerId}
         totalSets={movementData.length}
+        maxSetNumber={maxSetNumber}
       />
       
       {/* Notes Modal */}

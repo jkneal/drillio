@@ -216,7 +216,7 @@ function parsePerformerSection(lines) {
     // Parse set data - now includes optional Title column
     // First try new format with Title column - updated to handle decimal measures like "28.5" and "Opening S"
     // Also handle "46 to End" format by allowing spaces in title column
-    let setMatch = line.match(/^(\d+)\s+[\w\s-]+\s+([\d\s\-.]+|Opening\s+S|46\s+to\s+End)\s+(Left|Right):\s*(.+?)\s+((?:\d+\.?\d*\s*steps?\s*.+|On\s+.+))$/);
+    let setMatch = line.match(/^(\d+)\s+([\w\-\{\}]+)\s+(.+?)\s+(Left|Right):\s*(.+?)\s+((?:\d+\.?\d*\s*steps?\s*.+|On\s+.+))$/);
     
     if (!setMatch) {
       // Try old format without Title column (for backward compatibility)
@@ -237,7 +237,7 @@ function parsePerformerSection(lines) {
       }
     } else {
       // New format detected - extract without counts (Title format doesn't have counts column)
-      const [, setNum, measures, side, leftRight, homeVisitor] = setMatch;
+      const [, setNum, title, measures, side, leftRight, homeVisitor] = setMatch;
       setMatch = [setMatch[0], setNum, measures, '', side, leftRight, homeVisitor];
     }
     

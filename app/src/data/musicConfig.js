@@ -64,10 +64,50 @@ export const musicConfig = {
   },
   // Movement 2
   "2": {
-    "Staff": {},
-    "SD": {},
-    "TD": {},
-    "BD": {}
+    "Staff": {
+      "14": true,
+      "15": true,
+      "16": true,
+      "17": true,
+      "18": true,
+      "19": true,
+      "20": false,
+      "21": false,
+      "22": true
+    },
+    "SD": {
+      "14": true,
+      "15": true,
+      "16": true,
+      "17": true,
+      "18": true,
+      "19": true,
+      "20": false,
+      "21": false,
+      "22": true
+    },
+    "TD": {
+      "14": true,
+      "15": true,
+      "16": true,
+      "17": true,
+      "18": true,
+      "19": true,
+      "20": false,
+      "21": false,
+      "22": true
+    },
+    "BD": {
+      "14": true,
+      "15": true,
+      "16": true,
+      "17": true,
+      "18": true,
+      "19": true,
+      "20": false,
+      "21": false,
+      "22": true
+    }
   },
   // Movement 3
   "3": {

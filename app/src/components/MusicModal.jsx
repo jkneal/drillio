@@ -8,7 +8,8 @@ const MusicModal = ({
   setNumber, 
   isStaffView = false,
   performerKey = '',
-  totalSets = 0
+  totalSets = 0,
+  maxSetNumber = 0
 }) => {
   const [currentSet, setCurrentSet] = useState(setNumber);
   const [imageError, setImageError] = useState(false);
@@ -31,8 +32,10 @@ const MusicModal = ({
   };
   
   const handleNext = () => {
-    setCurrentSet(currentSet + 1);
-    setImageError(false);
+    if (currentSet < maxSetNumber) {
+      setCurrentSet(currentSet + 1);
+      setImageError(false);
+    }
   };
   
   const getCurrentImagePath = () => {
@@ -89,7 +92,7 @@ const MusicModal = ({
                 </span>
                 <button
                   onClick={handleNext}
-                  disabled={currentSet >= totalSets}
+                  disabled={currentSet >= maxSetNumber}
                   className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ChevronRight className="w-5 h-5 text-white" />
@@ -118,7 +121,7 @@ const MusicModal = ({
                 </span>
                 <button
                   onClick={handleNext}
-                  disabled={currentSet >= totalSets}
+                  disabled={currentSet >= maxSetNumber}
                   className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ChevronRight className="w-5 h-5 text-white" />
