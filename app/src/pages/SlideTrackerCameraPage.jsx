@@ -55,6 +55,13 @@ const SlideTrackerCameraPage = () => {
     };
   }, []);
 
+  // Set video source when stream is available
+  useEffect(() => {
+    if (videoRef.current && stream) {
+      videoRef.current.srcObject = stream;
+    }
+  }, [stream]);
+
   // Process video frames for rotation detection
   const processFrame = () => {
     if (!videoRef.current || !canvasRef.current || !isCalibrated || processingRef.current) return;
@@ -329,8 +336,9 @@ const SlideTrackerCameraPage = () => {
                   ref={videoRef}
                   autoPlay
                   playsInline
+                  muted
                   className="w-full"
-                  style={{ maxHeight: '300px', objectFit: 'cover' }}
+                  style={{ height: '300px', objectFit: 'cover', display: 'block' }}
                 />
                 <canvas
                   ref={overlayCanvasRef}
