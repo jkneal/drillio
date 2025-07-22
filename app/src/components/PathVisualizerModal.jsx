@@ -27,6 +27,7 @@ const PathVisualizerModal = ({
   const animationRef = useRef(null);
   const [logoImage, setLogoImage] = useState(null);
   const [animatedCenter, setAnimatedCenter] = useState({ x: 0, y: 0 });
+  const lastCenterRef = useRef({ x: 0, y: 0 });
   // Initialize selectedPerformerId with a saved value if in staff view
   const [selectedPerformerId, setSelectedPerformerId] = useState(() => {
     if (isStaffView) {
@@ -102,6 +103,10 @@ const PathVisualizerModal = ({
       setCurrentSetIndex(0);
       setAnimationProgress(0);
       setCurrentCount(0);
+      // Reset smooth center tracking only when modal closes
+      if (!show) {
+        lastCenterRef.current = { x: 0, y: 0 };
+      }
       // Don't reset zoom - preserve user's preference
     }
   }, [show]);
@@ -472,18 +477,64 @@ const PathVisualizerModal = ({
         targetCenterX = currentBbox.x + currentBbox.width / 2;
         targetCenterY = currentBbox.y + currentBbox.height / 2;
         
-        // During animation, smoothly interpolate to next position
+        // During animation, follow the actual movement path
         if (isPlaying && animationProgress > 0 && currentSetIndex < movementData.length - 1) {
           const nextSet = movementData[currentSetIndex + 1];
-          const nextBbox = calculateBoundingBox(nextSet.set, false);
-          if (nextBbox) {
-            const nextCenterX = nextBbox.x + nextBbox.width / 2;
-            const nextCenterY = nextBbox.y + nextBbox.height / 2;
+          if (nextSet) {
+            // Get actual positions for interpolation
+            const currentPos = parsePosition(currentSet.leftRight, currentSet.homeVisitor);
+            const nextPos = parsePosition(nextSet.leftRight, nextSet.homeVisitor);
             
-            // Smooth interpolation
-            targetCenterX = targetCenterX + (nextCenterX - targetCenterX) * animationProgress;
-            targetCenterY = targetCenterY + (nextCenterY - targetCenterY) * animationProgress;
+            // Interpolate along the actual movement path
+            const interpolatedX = currentPos.x + (nextPos.x - currentPos.x) * animationProgress;
+            const interpolatedY = currentPos.y + (nextPos.y - currentPos.y) * animationProgress;
+            
+            // Center view on the interpolated position
+            targetCenterX = interpolatedX;
+            targetCenterY = interpolatedY;
           }
+        }
+        
+        // Smooth the center position to prevent jarring movements
+        if (lastCenterRef.current.x === 0 && lastCenterRef.current.y === 0) {
+          // First frame, set directly
+          lastCenterRef.current = { x: targetCenterX, y: targetCenterY };
+        } else {
+          // Calculate distance to target
+          const deltaX = targetCenterX - lastCenterRef.current.x;
+          const deltaY = targetCenterY - lastCenterRef.current.y;
+          const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+          
+          // Adaptive smoothing based on distance
+          // Larger distances get more aggressive smoothing to prevent jumps
+          let smoothingFactor;
+          if (distance > 100) {
+            // Large jump detected (like when changing sets)
+            smoothingFactor = 0.95; // Very smooth
+          } else if (distance > 50) {
+            smoothingFactor = 0.92; // Moderate smoothing
+          } else {
+            smoothingFactor = isPlaying ? 0.88 : 0.85; // Normal smoothing
+          }
+          
+          // Apply spring-like physics for more natural movement
+          const springStrength = 1 - smoothingFactor;
+          const velocityX = deltaX * springStrength;
+          const velocityY = deltaY * springStrength;
+          
+          // Limit maximum velocity to prevent too fast movements
+          const maxVelocity = 15;
+          const currentVelocity = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
+          if (currentVelocity > maxVelocity) {
+            const scale = maxVelocity / currentVelocity;
+            targetCenterX = lastCenterRef.current.x + velocityX * scale;
+            targetCenterY = lastCenterRef.current.y + velocityY * scale;
+          } else {
+            targetCenterX = lastCenterRef.current.x + velocityX;
+            targetCenterY = lastCenterRef.current.y + velocityY;
+          }
+          
+          lastCenterRef.current = { x: targetCenterX, y: targetCenterY };
         }
         
         // Use a fixed bounding box size based on all performers to avoid scale jumping

@@ -114,13 +114,13 @@ const HomePage = () => {
           </div>
           
           <div className="text-center mt-8 space-y-2">
-            <button
-              onClick={() => navigate('/slide-tracker')}
-              className="flex items-center justify-center text-white/60 hover:text-white text-sm transition-colors mx-auto"
-            >
-              <Camera className="w-4 h-4 mr-1" />
-              Slide Tracker
-            </button>
+            {/*<button*/}
+            {/*  onClick={() => navigate('/slide-tracker')}*/}
+            {/*  className="flex items-center justify-center text-white/60 hover:text-white text-sm transition-colors mx-auto"*/}
+            {/*>*/}
+            {/*  <Camera className="w-4 h-4 mr-1" />*/}
+            {/*  Slide Tracker*/}
+            {/*</button>*/}
             <button
               onClick={() => navigate('/about')}
               className="text-white/60 hover:text-white text-sm transition-colors"
