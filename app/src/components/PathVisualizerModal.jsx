@@ -21,6 +21,7 @@ const PathVisualizerModal = ({
   const [showPaths, setShowPaths] = useState(false);
   const [showOtherPerformers, setShowOtherPerformers] = useState(true);
   const [show4StepMarks, setShow4StepMarks] = useState(false);
+  const [directorView, setDirectorView] = useState(false);
   const [animationProgress, setAnimationProgress] = useState(0); // 0 to 1 for transition
   const [currentCount, setCurrentCount] = useState(0);
   const [zoomToFit, setZoomToFit] = useState(false);
@@ -346,7 +347,8 @@ const PathVisualizerModal = ({
     // Add current performer position
     const currentSet = movementData.find(s => s.set === currentSetNumber);
     if (currentSet) {
-      const pos = parsePosition(currentSet.leftRight, currentSet.homeVisitor);
+      const posRaw = parsePosition(currentSet.leftRight, currentSet.homeVisitor);
+      const pos = transformForDirectorView(posRaw.x, posRaw.y);
       positions.push(pos);
     }
     
@@ -354,7 +356,8 @@ const PathVisualizerModal = ({
     if (includeNext && currentSetNumber < movementData.length) {
       const nextSet = movementData.find(s => s.set === currentSetNumber + 1);
       if (nextSet) {
-        const pos = parsePosition(nextSet.leftRight, nextSet.homeVisitor);
+        const posRaw = parsePosition(nextSet.leftRight, nextSet.homeVisitor);
+        const pos = transformForDirectorView(posRaw.x, posRaw.y);
         positions.push(pos);
       }
     }
@@ -368,7 +371,8 @@ const PathVisualizerModal = ({
         if (otherPerformer.movements && otherPerformer.movements[movement]) {
           const otherSet = otherPerformer.movements[movement].find(s => s.set === currentSetNumber);
           if (otherSet) {
-            const pos = parsePosition(otherSet.leftRight, otherSet.homeVisitor);
+            const posRaw = parsePosition(otherSet.leftRight, otherSet.homeVisitor);
+            const pos = transformForDirectorView(posRaw.x, posRaw.y);
             positions.push(pos);
           }
           
@@ -376,7 +380,8 @@ const PathVisualizerModal = ({
           if (includeNext && currentSetNumber < movementData.length) {
             const nextSet = otherPerformer.movements[movement].find(s => s.set === currentSetNumber + 1);
             if (nextSet) {
-              const pos = parsePosition(nextSet.leftRight, nextSet.homeVisitor);
+              const posRaw = parsePosition(nextSet.leftRight, nextSet.homeVisitor);
+              const pos = transformForDirectorView(posRaw.x, posRaw.y);
               positions.push(pos);
             }
           }
@@ -433,9 +438,20 @@ const PathVisualizerModal = ({
     };
   };
   
+  
+  // Transform coordinates for director view
+  const transformForDirectorView = (x, y) => {
+    if (!directorView) return { x, y };
+    return {
+      x: FIELD_LENGTH - x,
+      y: FIELD_WIDTH - y
+    };
+  };
+  
   // Draw the visualization
   useEffect(() => {
     if (!show || !canvasRef.current) return;
+    
     
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
@@ -482,8 +498,10 @@ const PathVisualizerModal = ({
           const nextSet = movementData[currentSetIndex + 1];
           if (nextSet) {
             // Get actual positions for interpolation
-            const currentPos = parsePosition(currentSet.leftRight, currentSet.homeVisitor);
-            const nextPos = parsePosition(nextSet.leftRight, nextSet.homeVisitor);
+            const currentPosRaw = parsePosition(currentSet.leftRight, currentSet.homeVisitor);
+            const nextPosRaw = parsePosition(nextSet.leftRight, nextSet.homeVisitor);
+            const currentPos = transformForDirectorView(currentPosRaw.x, currentPosRaw.y);
+            const nextPos = transformForDirectorView(nextPosRaw.x, nextPosRaw.y);
             
             // Interpolate along the actual movement path
             const interpolatedX = currentPos.x + (nextPos.x - currentPos.x) * animationProgress;
@@ -586,7 +604,12 @@ const PathVisualizerModal = ({
     
     // Draw right side (home side) yard lines: 50, 45, 40, 35, 30, 25, 20, 15, 10, 5, 0
     for (let yard = 50; yard >= 0; yard -= 5) {
-      const x = FIELD_LENGTH / 2 + (50 - yard) * PIXELS_PER_YARD_LENGTH;
+      let x = FIELD_LENGTH / 2 + (50 - yard) * PIXELS_PER_YARD_LENGTH;
+      
+      // In director view, flip the x coordinate
+      if (directorView) {
+        x = FIELD_LENGTH - x;
+      }
       
       // Make 50 yard line thicker
       if (yard === 50) {
@@ -624,7 +647,12 @@ const PathVisualizerModal = ({
     
     // Draw left side (visitor side) yard lines: 45, 40, 35, 30, 25, 20, 15, 10, 5, 0
     for (let yard = 45; yard >= 0; yard -= 5) {
-      const x = FIELD_LENGTH / 2 - (50 - yard) * PIXELS_PER_YARD_LENGTH;
+      let x = FIELD_LENGTH / 2 - (50 - yard) * PIXELS_PER_YARD_LENGTH;
+      
+      // In director view, flip the x coordinate
+      if (directorView) {
+        x = FIELD_LENGTH - x;
+      }
       
       ctx.beginPath();
       ctx.moveTo(x, 0);
@@ -790,19 +818,26 @@ const PathVisualizerModal = ({
       ctx.save();
       // Home hash label - moved slightly right
       const labelX = FIELD_LENGTH * 0.105; // Slightly right from 0.1
+      
+      // In director view, just swap the labels (not the positions)
+      const homeHashLabel = directorView ? 'VH' : 'HH';
+      const visitorHashLabel = directorView ? 'HH' : 'VH';
+      
+      
+      // Home hash label
       ctx.fillStyle = '#0f5132'; // Background
       ctx.fillRect(labelX - 15, HOME_HASH_Y - 10, 30, 20);
       ctx.fillStyle = '#ffffff70';
       ctx.font = 'bold 14px sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText('HH', labelX, HOME_HASH_Y);
+      ctx.fillText(homeHashLabel, labelX, HOME_HASH_Y);
       
       // Visitor hash label
       ctx.fillStyle = '#0f5132'; // Background
       ctx.fillRect(labelX - 15, VISITOR_HASH_Y - 10, 30, 20);
       ctx.fillStyle = '#ffffff70';
-      ctx.fillText('VH', labelX, VISITOR_HASH_Y);
+      ctx.fillText(visitorHashLabel, labelX, VISITOR_HASH_Y);
       ctx.restore();
     }
     
@@ -820,9 +855,17 @@ const PathVisualizerModal = ({
       // Add transparency to the logo
       ctx.globalAlpha = 0.7; // 70% opacity for subtle appearance
       
-      // Translate to center, rotate 180 degrees to point up, then draw
+      // Translate to center
       ctx.translate(centerX, centerY);
-      ctx.rotate(Math.PI); // 180 degrees to flip upside down
+      
+      if (directorView) {
+        // In director view, no transformation (show logo as-is)
+        // This will show the logo in its original orientation
+      } else {
+        // Normal view: rotate 180 degrees to point up
+        ctx.rotate(Math.PI);
+      }
+      
       ctx.drawImage(logoImage, -logoSize/2, -logoSize/2, logoSize, logoSize);
       
       ctx.restore();
@@ -845,12 +888,18 @@ const PathVisualizerModal = ({
       ctx.fillRect(FIELD_LENGTH * 0.85 - 30, 0, 60, 20);
       
       ctx.fillStyle = '#ffffff90';
-      ctx.fillText('FRONT (HOME) SIDELINE', FIELD_LENGTH / 2, 10);
-      ctx.fillText('BACK (VISITOR) SIDELINE', FIELD_LENGTH / 2, FIELD_WIDTH - 10);
+      // In director view, swap the sideline labels
+      const frontLabel = directorView ? 'BACK (VISITOR) SIDELINE' : 'FRONT (HOME) SIDELINE';
+      const backLabel = directorView ? 'FRONT (HOME) SIDELINE' : 'BACK (VISITOR) SIDELINE';
+      ctx.fillText(frontLabel, FIELD_LENGTH / 2, 10);
+      ctx.fillText(backLabel, FIELD_LENGTH / 2, FIELD_WIDTH - 10);
       
       // Draw LEFT and RIGHT labels at the top
-      ctx.fillText('RIGHT', FIELD_LENGTH * 0.15, 10);
-      ctx.fillText('LEFT', FIELD_LENGTH * 0.85, 10);
+      // In director view, swap left and right
+      const leftLabel = directorView ? 'RIGHT' : 'LEFT';
+      const rightLabel = directorView ? 'LEFT' : 'RIGHT';
+      ctx.fillText(rightLabel, FIELD_LENGTH * 0.15, 10);
+      ctx.fillText(leftLabel, FIELD_LENGTH * 0.85, 10);
       
       // Draw end zone labels
       ctx.fillStyle = '#ffffffa0';
@@ -875,7 +924,8 @@ const PathVisualizerModal = ({
       
       for (let i = 0; i < movementData.length; i++) {
         const set = movementData[i];
-        const { x, y } = parsePosition(set.leftRight, set.homeVisitor);
+        const pos = parsePosition(set.leftRight, set.homeVisitor);
+        const { x, y } = transformForDirectorView(pos.x, pos.y);
         
         if (currentGroup && Math.abs(currentGroup.x - x) < 0.1 && Math.abs(currentGroup.y - y) < 0.1) {
           // Same position, add to current group
@@ -965,11 +1015,16 @@ const PathVisualizerModal = ({
               break;
           }
           
+          // In director view, flip all arrows 180 degrees
+          if (directorView) {
+            angle += Math.PI;
+          }
+          
           ctx.rotate(angle);
           
-          // Draw black background box with more padding
-          ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
-          ctx.fillRect(-2, -10, 20, 20);
+          // Remove or comment out the black background
+          // ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+          // ctx.fillRect(-2, -10, 20, 20);
           
           // Draw arrow pointing right before rotation
           ctx.strokeStyle = '#ffffff';
@@ -1026,14 +1081,16 @@ const PathVisualizerModal = ({
     const nextSet = movementData[currentSetIndex + 1];
     
     if (currentSet) {
-      const { x: currentX, y: currentY } = parsePosition(currentSet.leftRight, currentSet.homeVisitor);
+      const pos = parsePosition(currentSet.leftRight, currentSet.homeVisitor);
+      const { x: currentX, y: currentY } = transformForDirectorView(pos.x, pos.y);
       
       let drawX = currentX;
       let drawY = currentY;
       
       // If animating to next set, interpolate position
       if (animationProgress > 0 && nextSet) {
-        const { x: nextX, y: nextY } = parsePosition(nextSet.leftRight, nextSet.homeVisitor);
+        const nextPos = parsePosition(nextSet.leftRight, nextSet.homeVisitor);
+        const { x: nextX, y: nextY } = transformForDirectorView(nextPos.x, nextPos.y);
         drawX = currentX + (nextX - currentX) * animationProgress;
         drawY = currentY + (nextY - currentY) * animationProgress;
         
@@ -1073,14 +1130,16 @@ const PathVisualizerModal = ({
           const otherPerformerNextSet = nextSet ? otherPerformer.movements[movement].find(s => s.set === currentSetNumber + 1) : null;
           
           if (otherPerformerCurrentSet) {
-            const { x: currentX, y: currentY } = parsePosition(otherPerformerCurrentSet.leftRight, otherPerformerCurrentSet.homeVisitor);
+            const pos = parsePosition(otherPerformerCurrentSet.leftRight, otherPerformerCurrentSet.homeVisitor);
+            const { x: currentX, y: currentY } = transformForDirectorView(pos.x, pos.y);
             
             let drawX = currentX;
             let drawY = currentY;
             
             // If animating and next set exists for this performer, interpolate their position too
             if (animationProgress > 0 && otherPerformerNextSet) {
-              const { x: nextX, y: nextY } = parsePosition(otherPerformerNextSet.leftRight, otherPerformerNextSet.homeVisitor);
+              const nextPos = parsePosition(otherPerformerNextSet.leftRight, otherPerformerNextSet.homeVisitor);
+              const { x: nextX, y: nextY } = transformForDirectorView(nextPos.x, nextPos.y);
               drawX = currentX + (nextX - currentX) * animationProgress;
               drawY = currentY + (nextY - currentY) * animationProgress;
             }
@@ -1334,6 +1393,10 @@ const PathVisualizerModal = ({
         }
         
         // Add hash labels if hashes are visible
+        // In director view, swap the labels
+        const homeHashLabel = directorView ? 'VH' : 'HH';
+        const visitorHashLabel = directorView ? 'HH' : 'VH';
+        
         if (homeHashScreenY >= 0 && homeHashScreenY <= FIELD_WIDTH) {
           ctx.save();
           ctx.fillStyle = '#0f5132'; // Background
@@ -1342,7 +1405,7 @@ const PathVisualizerModal = ({
           ctx.font = 'bold 14px sans-serif';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          ctx.fillText('HH', 65, homeHashScreenY);
+          ctx.fillText(homeHashLabel, 65, homeHashScreenY);
           ctx.restore();
         }
         
@@ -1354,7 +1417,7 @@ const PathVisualizerModal = ({
           ctx.font = 'bold 14px sans-serif';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          ctx.fillText('VH', 65, visitorHashScreenY);
+          ctx.fillText(visitorHashLabel, 65, visitorHashScreenY);
           ctx.restore();
         }
         
@@ -1532,7 +1595,7 @@ const PathVisualizerModal = ({
     
     // Final reset of global alpha
     ctx.globalAlpha = 1;
-  }, [show, currentSetIndex, showPaths, showOtherPerformers, show4StepMarks, movement, currentPerformerData, performerId, selectedPerformerId, animationProgress, isPlaying, currentCount, zoomToFit]);
+  }, [show, currentSetIndex, showPaths, showOtherPerformers, show4StepMarks, movement, currentPerformerData, performerId, selectedPerformerId, animationProgress, isPlaying, currentCount, zoomToFit, directorView]);
   
   // Animation loop with smooth transitions
   useEffect(() => {
@@ -1884,8 +1947,8 @@ const PathVisualizerModal = ({
         )}
         
         {/* Options */}
-        <div className="flex flex-col items-center space-y-2 mt-4 pb-4">
-          <label className="flex items-center text-white/80 text-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4 pb-4 max-w-md mx-auto">
+          <label className="flex items-center text-white/80 text-sm justify-center md:justify-start">
             <input
               type="checkbox"
               checked={showPaths}
@@ -1894,7 +1957,7 @@ const PathVisualizerModal = ({
             />
             Show movement paths
           </label>
-          <label className="flex items-center text-white/80 text-sm">
+          <label className="flex items-center text-white/80 text-sm justify-center md:justify-start">
             <input
               type="checkbox"
               checked={showOtherPerformers}
@@ -1903,7 +1966,7 @@ const PathVisualizerModal = ({
             />
             Show other performers
           </label>
-          <label className="flex items-center text-white/80 text-sm">
+          <label className="flex items-center text-white/80 text-sm justify-center md:justify-start">
             <input
               type="checkbox"
               checked={show4StepMarks}
@@ -1912,29 +1975,38 @@ const PathVisualizerModal = ({
             />
             Show 4-step ticks
           </label>
-          
-          {/* Legend when showing other performers */}
-          {showOtherPerformers && (
-            <div className="flex items-center justify-center flex-wrap gap-x-4 gap-y-2 mt-3 text-xs">
-              <div className="flex items-center">
-                <div className="w-3 h-3 rounded-full mr-1 ml-1" style={{ backgroundColor: '#ef4444' }}></div>
-                <span className="text-white/80">Current</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-3 h-3 rounded-full mr-1 ml-2" style={{ backgroundColor: '#60a5fa' }}></div>
-                <span className="text-white/60">Snare</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-3 h-3 rounded-full mr-1 ml-2" style={{ backgroundColor: '#a78bfa' }}></div>
-                <span className="text-white/60">Tenor</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-3 h-3 rounded-full mr-1 ml-2" style={{ backgroundColor: '#f59e0b' }}></div>
-                <span className="text-white/60">Bass</span>
-              </div>
-            </div>
-          )}
+          <label className="flex items-center text-white/80 text-sm justify-center md:justify-start">
+            <input
+              type="checkbox"
+              checked={directorView}
+              onChange={(e) => setDirectorView(e.target.checked)}
+              className="mr-2"
+            />
+            Director's view
+          </label>
         </div>
+        
+        {/* Legend when showing other performers - outside grid */}
+        {showOtherPerformers && (
+          <div className="flex items-center justify-center flex-wrap gap-x-4 gap-y-2 mt-3 text-xs pb-4">
+            <div className="flex items-center">
+              <div className="w-3 h-3 rounded-full mr-1 ml-1" style={{ backgroundColor: '#ef4444' }}></div>
+              <span className="text-white/80">Current</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 rounded-full mr-1 ml-2" style={{ backgroundColor: '#60a5fa' }}></div>
+              <span className="text-white/60">Snare</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 rounded-full mr-1 ml-2" style={{ backgroundColor: '#a78bfa' }}></div>
+              <span className="text-white/60">Tenor</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 rounded-full mr-1 ml-2" style={{ backgroundColor: '#f59e0b' }}></div>
+              <span className="text-white/60">Bass</span>
+            </div>
+          </div>
+        )}
       </div>
       
       {/* Drill Chart Modal */}

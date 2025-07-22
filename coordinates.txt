@@ -1,0 +1,39 @@
+
+
+
+
+Counts Snare
+2-Transient
+14 Move 14
+15 Move 12
+16 Hold 4
+17 Move 10
+18 Hold 10
+19 Move 10
+20 Hold 18
+21 Move 12
+22 Move 12
+
+Counts Tenor
+2-Transient
+14 Move 14
+15 Move 12
+16 Hold 4
+17 Move 10
+18 Hold 10
+19 Move 10
+20 Hold 18
+21 Move 12
+22 Move 12
+
+Counts Bass Drum
+2-Transient
+14 Move 14
+15 Move 12
+16 Hold 4
+17 Move 10
+18 Hold 10
+19 Move 10
+20 Hold 18
+21 Move 12
+22 Move 12
