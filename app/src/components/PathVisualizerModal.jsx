@@ -1839,16 +1839,20 @@ const PathVisualizerModal = ({
           {/* Current set info */}
           {currentSet && (
             <div className="bg-red-700/20 border border-red-500/30 rounded-lg p-3 mb-4">
-              <div className="flex items-center justify-between">
-                <div className="text-white text-sm flex items-center">
-                  <span className="font-semibold">Set {currentSet.set}:</span>{' '}
-                  {highlightNumbers(currentSet.leftRight)} | {highlightNumbers(currentSet.homeVisitor)}
-                  {currentSet.counts && <span className="ml-2">({currentSet.counts} counts)</span>}
-                  {rehearsalMarks[movement]?.[String(currentSet.set)] && (
-                    <span className="ml-3 px-2 py-0.5 bg-purple-600/20 border border-purple-500/30 rounded text-purple-300 text-xs font-bold">
-                      {rehearsalMarks[movement][String(currentSet.set)]}
-                    </span>
-                  )}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div className="text-white text-sm">
+                  <div className="flex items-center flex-wrap gap-2">
+                    <span className="font-semibold">Set {currentSet.set}:</span>
+                    {rehearsalMarks[movement]?.[String(currentSet.set)] && (
+                      <span className="px-2 py-0.5 bg-purple-600/20 border border-purple-500/30 rounded text-purple-300 text-xs font-bold">
+                        {rehearsalMarks[movement][String(currentSet.set)]}
+                      </span>
+                    )}
+                  </div>
+                  <div className="mt-1">
+                    {highlightNumbers(currentSet.leftRight)} | {highlightNumbers(currentSet.homeVisitor)}
+                    {currentSet.counts && <span className="ml-2">({currentSet.counts} counts)</span>}
+                  </div>
                 </div>
                 {(!isStaffView || selectedPerformerId) && (
                   <div className="flex items-center space-x-2">
