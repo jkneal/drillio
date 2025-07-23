@@ -44,7 +44,7 @@ const DrillChartModal = ({
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-red-600/20 border border-red-500/30 rounded-xl p-4 backdrop-blur-sm max-w-full max-h-full overflow-auto" style={{ touchAction: 'pan-y' }}>
+      <div className="bg-red-600/20 border border-red-500/30 rounded-xl p-4 backdrop-blur-sm max-w-full max-h-full overflow-auto">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-white font-bold text-lg">
             Drill Chart - Movement {movement}, Set {currentSet}
@@ -59,20 +59,12 @@ const DrillChartModal = ({
         <div className="text-center">
           {!imageError ? (
             <div>
-              <div className="overflow-hidden rounded" style={{ maxHeight: '70vh' }}>
-                <img
-                  src={getCurrentImagePath()}
-                  alt={`Drill chart for Movement ${movement}, Set ${currentSet}`}
-                  className="max-w-full object-contain rounded"
-                  style={{
-                    maxHeight: '70vh',
-                    touchAction: 'manipulation', // Allows pinch-zoom but prevents double-tap zoom
-                    WebkitUserSelect: 'none',
-                    userSelect: 'none'
-                  }}
-                  onError={() => setImageError(true)}
-                />
-              </div>
+              <img
+                src={getCurrentImagePath()}
+                alt={`Drill chart for Movement ${movement}, Set ${currentSet}`}
+                className="max-w-full max-h-96 object-contain rounded"
+                onError={() => setImageError(true)}
+              />
               <div className="flex justify-center items-center mt-4 space-x-4">
                 <button
                   onClick={handlePrevious}
