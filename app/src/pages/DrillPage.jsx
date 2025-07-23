@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, Home, SkipBack, SkipForward, Users, Route } 
 import { performerData } from '../data/performerData';
 import { movementsConfig } from '../data/movementsConfig';
 import { musicConfig } from '../data/musicConfig';
+import { rehearsalMarks } from '../data/rehearsalMarks';
 import MusicModal from '../components/MusicModal';
 import DrillChartModal from '../components/DrillChartModal';
 import SetHeader from '../components/SetHeader';

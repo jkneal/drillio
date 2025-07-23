@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { X, Play, Pause, SkipBack, SkipForward, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Maximize2, Map, Music, StickyNote } from 'lucide-react';
 import { performerData } from '../data/performerData';
+import { rehearsalMarks } from '../data/rehearsalMarks';
 import DrillChartModal from './DrillChartModal';
 import MusicModal from './MusicModal';
 import NotesModal from './NotesModal';
@@ -1839,10 +1840,15 @@ const PathVisualizerModal = ({
           {currentSet && (
             <div className="bg-red-700/20 border border-red-500/30 rounded-lg p-3 mb-4">
               <div className="flex items-center justify-between">
-                <div className="text-white text-sm">
+                <div className="text-white text-sm flex items-center">
                   <span className="font-semibold">Set {currentSet.set}:</span>{' '}
                   {highlightNumbers(currentSet.leftRight)} | {highlightNumbers(currentSet.homeVisitor)}
                   {currentSet.counts && <span className="ml-2">({currentSet.counts} counts)</span>}
+                  {rehearsalMarks[movement]?.[String(currentSet.set)] && (
+                    <span className="ml-3 px-2 py-0.5 bg-purple-600/20 border border-purple-500/30 rounded text-purple-300 text-xs font-bold">
+                      {rehearsalMarks[movement][String(currentSet.set)]}
+                    </span>
+                  )}
                 </div>
                 {(!isStaffView || selectedPerformerId) && (
                   <div className="flex items-center space-x-2">

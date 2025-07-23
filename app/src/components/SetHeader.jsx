@@ -1,5 +1,6 @@
 import { Map, Music, Sparkles, StickyNote, Route } from 'lucide-react';
 import { setNicknamesConfig } from '../data/setNicknamesConfig';
+import { rehearsalMarks } from '../data/rehearsalMarks';
 
 const SetHeader = ({ 
   setNumber, 
@@ -15,6 +16,7 @@ const SetHeader = ({
 }) => {
   // Convert setNumber to string for config lookup
   const nickname = movement && setNumber && setNicknamesConfig[movement]?.[String(setNumber)];
+  const rehearsalMark = movement && setNumber && rehearsalMarks[movement]?.[String(setNumber)];
   
   return (
     <div className="text-center mb-4">
@@ -56,6 +58,11 @@ const SetHeader = ({
           >
             <Route className="w-5 h-5 text-blue-300" />
           </button>
+        )}
+        {rehearsalMark && (
+          <span className="ml-3 px-3 py-1 bg-purple-600/20 border border-purple-500/30 rounded-lg text-purple-300 text-lg font-bold">
+            {rehearsalMark}
+          </span>
         )}
       </div>
       {subtitle && (
