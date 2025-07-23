@@ -7,7 +7,9 @@ const DrillChartModal = ({
   imagePath, 
   movement, 
   setNumber, 
-  totalSets = 0
+  totalSets = 0,
+  minSetNumber = 1,
+  maxSetNumber = 0
 }) => {
   const [currentSet, setCurrentSet] = useState(setNumber);
   const [imageError, setImageError] = useState(false);
@@ -23,15 +25,17 @@ const DrillChartModal = ({
   if (!show) return null;
   
   const handlePrevious = () => {
-    if (currentSet > 1) {
+    if (currentSet > minSetNumber) {
       setCurrentSet(currentSet - 1);
       setImageError(false);
     }
   };
   
   const handleNext = () => {
-    setCurrentSet(currentSet + 1);
-    setImageError(false);
+    if (currentSet < maxSetNumber) {
+      setCurrentSet(currentSet + 1);
+      setImageError(false);
+    }
   };
   
   const getCurrentImagePath = () => {
@@ -39,8 +43,8 @@ const DrillChartModal = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" style={{ touchAction: 'none' }}>
-      <div className="bg-red-600/20 border border-red-500/30 rounded-xl p-4 backdrop-blur-sm max-w-full max-h-full overflow-auto">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-red-600/20 border border-red-500/30 rounded-xl p-4 backdrop-blur-sm max-w-full max-h-full overflow-auto" style={{ touchAction: 'pan-y' }}>
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-white font-bold text-lg">
             Drill Chart - Movement {movement}, Set {currentSet}
@@ -55,17 +59,16 @@ const DrillChartModal = ({
         <div className="text-center">
           {!imageError ? (
             <div>
-              <div className="overflow-hidden rounded" style={{ maxHeight: '70vh', touchAction: 'pinch-zoom' }}>
+              <div className="overflow-hidden rounded" style={{ maxHeight: '70vh' }}>
                 <img
                   src={getCurrentImagePath()}
                   alt={`Drill chart for Movement ${movement}, Set ${currentSet}`}
                   className="max-w-full object-contain rounded"
                   style={{
                     maxHeight: '70vh',
-                    WebkitTransform: 'translate3d(0,0,0)', // Force GPU acceleration
-                    transform: 'translate3d(0,0,0)',
-                    WebkitBackfaceVisibility: 'hidden', // Prevent flickering
-                    backfaceVisibility: 'hidden'
+                    touchAction: 'manipulation', // Allows pinch-zoom but prevents double-tap zoom
+                    WebkitUserSelect: 'none',
+                    userSelect: 'none'
                   }}
                   onError={() => setImageError(true)}
                 />
@@ -73,7 +76,7 @@ const DrillChartModal = ({
               <div className="flex justify-center items-center mt-4 space-x-4">
                 <button
                   onClick={handlePrevious}
-                  disabled={currentSet <= 1}
+                  disabled={currentSet <= minSetNumber}
                   className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ChevronLeft className="w-5 h-5 text-white" />
@@ -83,7 +86,7 @@ const DrillChartModal = ({
                 </span>
                 <button
                   onClick={handleNext}
-                  disabled={currentSet >= totalSets}
+                  disabled={currentSet >= maxSetNumber}
                   className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ChevronRight className="w-5 h-5 text-white" />
@@ -102,7 +105,7 @@ const DrillChartModal = ({
               <div className="flex justify-center items-center mt-4 space-x-4">
                 <button
                   onClick={handlePrevious}
-                  disabled={currentSet <= 1}
+                  disabled={currentSet <= minSetNumber}
                   className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ChevronLeft className="w-5 h-5 text-white" />
@@ -112,7 +115,7 @@ const DrillChartModal = ({
                 </span>
                 <button
                   onClick={handleNext}
-                  disabled={currentSet >= totalSets}
+                  disabled={currentSet >= maxSetNumber}
                   className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ChevronRight className="w-5 h-5 text-white" />

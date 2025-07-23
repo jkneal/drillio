@@ -67,7 +67,8 @@ const DrillPage = () => {
     ? { set: currentMovement[currentSet].set }
     : currentMovement[currentSet];
 
-  // Calculate the maximum set number in the current movement
+  // Calculate the minimum and maximum set numbers in the current movement
+  const minSetNumber = Math.min(...currentMovement.map(s => s.set));
   const maxSetNumber = Math.max(...currentMovement.map(s => s.set));
 
   const goToNextSet = () => {
@@ -326,6 +327,8 @@ const DrillPage = () => {
             movement={movement.match(/\d+/)?.[0] || '1'}
             setNumber={setNumber}
             totalSets={currentMovement.length}
+            minSetNumber={minSetNumber}
+            maxSetNumber={maxSetNumber}
           />
 
           <MusicModal
@@ -463,6 +466,8 @@ const DrillPage = () => {
           movement={movement.match(/\d+/)?.[0] || '1'}
           setNumber={currentSetData.set}
           totalSets={currentMovement.length}
+          minSetNumber={minSetNumber}
+          maxSetNumber={maxSetNumber}
         />
 
         <MusicModal

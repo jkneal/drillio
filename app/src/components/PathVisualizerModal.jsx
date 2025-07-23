@@ -1731,7 +1731,8 @@ const PathVisualizerModal = ({
   const movementData = getMovementData();
   const currentSet = movementData[currentSetIndex];
   
-  // Calculate the maximum set number in the current movement
+  // Calculate the minimum and maximum set numbers in the current movement
+  const minSetNumber = Math.min(...movementData.map(s => s.set));
   const maxSetNumber = Math.max(...movementData.map(s => s.set));
 
   return (
@@ -2020,6 +2021,8 @@ const PathVisualizerModal = ({
         movement={movement}
         setNumber={currentSet?.set || 1}
         totalSets={movementData.length}
+        minSetNumber={minSetNumber}
+        maxSetNumber={maxSetNumber}
       />
       
       {/* Music Modal */}

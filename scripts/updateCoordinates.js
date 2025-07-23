@@ -428,10 +428,12 @@ function generateTipAndVector(set, prevSet, countInfo, forms, counts, orientatio
     y: parseFrontBackToPosition(set.homeVisitor)
   };
   
-  // Get count information
+  // Get count information - handle patterns like "Hold 10, Move 10, Hold 20"
   const moveCounts = parseInt(countInfo.match(/Move\s+(\d+)/)?.[1] || set.counts || '0');
   const holdStartCounts = countInfo.match(/^Hold\s+(\d+)/)?.[1];
-  const holdEndCounts = countInfo.match(/Move\s+\d+,\s*Hold\s+(\d+)/)?.[1];
+  // Look for hold at the end - can be after just Move or after Hold, Move
+  const holdEndMatch = countInfo.match(/,\s*Hold\s+(\d+)$/);
+  const holdEndCounts = holdEndMatch?.[1];
   
   // Calculate movement details FROM previous TO current
   const distance = calculateDistance(prevPos, currentPos);
@@ -462,6 +464,9 @@ function generateTipAndVector(set, prevSet, countInfo, forms, counts, orientatio
     if (moveCounts > 0 && distance > 0.1) {
       tip += `, then Move ${direction} (${stepSize}-to-5) for ${moveCounts} counts`;
       movementVector = Math.round(relativeAngle); // Use relative angle for performer's perspective
+      if (holdEndCounts) {
+        tip += `, then hold for ${holdEndCounts} counts`;
+      }
     }
   } else if (moveCounts > 0 && distance > 0.1) {
     tip += `Move ${direction} (${stepSize}-to-5) for ${moveCounts} counts`;
