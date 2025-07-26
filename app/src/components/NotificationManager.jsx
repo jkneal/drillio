@@ -8,27 +8,27 @@ const NotificationManager = () => {
   const [hasSeenUpdateNotification, setHasSeenUpdateNotification] = useState(false);
 
   useEffect(() => {
-    // Check current permission status
-    if ('Notification' in window) {
-      setPermission(Notification.permission);
-      console.log('Notification permission:', Notification.permission);
-      
-      // Check if user has seen the update notification
-      const seenUpdate = localStorage.getItem('drillioUpdateNotificationSeen');
-      setHasSeenUpdateNotification(seenUpdate === 'true');
+    // Add a small delay to ensure DOM is ready
+    const timer = setTimeout(() => {
+      // Check current permission status
+      if ('Notification' in window) {
+        setPermission(Notification.permission);
+        
+        // Check if user has seen the update notification
+        const seenUpdate = localStorage.getItem('drillioUpdateNotificationSeen');
+        setHasSeenUpdateNotification(seenUpdate === 'true');
 
-      // Check if banner was previously dismissed
-      const bannerDismissed = localStorage.getItem('drillioNotificationBannerDismissed');
-      console.log('Banner dismissed:', bannerDismissed);
-      
-      // Show banner if permission not granted and not denied and not previously dismissed
-      if (Notification.permission === 'default' && bannerDismissed !== 'true') {
-        console.log('Showing notification banner');
-        setShowBanner(true);
-      } else {
-        console.log('Not showing banner - permission:', Notification.permission, 'dismissed:', bannerDismissed);
+        // Check if banner was previously dismissed
+        const bannerDismissed = localStorage.getItem('drillioNotificationBannerDismissed');
+        
+        // Show banner if permission not granted and not denied and not previously dismissed
+        if (Notification.permission === 'default' && bannerDismissed !== 'true') {
+          setShowBanner(true);
+        }
       }
-    }
+    }, 1000); // 1 second delay
+
+    return () => clearTimeout(timer);
 
     // Check for service worker support and register for periodic sync
     if ('serviceWorker' in navigator && 'periodicSync' in ServiceWorkerRegistration.prototype) {
@@ -122,13 +122,34 @@ const NotificationManager = () => {
     }
   };
 
+
   if (!showBanner || permission !== 'default') {
     return null;
   }
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-sm z-50">
-      <div className="bg-gradient-to-r from-purple-600/90 to-pink-600/90 backdrop-blur-sm rounded-lg p-4 shadow-lg border border-purple-500/30">
+    <div 
+      className="fixed top-20 left-4 right-4 md:left-auto md:right-4 md:max-w-sm z-[9999]" 
+      style={{ 
+        pointerEvents: 'auto',
+        position: 'fixed',
+        top: '5rem',
+        left: '1rem',
+        right: '1rem',
+        zIndex: 9999,
+        maxWidth: '24rem'
+      }}
+    >
+      <div 
+        className="bg-gradient-to-r from-purple-600 to-pink-600 backdrop-blur-sm rounded-lg p-4 shadow-2xl border-2 border-white/40"
+        style={{
+          background: 'linear-gradient(to right, #9333ea, #db2777)',
+          borderRadius: '0.5rem',
+          padding: '1rem',
+          border: '2px solid rgba(255, 255, 255, 0.4)',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+        }}
+      >
         <div className="flex items-start justify-between mb-2">
           <div className="flex items-center text-white">
             <Bell className="w-5 h-5 mr-2 flex-shrink-0" />

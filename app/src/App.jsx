@@ -15,18 +15,13 @@ import './App.css';
 
 function App() {
   useEffect(() => {
-    // Log version for debugging
-    console.log('Drillio App Version:', APP_VERSION);
-    
     // Check for version update
     const lastVersion = localStorage.getItem('drillioAppVersion');
     if (lastVersion && lastVersion !== APP_VERSION) {
-      console.log('App updated from', lastVersion, 'to', APP_VERSION);
       // Clear any stale caches on major update
       if (lastVersion.split('.')[0] !== APP_VERSION.split('.')[0]) {
         caches.keys().then(names => {
           names.forEach(name => {
-            console.log('Clearing cache:', name);
             caches.delete(name);
           });
         });
