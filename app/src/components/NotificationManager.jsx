@@ -11,15 +11,23 @@ const NotificationManager = () => {
     // Check current permission status
     if ('Notification' in window) {
       setPermission(Notification.permission);
-    }
+      console.log('Notification permission:', Notification.permission);
+      
+      // Check if user has seen the update notification
+      const seenUpdate = localStorage.getItem('drillioUpdateNotificationSeen');
+      setHasSeenUpdateNotification(seenUpdate === 'true');
 
-    // Check if user has seen the update notification
-    const seenUpdate = localStorage.getItem('drillioUpdateNotificationSeen');
-    setHasSeenUpdateNotification(seenUpdate === 'true');
-
-    // Show banner if permission not granted and not denied
-    if (Notification.permission === 'default') {
-      setShowBanner(true);
+      // Check if banner was previously dismissed
+      const bannerDismissed = localStorage.getItem('drillioNotificationBannerDismissed');
+      console.log('Banner dismissed:', bannerDismissed);
+      
+      // Show banner if permission not granted and not denied and not previously dismissed
+      if (Notification.permission === 'default' && bannerDismissed !== 'true') {
+        console.log('Showing notification banner');
+        setShowBanner(true);
+      } else {
+        console.log('Not showing banner - permission:', Notification.permission, 'dismissed:', bannerDismissed);
+      }
     }
 
     // Check for service worker support and register for periodic sync
@@ -127,7 +135,10 @@ const NotificationManager = () => {
             <h3 className="font-semibold">Enable Notifications</h3>
           </div>
           <button
-            onClick={() => setShowBanner(false)}
+            onClick={() => {
+              setShowBanner(false);
+              localStorage.setItem('drillioNotificationBannerDismissed', 'true');
+            }}
             className="text-white/80 hover:text-white"
           >
             <X className="w-4 h-4" />
@@ -146,7 +157,10 @@ const NotificationManager = () => {
             Enable
           </button>
           <button
-            onClick={() => setShowBanner(false)}
+            onClick={() => {
+              setShowBanner(false);
+              localStorage.setItem('drillioNotificationBannerDismissed', 'true');
+            }}
             className="flex-1 bg-black/20 hover:bg-black/30 text-white/80 font-medium py-2 px-4 rounded-lg transition-colors duration-200"
           >
             Not Now
