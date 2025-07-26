@@ -2,8 +2,32 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
+// Version-based naming - increment this for each release
+const BUILD_VERSION = '1.2.0';
+
 // https://vite.dev/config/
 export default defineConfig({
+  build: {
+    rollupOptions: {
+      output: {
+        // Option 1: Use version number in filename
+        entryFileNames: `assets/[name]-v${BUILD_VERSION}-[hash:6].js`,
+        chunkFileNames: `assets/[name]-v${BUILD_VERSION}-[hash:6].js`,
+        assetFileNames: `assets/[name]-v${BUILD_VERSION}-[hash:6].[ext]`,
+        
+        // Option 2: Use timestamp for guaranteed uniqueness
+        // const timestamp = Date.now();
+        // entryFileNames: `assets/[name]-${timestamp}.js`,
+        // chunkFileNames: `assets/[name]-${timestamp}.js`,
+        // assetFileNames: `assets/[name]-${timestamp}.[ext]`,
+        
+        // Option 3: Simple hash only (default but shorter)
+        // entryFileNames: `assets/[name]-[hash:8].js`,
+        // chunkFileNames: `assets/[name]-[hash:8].js`,
+        // assetFileNames: `assets/[name]-[hash:8].[ext]`,
+      }
+    }
+  },
   plugins: [
     react(),
     VitePWA({
