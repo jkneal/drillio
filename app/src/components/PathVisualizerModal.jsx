@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { X, Play, Pause, SkipBack, SkipForward, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Maximize2, Map, Music, StickyNote } from 'lucide-react';
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { X, Play, Pause, SkipBack, SkipForward, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Maximize2, Map, Music, StickyNote, Brain, CheckCircle, XCircle, Trophy } from 'lucide-react';
 import { performerData } from '../data/performerData';
 import { rehearsalMarks } from '../data/rehearsalMarks';
 import DrillChartModal from './DrillChartModal';
@@ -57,6 +57,28 @@ const PathVisualizerModal = ({
   const [showMusic, setShowMusic] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
   
+  // Quiz mode states
+  const [quizMode, setQuizMode] = useState(false);
+  const [quizStep, setQuizStep] = useState(null); // 'position', 'counts', 'facing', 'music'
+  const [quizAnswers, setQuizAnswers] = useState({});
+  const [showQuizFeedback, setShowQuizFeedback] = useState(false);
+  const [quizClickPosition, setQuizClickPosition] = useState(null);
+  const [quizScore, setQuizScore] = useState({ correct: 0, total: 0 });
+  const [previousOptions, setPreviousOptions] = useState(null); // Store options before quiz
+  const [showPerfectBadge, setShowPerfectBadge] = useState(false);
+  const [trophyCount, setTrophyCount] = useState(0);
+  const [quizStartIndex, setQuizStartIndex] = useState(0); // Track where quiz started
+  const [crossMovementQuizCompleted, setCrossMovementQuizCompleted] = useState(false); // Track if we've done the cross-movement quiz
+  
+  // Load trophy count when movement changes
+  useEffect(() => {
+    if (movement) {
+      const trophyKey = `quiz_trophies_movement_${movement}`;
+      const count = parseInt(localStorage.getItem(trophyKey) || '0');
+      setTrophyCount(count);
+    }
+  }, [movement]);
+  
   // Function to highlight numbers in position text
   const highlightNumbers = (text) => {
     if (!text) return null;
@@ -110,6 +132,12 @@ const PathVisualizerModal = ({
         lastCenterRef.current = { x: 0, y: 0 };
       }
       // Don't reset zoom - preserve user's preference
+      // Reset quiz mode
+      setQuizMode(false);
+      setQuizStep(null);
+      setQuizAnswers({});
+      setShowQuizFeedback(false);
+      setQuizClickPosition(null);
     }
   }, [show]);
   
@@ -293,6 +321,34 @@ const PathVisualizerModal = ({
     return { x, y };
   };
   
+  // Get the quiz "to" set index
+  const getQuizToSetIndex = () => {
+    if (quizMode && movement !== '1' && currentSetIndex === 0 && !crossMovementQuizCompleted) {
+      return 0; // First set of the movement (for cross-movement quiz)
+    }
+    return currentSetIndex + 1; // Normal case
+  };
+  
+  // Get the quiz "from" set when at the first set of a movement
+  const getQuizFromSet = () => {
+    const movementData = getMovementData();
+    
+    // If we're in quiz mode and at the first set of a non-first movement AND haven't completed the cross-movement quiz yet
+    if (quizMode && movement !== '1' && currentSetIndex === 0 && !crossMovementQuizCompleted) {
+      // Get the last set of the previous movement
+      const prevMovement = (parseInt(movement) - 1).toString();
+      const currentPerformerId = isStaffView ? selectedPerformerId : performerId;
+      
+      if (currentPerformerId && performerData[currentPerformerId]?.movements?.[prevMovement]) {
+        const prevMovementSets = performerData[currentPerformerId].movements[prevMovement];
+        return prevMovementSets[prevMovementSets.length - 1] || null;
+      }
+    }
+    
+    // Normal case - use current set from current movement
+    return movementData[currentSetIndex];
+  };
+  
   // Get all positions for the current movement
   const getMovementData = () => {
     // In staff view, use selected performer if available
@@ -346,7 +402,19 @@ const PathVisualizerModal = ({
     const movementData = getMovementData();
     
     // Add current performer position
-    const currentSet = movementData.find(s => s.set === currentSetNumber);
+    let currentSet = movementData.find(s => s.set === currentSetNumber);
+    
+    // If not found in current movement and we're in quiz mode at first set of non-first movement
+    if (!currentSet && quizMode && movement !== '1' && currentSetIndex === 0) {
+      // Look for the set in the previous movement (this is the "from" set in quiz)
+      const prevMovement = (parseInt(movement) - 1).toString();
+      const currentPerformerId = isStaffView ? selectedPerformerId : performerId;
+      if (currentPerformerId && performerData[currentPerformerId]?.movements?.[prevMovement]) {
+        const prevMovementSets = performerData[currentPerformerId].movements[prevMovement];
+        currentSet = prevMovementSets[prevMovementSets.length - 1];
+      }
+    }
+    
     if (currentSet) {
       const posRaw = parsePosition(currentSet.leftRight, currentSet.homeVisitor);
       const pos = transformForDirectorView(posRaw.x, posRaw.y);
@@ -369,22 +437,34 @@ const PathVisualizerModal = ({
         if (otherPerformerId === selectedPerformerId || otherPerformerId === 'Staff') return;
         
         const otherPerformer = performerData[otherPerformerId];
+        let otherSet = null;
+        
         if (otherPerformer.movements && otherPerformer.movements[movement]) {
-          const otherSet = otherPerformer.movements[movement].find(s => s.set === currentSetNumber);
-          if (otherSet) {
-            const posRaw = parsePosition(otherSet.leftRight, otherSet.homeVisitor);
+          otherSet = otherPerformer.movements[movement].find(s => s.set === currentSetNumber);
+        }
+        
+        // If not found and we're in quiz mode at first set of non-first movement
+        if (!otherSet && quizMode && movement !== '1' && currentSetIndex === 0) {
+          const prevMovement = (parseInt(movement) - 1).toString();
+          if (otherPerformer.movements && otherPerformer.movements[prevMovement]) {
+            const prevMovementSets = otherPerformer.movements[prevMovement];
+            otherSet = prevMovementSets[prevMovementSets.length - 1];
+          }
+        }
+        
+        if (otherSet) {
+          const posRaw = parsePosition(otherSet.leftRight, otherSet.homeVisitor);
+          const pos = transformForDirectorView(posRaw.x, posRaw.y);
+          positions.push(pos);
+        }
+        
+        // Include next positions for other performers too
+        if (includeNext && currentSetNumber < movementData.length) {
+          const nextSet = otherPerformer.movements[movement].find(s => s.set === currentSetNumber + 1);
+          if (nextSet) {
+            const posRaw = parsePosition(nextSet.leftRight, nextSet.homeVisitor);
             const pos = transformForDirectorView(posRaw.x, posRaw.y);
             positions.push(pos);
-          }
-          
-          // Include next positions for other performers too
-          if (includeNext && currentSetNumber < movementData.length) {
-            const nextSet = otherPerformer.movements[movement].find(s => s.set === currentSetNumber + 1);
-            if (nextSet) {
-              const posRaw = parsePosition(nextSet.leftRight, nextSet.homeVisitor);
-              const pos = transformForDirectorView(posRaw.x, posRaw.y);
-              positions.push(pos);
-            }
           }
         }
       });
@@ -483,8 +563,10 @@ const PathVisualizerModal = ({
     let zoomCenterX = 0;
     let zoomCenterY = 0;
     if (zoomToFit && movementData[currentSetIndex]) {
-      const currentSet = movementData[currentSetIndex];
-      const currentBbox = calculateBoundingBox(currentSet.set, false); // Don't include next position
+      // In quiz mode, use the display set (which shows the "from" position)
+      const quizFromSet = getQuizFromSet();
+      const setForZoom = quizMode && quizFromSet ? quizFromSet : movementData[currentSetIndex];
+      const currentBbox = calculateBoundingBox(setForZoom.set, false); // Don't include next position
       
       // If animating, interpolate between current and next bounding boxes
       let targetCenterX = 0;
@@ -499,7 +581,7 @@ const PathVisualizerModal = ({
           const nextSet = movementData[currentSetIndex + 1];
           if (nextSet) {
             // Get actual positions for interpolation
-            const currentPosRaw = parsePosition(currentSet.leftRight, currentSet.homeVisitor);
+            const currentPosRaw = parsePosition(setForZoom.leftRight, setForZoom.homeVisitor);
             const nextPosRaw = parsePosition(nextSet.leftRight, nextSet.homeVisitor);
             const currentPos = transformForDirectorView(currentPosRaw.x, currentPosRaw.y);
             const nextPos = transformForDirectorView(nextPosRaw.x, nextPosRaw.y);
@@ -1078,11 +1160,13 @@ const PathVisualizerModal = ({
     }
     
     // Draw current position (with animation if in progress)
+    // In quiz mode, show the "from" position
+    const displaySet = quizMode ? getQuizFromSet() : movementData[currentSetIndex];
     const currentSet = movementData[currentSetIndex];
     const nextSet = movementData[currentSetIndex + 1];
     
-    if (currentSet) {
-      const pos = parsePosition(currentSet.leftRight, currentSet.homeVisitor);
+    if (displaySet) {
+      const pos = parsePosition(displaySet.leftRight, displaySet.homeVisitor);
       const { x: currentX, y: currentY } = transformForDirectorView(pos.x, pos.y);
       
       let drawX = currentX;
@@ -1119,19 +1203,31 @@ const PathVisualizerModal = ({
     }
     
     // Draw other performers if enabled
-    if (showOtherPerformers && currentSet) {
-      const currentSetNumber = currentSet.set;
+    if (showOtherPerformers && displaySet) {
+      const displaySetNumber = displaySet.set;
       
       Object.keys(performerData).forEach(otherPerformerId => {
         if (otherPerformerId === selectedPerformerId || otherPerformerId === 'Staff') return;
         
         const otherPerformer = performerData[otherPerformerId];
-        if (otherPerformer.movements && otherPerformer.movements[movement]) {
-          const otherPerformerCurrentSet = otherPerformer.movements[movement].find(s => s.set === currentSetNumber);
-          const otherPerformerNextSet = nextSet ? otherPerformer.movements[movement].find(s => s.set === currentSetNumber + 1) : null;
+        
+        // In quiz mode at first set of non-first movement, get from previous movement
+        let otherPerformerDisplaySet = null;
+        if (quizMode && movement !== '1' && currentSetIndex === 0 && !crossMovementQuizCompleted) {
+          const prevMovement = (parseInt(movement) - 1).toString();
+          if (otherPerformer.movements && otherPerformer.movements[prevMovement]) {
+            const prevMovementSets = otherPerformer.movements[prevMovement];
+            otherPerformerDisplaySet = prevMovementSets[prevMovementSets.length - 1];
+          }
+        } else if (otherPerformer.movements && otherPerformer.movements[movement]) {
+          otherPerformerDisplaySet = otherPerformer.movements[movement].find(s => s.set === displaySetNumber);
+        }
+        
+        if (otherPerformerDisplaySet) {
+          const otherPerformerNextSet = nextSet && otherPerformer.movements[movement] ? 
+            otherPerformer.movements[movement].find(s => s.set === displaySet.set + 1) : null;
           
-          if (otherPerformerCurrentSet) {
-            const pos = parsePosition(otherPerformerCurrentSet.leftRight, otherPerformerCurrentSet.homeVisitor);
+          const pos = parsePosition(otherPerformerDisplaySet.leftRight, otherPerformerDisplaySet.homeVisitor);
             const { x: currentX, y: currentY } = transformForDirectorView(pos.x, pos.y);
             
             let drawX = currentX;
@@ -1190,7 +1286,6 @@ const PathVisualizerModal = ({
             
             ctx.restore();
           }
-        }
       });
     }
     
@@ -1198,7 +1293,7 @@ const PathVisualizerModal = ({
     ctx.restore();
     
     // Draw yard markers in screen space when zoomed (so they're always visible)
-    if (zoomToFit && currentScale > 1) {
+    if (zoomToFit && currentScale > 0) {
       // Use the stored transformation parameters
       const limitedScale = currentScale;
       const centerX = zoomCenterX;
@@ -1219,11 +1314,12 @@ const PathVisualizerModal = ({
         let rightmostX = -Infinity;
         
         const movementData = getMovementData();
+        const displaySet = quizMode ? getQuizFromSet() : movementData[currentSetIndex];
         const currentSet = movementData[currentSetIndex];
         
-        if (currentSet) {
+        if (displaySet) {
           // Check current performer
-          const performerPos = parsePosition(currentSet.leftRight, currentSet.homeVisitor);
+          const performerPos = parsePosition(displaySet.leftRight, displaySet.homeVisitor);
           leftmostX = Math.min(leftmostX, performerPos.x);
           rightmostX = Math.max(rightmostX, performerPos.x);
           
@@ -1233,7 +1329,7 @@ const PathVisualizerModal = ({
               if (otherPerformerId === performerId || otherPerformerId === 'Staff') return;
               const otherPerformer = performerData[otherPerformerId];
               if (otherPerformer.movements && otherPerformer.movements[movement]) {
-                const otherSet = otherPerformer.movements[movement].find(s => s.set === currentSet.set);
+                const otherSet = otherPerformer.movements[movement].find(s => s.set === displaySet.set);
                 if (otherSet) {
                   const otherPos = parsePosition(otherSet.leftRight, otherSet.homeVisitor);
                   leftmostX = Math.min(leftmostX, otherPos.x);
@@ -1594,9 +1690,112 @@ const PathVisualizerModal = ({
       ctx.restore();
     }
     
+    
+    // Draw quiz click position if in quiz mode
+    if (quizMode && quizClickPosition) {
+      ctx.save();
+      
+      // Draw user's clicked position
+      ctx.strokeStyle = '#ffff00';
+      ctx.lineWidth = 2;
+      ctx.globalAlpha = 0.8;
+      
+      // Draw crosshair
+      ctx.beginPath();
+      ctx.moveTo(quizClickPosition.x - 10, quizClickPosition.y);
+      ctx.lineTo(quizClickPosition.x + 10, quizClickPosition.y);
+      ctx.moveTo(quizClickPosition.x, quizClickPosition.y - 10);
+      ctx.lineTo(quizClickPosition.x, quizClickPosition.y + 10);
+      ctx.stroke();
+      
+      // Draw circle
+      ctx.beginPath();
+      ctx.arc(quizClickPosition.x, quizClickPosition.y, 5, 0, 2 * Math.PI);
+      ctx.stroke();
+      
+      // If showing feedback and position was incorrect, also show the actual position
+      if (showQuizFeedback && quizAnswers.position) {
+        const movementData = getMovementData();
+        const toSetIndex = getQuizToSetIndex();
+        const nextSet = movementData[toSetIndex];
+        if (nextSet) {
+          const actualPos = parsePosition(nextSet.leftRight, nextSet.homeVisitor);
+          const { x: actualX, y: actualY } = transformForDirectorView(actualPos.x, actualPos.y);
+          
+          // Transform the actual position to screen coordinates if zoomed
+          let screenActualX = actualX;
+          let screenActualY = actualY;
+          
+          if (zoomToFit) {
+            const displaySet = quizMode ? getQuizFromSet() : movementData[currentSetIndex];
+            if (displaySet) {
+              const bbox = calculateBoundingBox(displaySet.set, false);
+              if (bbox) {
+                const targetCenterX = bbox.x + bbox.width / 2;
+                const targetCenterY = bbox.y + bbox.height / 2;
+                
+                // Calculate zoom scale (same logic as in canvas drawing)
+                const margin = 50;
+                const availableWidth = FIELD_LENGTH - 2 * margin;
+                const availableHeight = FIELD_WIDTH - 2 * margin;
+                const scaleX = availableWidth / bbox.width;
+                const scaleY = availableHeight / bbox.height;
+                const scale = Math.min(scaleX, scaleY, 4);
+                
+                // Apply the same transformations to convert to screen space
+                screenActualX = (actualX - targetCenterX) * scale + FIELD_LENGTH / 2;
+                screenActualY = (actualY - targetCenterY) * scale + FIELD_WIDTH / 2;
+              }
+            }
+          }
+          
+          const distance = Math.sqrt(
+            Math.pow(quizAnswers.position.x - screenActualX, 2) + 
+            Math.pow(quizAnswers.position.y - screenActualY, 2)
+          );
+          const tolerance = FIELD_WIDTH * 0.15;
+          const isCorrect = distance < tolerance;
+          
+          if (!isCorrect) {
+            // Draw actual position in green
+            ctx.strokeStyle = '#00ff00';
+            ctx.fillStyle = '#00ff00';
+            ctx.lineWidth = 3;
+            ctx.globalAlpha = 0.9;
+            
+            // Draw crosshair for actual position
+            ctx.beginPath();
+            ctx.moveTo(screenActualX - 12, screenActualY);
+            ctx.lineTo(screenActualX + 12, screenActualY);
+            ctx.moveTo(screenActualX, screenActualY - 12);
+            ctx.lineTo(screenActualX, screenActualY + 12);
+            ctx.stroke();
+            
+            // Draw filled circle for actual position
+            ctx.beginPath();
+            ctx.arc(screenActualX, screenActualY, 6, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Draw connecting line
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1;
+            ctx.globalAlpha = 0.5;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(quizClickPosition.x, quizClickPosition.y);
+            ctx.lineTo(screenActualX, screenActualY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+          }
+        }
+      }
+      
+      ctx.restore();
+    }
+    
     // Final reset of global alpha
     ctx.globalAlpha = 1;
-  }, [show, currentSetIndex, showPaths, showOtherPerformers, show4StepMarks, movement, currentPerformerData, performerId, selectedPerformerId, animationProgress, isPlaying, currentCount, zoomToFit, directorView]);
+  }, [show, currentSetIndex, showPaths, showOtherPerformers, show4StepMarks, movement, currentPerformerData, performerId, selectedPerformerId, animationProgress, isPlaying, currentCount, zoomToFit, directorView, quizMode, quizClickPosition, showQuizFeedback, quizAnswers]);
   
   // Animation loop with smooth transitions
   useEffect(() => {
@@ -1727,6 +1926,531 @@ const PathVisualizerModal = ({
     }
   };
   
+  // Quiz mode functions
+  const startQuiz = () => {
+    // Save current options before changing them
+    setPreviousOptions({
+      show4StepMarks,
+      zoomToFit,
+      showPaths,
+      showOtherPerformers,
+      directorView
+    });
+    
+    // Determine the starting index for the quiz
+    let startIndex = currentSetIndex;
+    
+    // Only back up if we're not at the first set of any movement
+    if (currentSetIndex > 0) {
+      // We can back up within this movement
+      setCurrentSetIndex(currentSetIndex - 1);
+      startIndex = currentSetIndex - 1;
+    }
+    // If currentSetIndex === 0, we stay at 0 (whether movement 1 or not)
+    
+    setQuizMode(true);
+    setQuizStep('position');
+    setQuizAnswers({});
+    setShowQuizFeedback(false);
+    setQuizClickPosition(null);
+    setQuizScore({ correct: 0, total: 0 }); // Reset score when starting quiz
+    setQuizStartIndex(startIndex); // Remember where we started
+    setCrossMovementQuizCompleted(false); // Reset cross-movement quiz flag
+    setIsPlaying(false);
+    // Automatically enable helpful features for quiz
+    setShow4StepMarks(true);
+    setZoomToFit(true);
+  };
+  
+  const handleCanvasClick = (event) => {
+    if (!quizMode || quizStep !== 'position') return;
+    
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    
+    const x = (event.clientX - rect.left) * scaleX;
+    const y = (event.clientY - rect.top) * scaleY;
+    
+    // Store the clicked position directly - the canvas drawing will handle any transformations
+    setQuizClickPosition({ x, y });
+    
+    // Automatically move to next quiz step
+    setTimeout(() => {
+      setQuizAnswers(prev => ({ ...prev, position: { x, y } }));
+      setQuizStep('counts');
+    }, 500);
+  };
+  
+  // Generate count options for quiz
+  const generateCountOptions = (correctCount, hasHoldMove = false) => {
+    const options = new Set();
+    
+    // Add the correct count (whether odd or even)
+    options.add(correctCount);
+    
+    // Check if correct count is even
+    const isCorrectEven = correctCount % 2 === 0;
+    
+    // Generate 3 incorrect options (all even)
+    while (options.size < 4) {
+      let wrongCount;
+      
+      // Base the generation on the correct count value
+      if (correctCount <= 4) {
+        // For small counts, use nearby even values (+/- 2 or 4)
+        const offset = 2 * (Math.floor(Math.random() * 2) + 1);
+        wrongCount = correctCount + (Math.random() < 0.5 ? -offset : offset);
+      } else if (correctCount <= 8) {
+        // For medium counts, use +/- 2, 4, or 6
+        const offset = 2 * (Math.floor(Math.random() * 3) + 1);
+        wrongCount = correctCount + (Math.random() < 0.5 ? -offset : offset);
+      } else {
+        // For larger counts, use +/- 4, 6, or 8
+        const offset = 2 * (Math.floor(Math.random() * 3) + 2);
+        wrongCount = correctCount + (Math.random() < 0.5 ? -offset : offset);
+      }
+      
+      // Make sure wrong count is even
+      wrongCount = Math.round(wrongCount / 2) * 2;
+      
+      // Ensure count is between 2 and 32 and different from correct
+      if (wrongCount >= 2 && wrongCount <= 32 && wrongCount !== correctCount) {
+        options.add(wrongCount);
+      }
+    }
+    
+    // Convert to array and shuffle using Fisher-Yates algorithm for better randomization
+    const optionsArray = Array.from(options);
+    for (let i = optionsArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [optionsArray[i], optionsArray[j]] = [optionsArray[j], optionsArray[i]];
+    }
+    return optionsArray;
+  };
+  
+  // Helper function to get music image path
+  const getMusicImagePath = (movement, setNumber) => {
+    const currentPerformerId = isStaffView ? selectedPerformerId : performerId;
+    let prefix = 'Staff';
+    
+    if (currentPerformerId) {
+      if (currentPerformerId.startsWith('SD')) {
+        prefix = 'SD';
+      } else if (currentPerformerId.startsWith('TD')) {
+        prefix = 'TD';
+      } else if (currentPerformerId.startsWith('BD')) {
+        prefix = 'BD';
+      }
+    }
+    
+    return `/music/${prefix}${movement}-${setNumber}.png`;
+  };
+
+  // Memoize count options for quiz - must be at component level, not in conditional
+  const quizCountOptions = useMemo(() => {
+    if (!quizMode || quizStep !== 'counts') return null;
+    
+    const movementData = getMovementData();
+    const toSetIndex = getQuizToSetIndex();
+    const nextSet = movementData[toSetIndex];
+    if (!nextSet) return null;
+    
+    const actualCounts = parseInt(nextSet.counts) || 8;
+    const tip = nextSet.tip || '';
+    
+    // Parse components from tip
+    const components = [];
+    
+    // Pattern to match "Move ... for X counts" or "hold for X counts"
+    const movePattern = /move[^,]*?for\s+(\d+)\s+counts?/gi;
+    const holdPattern = /hold(?:\s+for)?\s+(\d+)\s+counts?/gi;
+    
+    // Collect all matches with their positions
+    const allMatches = [];
+    let match;
+    
+    while ((match = movePattern.exec(tip)) !== null) {
+      allMatches.push({
+        type: 'move',
+        counts: parseInt(match[1]),
+        index: match.index
+      });
+    }
+    
+    while ((match = holdPattern.exec(tip)) !== null) {
+      allMatches.push({
+        type: 'hold',
+        counts: parseInt(match[1]),
+        index: match.index
+      });
+    }
+    
+    // Sort by position in string to get correct order
+    allMatches.sort((a, b) => a.index - b.index);
+    
+    // Build components array
+    allMatches.forEach(match => {
+      components.push({
+        type: match.type,
+        counts: match.counts
+      });
+    });
+    
+    // If no components found in tip, create a single component
+    if (components.length === 0) {
+      components.push({
+        type: null, // User must choose
+        counts: actualCounts
+      });
+    }
+    
+    // Generate count options for each component
+    const countOptions = {};
+    components.forEach((comp, idx) => {
+      countOptions[idx] = generateCountOptions(comp.counts);
+    });
+    
+    return { components, countOptions, actualCounts, tip };
+  }, [quizMode, quizStep, currentSetIndex]); // Dependencies
+  
+  // Memoize music options for quiz
+  const quizMusicOptions = useMemo(() => {
+    if (!quizMode || quizStep !== 'music') return null;
+    
+    const movementData = getMovementData();
+    const toSetIndex = getQuizToSetIndex();
+    const nextSet = movementData[toSetIndex];
+    if (!nextSet) return null;
+    
+    const nextSetNumber = nextSet.set;
+    const hasMusic = getMusicAvailability(nextSetNumber);
+    
+    // Create options array
+    const options = [];
+    
+    // Add the correct option
+    if (hasMusic) {
+      options.push({
+        setNumber: nextSetNumber,
+        isCorrect: true,
+        isRest: false,
+        imagePath: getMusicImagePath(movement, nextSetNumber)
+      });
+    } else {
+      options.push({
+        setNumber: nextSetNumber,
+        isCorrect: true,
+        isRest: true,
+        imagePath: null
+      });
+    }
+    
+    // Generate 3 incorrect options
+    const allSets = movementData.map(s => s.set);
+    const usedSets = new Set([nextSetNumber]);
+    let hasRestOption = hasMusic ? false : true; // Track if we already have a Rest option
+    
+    while (options.length < 4) {
+      // Find available sets with music that haven't been used
+      const availableSets = allSets.filter(s => 
+        !usedSets.has(s) && getMusicAvailability(s)
+      );
+      
+      // Decide whether to add a Rest option or a music option
+      const shouldAddRest = !hasRestOption && (
+        availableSets.length === 0 || // No more music options available
+        (Math.random() < 0.3 && options.length === 3) // 30% chance on last option
+      );
+      
+      if (shouldAddRest) {
+        options.push({
+          setNumber: null,
+          isCorrect: false,
+          isRest: true,
+          imagePath: null
+        });
+        hasRestOption = true;
+      } else if (availableSets.length > 0) {
+        // Add a music option
+        const randomSet = availableSets[Math.floor(Math.random() * availableSets.length)];
+        usedSets.add(randomSet);
+        options.push({
+          setNumber: randomSet,
+          isCorrect: false,
+          isRest: false,
+          imagePath: getMusicImagePath(movement, randomSet)
+        });
+      } else {
+        // No more music options and we already have a rest option
+        // Find any set we haven't used yet, even if it doesn't have music
+        const unusedSets = allSets.filter(s => !usedSets.has(s));
+        if (unusedSets.length > 0) {
+          const randomSet = unusedSets[Math.floor(Math.random() * unusedSets.length)];
+          usedSets.add(randomSet);
+          if (!hasRestOption) {
+            // Add as Rest since it doesn't have music
+            options.push({
+              setNumber: null,
+              isCorrect: false,
+              isRest: true,
+              imagePath: null
+            });
+            hasRestOption = true;
+          } else {
+            // Skip this iteration to avoid duplicate rest options
+            continue;
+          }
+        } else {
+          // Fallback: duplicate a music option if we can't fill 4 options
+          const musicOptions = options.filter(o => !o.isRest && !o.isCorrect);
+          if (musicOptions.length > 0) {
+            const randomOption = musicOptions[Math.floor(Math.random() * musicOptions.length)];
+            options.push({...randomOption, isCorrect: false});
+          }
+        }
+      }
+    }
+    
+    // Shuffle options using Fisher-Yates
+    for (let i = options.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [options[i], options[j]] = [options[j], options[i]];
+    }
+    
+    return options;
+  }, [quizMode, quizStep, currentSetIndex, movement]);
+
+  const checkQuizAnswer = (answersToCheck = null) => {
+    const movementData = getMovementData();
+    const toSetIndex = getQuizToSetIndex();
+    const nextSet = movementData[toSetIndex];
+    if (!nextSet) return;
+    
+    // Use passed answers or fall back to state
+    const answers = answersToCheck || quizAnswers;
+    
+    let correct = 0;
+    let total = 0;
+    
+    console.log('Quiz answers:', answers); // Debug log
+    
+    // Check position
+    if (answers.position) {
+      total++;
+      const actualPos = parsePosition(nextSet.leftRight, nextSet.homeVisitor);
+      const { x: actualX, y: actualY } = transformForDirectorView(actualPos.x, actualPos.y);
+      
+      // Transform the actual position to screen coordinates if zoomed
+      let compareX = actualX;
+      let compareY = actualY;
+      
+      if (zoomToFit) {
+        const currentSet = movementData[currentSetIndex];
+        if (currentSet) {
+          const bbox = calculateBoundingBox(currentSet.set, false);
+          if (bbox) {
+            const targetCenterX = bbox.x + bbox.width / 2;
+            const targetCenterY = bbox.y + bbox.height / 2;
+            
+            // Calculate zoom scale (same logic as in canvas drawing)
+            const margin = 50;
+            const availableWidth = FIELD_LENGTH - 2 * margin;
+            const availableHeight = FIELD_WIDTH - 2 * margin;
+            const scaleX = availableWidth / bbox.width;
+            const scaleY = availableHeight / bbox.height;
+            const scale = Math.min(scaleX, scaleY, 4);
+            
+            // Apply the same transformations to convert to screen space
+            compareX = (actualX - targetCenterX) * scale + FIELD_LENGTH / 2;
+            compareY = (actualY - targetCenterY) * scale + FIELD_WIDTH / 2;
+          }
+        }
+      }
+      
+      const distance = Math.sqrt(
+        Math.pow(answers.position.x - compareX, 2) + 
+        Math.pow(answers.position.y - compareY, 2)
+      );
+      // Use relative tolerance - 15% of field width for mobile experience
+      const tolerance = FIELD_WIDTH * 0.15; // 60 pixels (15% of 400)
+      console.log('Position check:', {
+        userPosition: answers.position,
+        actualPosition: { x: actualX, y: actualY },
+        transformedPosition: { x: compareX, y: compareY },
+        distance: distance,
+        tolerance: tolerance,
+        isCorrect: distance < tolerance,
+        isZoomed: zoomToFit,
+        fieldDimensions: { width: FIELD_WIDTH, length: FIELD_LENGTH }
+      });
+      if (distance < tolerance) correct++;
+    }
+    
+    // Check counts
+    if (answers.counts !== undefined && answers.counts !== '') {
+      total++;
+      const userCounts = parseInt(answers.counts);
+      const actualCounts = parseInt(nextSet.counts) || 8;
+      
+      // For components, check both total and individual components
+      if (answers.components && answers.components.length > 0) {
+        // First check if total is correct
+        if (userCounts === actualCounts) {
+          // Now check components if tip exists
+          const tip = nextSet.tip || '';
+          if (tip) {
+            // Parse actual components from tip
+            const actualComponents = [];
+            const movePattern = /move[^,]*?for\s+(\d+)\s+counts?/gi;
+            const holdPattern = /hold(?:\s+for)?\s+(\d+)\s+counts?/gi;
+            
+            const allMatches = [];
+            let match;
+            
+            while ((match = movePattern.exec(tip)) !== null) {
+              allMatches.push({
+                type: 'move',
+                counts: parseInt(match[1]),
+                index: match.index
+              });
+            }
+            
+            while ((match = holdPattern.exec(tip)) !== null) {
+              allMatches.push({
+                type: 'hold',
+                counts: parseInt(match[1]),
+                index: match.index
+              });
+            }
+            
+            allMatches.sort((a, b) => a.index - b.index);
+            
+            // Check if user's components match
+            let componentsCorrect = true;
+            if (allMatches.length === answers.components.length) {
+              for (let i = 0; i < allMatches.length; i++) {
+                if (allMatches[i].type !== answers.components[i].type ||
+                    allMatches[i].counts !== answers.components[i].counts) {
+                  componentsCorrect = false;
+                  break;
+                }
+              }
+            } else if (allMatches.length === 0 && answers.components.length === 1) {
+              // No components in tip, just check total
+              componentsCorrect = true;
+            } else {
+              componentsCorrect = false;
+            }
+            
+            if (componentsCorrect) correct++;
+          } else {
+            // No tip, just total counts matter
+            correct++;
+          }
+        }
+      } else {
+        // Simple counts check
+        if (userCounts === actualCounts) correct++;
+      }
+    }
+    
+    // Check facing
+    if (answers.facing) {
+      total++;
+      if (answers.facing === (nextSet.orientation || 'Front')) correct++;
+    }
+    
+    // Check music
+    if (answers.music) {
+      total++;
+      const hasMusic = getMusicAvailability(nextSet.set);
+      if (answers.music.isCorrect) {
+        correct++;
+      }
+    }
+    
+    console.log('Score calculation - correct:', correct, 'total:', total); // Debug log
+    
+    setQuizScore(prev => ({
+      correct: prev.correct + correct,
+      total: prev.total + total
+    }));
+    
+    setShowQuizFeedback(true);
+  };
+  
+  const exitQuizMode = () => {
+    setQuizMode(false);
+    setQuizStep(null);
+    setQuizAnswers({});
+    setShowQuizFeedback(false);
+    setQuizClickPosition(null);
+    setShowPerfectBadge(false);
+    setCrossMovementQuizCompleted(false);
+    
+    // Restore previous options if they were saved
+    if (previousOptions) {
+      setShow4StepMarks(previousOptions.show4StepMarks);
+      setZoomToFit(previousOptions.zoomToFit);
+      setShowPaths(previousOptions.showPaths);
+      setShowOtherPerformers(previousOptions.showOtherPerformers);
+      setDirectorView(previousOptions.directorView);
+      setPreviousOptions(null);
+    }
+  };
+  
+  const nextQuizSet = () => {
+    const movementData = getMovementData();
+    
+    // Special handling for first set of non-first movement
+    // If we're at index 0 and haven't completed the cross-movement quiz yet
+    if (movement !== '1' && currentSetIndex === 0 && !crossMovementQuizCompleted) {
+      // We just completed the cross-movement quiz, mark it as done
+      setCrossMovementQuizCompleted(true);
+      setQuizStep('position');
+      setQuizAnswers({});
+      setShowQuizFeedback(false);
+      setQuizClickPosition(null);
+      // Don't increment currentSetIndex - stay at 0 for the next quiz (set 14 → set 15)
+    } else if (currentSetIndex < movementData.length - 2) {
+      setCurrentSetIndex(prev => prev + 1);
+      setQuizStep('position');
+      setQuizAnswers({}); // This clears all answers including holdCounts/moveCounts
+      setShowQuizFeedback(false);
+      setQuizClickPosition(null);
+    } else {
+      // Quiz completed - check if perfect score AND started from beginning
+      const isPerfectScore = quizScore.correct === quizScore.total && quizScore.total > 0;
+      // For movement 1, must start from index 0
+      // For other movements, the quiz would have backed up, so starting from 0 is still correct
+      const isCompleteMovement = quizStartIndex === 0;
+      
+      if (isPerfectScore && isCompleteMovement) {
+        // Save trophy to localStorage only for complete movement
+        const trophyKey = `quiz_trophies_movement_${movement}`;
+        const currentTrophies = parseInt(localStorage.getItem(trophyKey) || '0');
+        const newTrophyCount = currentTrophies + 1;
+        localStorage.setItem(trophyKey, newTrophyCount.toString());
+        setTrophyCount(newTrophyCount);
+        
+        setShowPerfectBadge(true);
+        // Auto-hide badge after 5 seconds
+        setTimeout(() => {
+          setShowPerfectBadge(false);
+          exitQuizMode();
+        }, 5000);
+      } else if (isPerfectScore && !isCompleteMovement) {
+        // Perfect score but didn't start from beginning - show congratulations but no trophy
+        alert(`Great job! Perfect score from Set ${movementData[quizStartIndex].set} to the end. To earn a trophy, complete the entire movement from Set ${movementData[0].set}.`);
+        exitQuizMode();
+      } else {
+        exitQuizMode();
+      }
+    }
+  };
+  
   if (!show) return null;
   
   const movementData = getMovementData();
@@ -1803,14 +2527,49 @@ const PathVisualizerModal = ({
                   width={FIELD_LENGTH}
                   height={FIELD_WIDTH}
                   className="w-full h-auto"
+                  onClick={handleCanvasClick}
                   style={{ 
                     maxWidth: '100%',
                     maxHeight: '60vh',
                     aspectRatio: `${FIELD_LENGTH}/${FIELD_WIDTH}`,
-                    objectFit: 'contain'
+                    objectFit: 'contain',
+                    cursor: quizMode && quizStep === 'position' ? 'crosshair' : 'default'
                   }}
                 />
               </div>
+              
+              {/* Position indicator legend when showing incorrect quiz feedback */}
+              {quizMode && showQuizFeedback && quizAnswers.position && (() => {
+                const toSetIndex = getQuizToSetIndex();
+                const nextSet = movementData[toSetIndex];
+                if (!nextSet) return null;
+                const actualPos = parsePosition(nextSet.leftRight, nextSet.homeVisitor);
+                const { x: actualX, y: actualY } = transformForDirectorView(actualPos.x, actualPos.y);
+                const distance = Math.sqrt(
+                  Math.pow(quizAnswers.position.x - actualX, 2) + 
+                  Math.pow(quizAnswers.position.y - actualY, 2)
+                );
+                const tolerance = FIELD_WIDTH * 0.15;
+                const isCorrect = distance < tolerance;
+                
+                if (!isCorrect) {
+                  return (
+                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 p-2 bg-black/60 rounded text-xs">
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-1">
+                          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#ffff00' }}></div>
+                          <span className="text-white/80">Your selection</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#00ff00' }}></div>
+                          <span className="text-white/80">Actual position</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+                return null;
+              })()}
             
               {/* Zoom button overlay - positioned above end zone, between front sideline and home hash */}
               <button
@@ -1836,25 +2595,27 @@ const PathVisualizerModal = ({
           </button>
           </div>
           
-          {/* Current set info */}
-          {currentSet && (
+          {/* Current set info - hidden in quiz mode */}
+          {currentSet && !quizMode && (
             <div className="bg-red-700/20 border border-red-500/30 rounded-lg p-3 mb-4">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                 <div className="text-white text-sm">
                   <div className="flex items-center flex-wrap gap-2">
                     <span className="font-semibold">Set {currentSet.set}:</span>
-                    {rehearsalMarks[movement]?.[String(currentSet.set)] && (
+                    {!quizMode && rehearsalMarks[movement]?.[String(currentSet.set)] && (
                       <span className="px-2 py-0.5 bg-purple-600/20 border border-purple-500/30 rounded text-purple-300 text-xs font-bold">
                         {rehearsalMarks[movement][String(currentSet.set)]}
                       </span>
                     )}
                   </div>
-                  <div className="mt-1">
-                    {highlightNumbers(currentSet.leftRight)} | {highlightNumbers(currentSet.homeVisitor)}
-                    {currentSet.counts && <span className="ml-2">({currentSet.counts} counts)</span>}
-                  </div>
+                  {!quizMode && (
+                    <div className="mt-1">
+                      {highlightNumbers(currentSet.leftRight)} | {highlightNumbers(currentSet.homeVisitor)}
+                      {currentSet.counts && <span className="ml-2">({currentSet.counts} counts)</span>}
+                    </div>
+                  )}
                 </div>
-                {(!isStaffView || selectedPerformerId) && (
+                {(!isStaffView || selectedPerformerId) && !quizMode && (
                   <div className="flex items-center space-x-2">
                     <button
                       onClick={() => setShowDrillChart(true)}
@@ -1886,70 +2647,519 @@ const PathVisualizerModal = ({
                 )}
               </div>
               {/* Show current tip normally, or next tip during animation */}
-              <div className="flex items-center justify-between mt-2">
-                {(isPlaying && movementData[currentSetIndex + 1]?.tip) ? (
-                  <div className="text-yellow-300 text-sm flex items-start">
-                    <span className="mr-1">💡</span>
-                    <span className="ml-1">{movementData[currentSetIndex + 1].tip}</span>
-                  </div>
-                ) : (
-                  currentSet.tip ? (
+              {!quizMode && (
+                <div className="flex items-center justify-between mt-2">
+                  {(isPlaying && movementData[currentSetIndex + 1]?.tip) ? (
                     <div className="text-yellow-300 text-sm flex items-start">
                       <span className="mr-1">💡</span>
-                      <span>{currentSet.tip}</span>
+                      <span className="ml-1">{movementData[currentSetIndex + 1].tip}</span>
                     </div>
                   ) : (
-                    <div></div>
-                  )
-                )}
-                {/* Nickname badge */}
-                <NicknameBadge movement={movement} setNumber={currentSet.set} />
-              </div>
+                    currentSet.tip ? (
+                      <div className="text-yellow-300 text-sm flex items-start">
+                        <span className="mr-1">💡</span>
+                        <span>{currentSet.tip}</span>
+                      </div>
+                    ) : (
+                      <div></div>
+                    )
+                  )}
+                  {/* Nickname badge */}
+                  <NicknameBadge movement={movement} setNumber={currentSet.set} />
+                </div>
+              )}
             </div>
           )}
           
+          {/* Quiz UI */}
+          {quizMode && !showQuizFeedback && (() => {
+            const fromSet = getQuizFromSet();
+            const toSetIndex = getQuizToSetIndex();
+            const toSet = movementData[toSetIndex];
+            if (!fromSet || !toSet) return null;
+            return (
+              <div className="bg-purple-700/20 border border-purple-500/30 rounded-lg p-4 mb-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <Brain className="w-5 h-5 text-purple-300 mr-2" />
+                    <h4 className="text-white font-semibold" style={{"marginTop": ".3rem", "marginBottom" : ".3rem"}}>Quiz Mode Set {fromSet.set} → Set {toSet.set}</h4>
+                  </div>
+                {trophyCount > 0 && (
+                  <div className="flex items-center bg-yellow-600/20 px-2 py-1 rounded-lg">
+                    <Trophy className="w-4 h-4 text-yellow-400 mr-1" />
+                    <span className="text-yellow-300 text-sm font-semibold">{trophyCount}</span>
+                  </div>
+                )}
+              </div>
+              
+              {quizStep === 'position' && (
+                <div className="text-white/80">
+                  <p className="mb-2">Touch on the field where you'll be for Set {toSet.set}</p>
+                </div>
+              )}
+              
+              {quizStep === 'counts' && quizCountOptions && (
+                <div>
+                  <p className="text-white/80 mb-3">
+                    How do you get to Set {toSet.set}?
+                  </p>
+                        
+                  <div className="space-y-4">
+                    {quizCountOptions.components.map((component, idx) => (
+                      <div key={idx} className="border border-purple-500/30 rounded-lg p-3 bg-purple-700/10">
+                        <p className="text-white/70 text-sm mb-2">
+                          Component {idx + 1}{quizCountOptions.components.length > 1 ? ` of ${quizCountOptions.components.length}` : ''}:
+                        </p>
+                              
+                              {/* Action type selection */}
+                              <div className="mb-3">
+                                <p className="text-white/60 text-xs mb-2">Action type:</p>
+                                <div className="flex gap-2">
+                                  <button
+                                    onClick={() => setQuizAnswers(prev => ({ 
+                                      ...prev, 
+                                      [`component${idx}_type`]: 'move'
+                                    }))}
+                                    className={`px-3 py-1 rounded text-white ${
+                                      quizAnswers[`component${idx}_type`] === 'move'
+                                        ? 'bg-blue-600/40 border-blue-400'
+                                        : 'bg-blue-600/20 hover:bg-blue-600/30 border-blue-500/30'
+                                    } border`}
+                                  >
+                                    Move
+                                  </button>
+                                  <button
+                                    onClick={() => setQuizAnswers(prev => ({ 
+                                      ...prev, 
+                                      [`component${idx}_type`]: 'hold'
+                                    }))}
+                                    className={`px-3 py-1 rounded text-white ${
+                                      quizAnswers[`component${idx}_type`] === 'hold'
+                                        ? 'bg-blue-600/40 border-blue-400'
+                                        : 'bg-blue-600/20 hover:bg-blue-600/30 border-blue-500/30'
+                                    } border`}
+                                  >
+                                    Hold
+                                  </button>
+                                </div>
+                              </div>
+                              
+                        {/* Count selection */}
+                        <div>
+                          <p className="text-white/60 text-xs mb-2">Counts:</p>
+                          <div className="flex flex-wrap gap-2">
+                            {quizCountOptions.countOptions[idx].map(count => (
+                              <button
+                                key={`comp${idx}-${count}`}
+                                onClick={() => setQuizAnswers(prev => ({ 
+                                  ...prev, 
+                                  [`component${idx}_counts`]: count.toString()
+                                }))}
+                                className={`px-3 py-1 rounded text-white ${
+                                  quizAnswers[`component${idx}_counts`] === count.toString()
+                                    ? 'bg-purple-600/40 border-purple-400'
+                                    : 'bg-purple-600/20 hover:bg-purple-600/30 border-purple-500/30'
+                                } border`}
+                              >
+                                {count}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                        
+                        <button
+                          onClick={() => {
+                            // Calculate total and store components info
+                            let total = 0;
+                            const componentData = [];
+                            
+                            quizCountOptions.components.forEach((comp, idx) => {
+                              const counts = parseInt(quizAnswers[`component${idx}_counts`] || 0);
+                              total += counts;
+                              componentData.push({
+                                type: quizAnswers[`component${idx}_type`],
+                                counts: counts
+                              });
+                            });
+                            
+                            setQuizAnswers(prev => ({ 
+                              ...prev, 
+                              counts: total.toString(),
+                              components: componentData,
+                              componentCount: quizCountOptions.components.length
+                            }));
+                            setQuizStep('facing');
+                          }}
+                          disabled={(() => {
+                            // Check if all components have both type and counts selected
+                            for (let i = 0; i < quizCountOptions.components.length; i++) {
+                              if (!quizAnswers[`component${i}_type`] || !quizAnswers[`component${i}_counts`]) {
+                                return true;
+                              }
+                            }
+                            return false;
+                          })()}
+                          className="mt-4 px-4 py-2 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/30 rounded text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Next
+                        </button>
+                </div>
+              )}
+              
+              
+              {quizStep === 'facing' && (
+                <div>
+                  <p className="text-white/80 mb-2">What direction will you be facing in Set {toSet.set}?</p>
+                  <div className="flex flex-wrap gap-2">
+                    {['Front', 'Back', 'Left End Zone', 'Right End Zone'].map(dir => (
+                      <button
+                        key={dir}
+                        onClick={() => {
+                          setQuizAnswers(prev => ({ ...prev, facing: dir }));
+                          setQuizStep('music');
+                        }}
+                        className="px-3 py-1 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/30 rounded text-white text-sm"
+                      >
+                        {dir}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {quizStep === 'music' && quizMusicOptions && (
+                <div>
+                  <p className="text-white/80 mb-3">What music plays during Set {toSet.set}?</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    {quizMusicOptions.map((option, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          const updatedAnswers = { ...quizAnswers, music: option };
+                          setQuizAnswers(updatedAnswers);
+                          // Check all answers after music selection
+                          checkQuizAnswer(updatedAnswers);
+                        }}
+                        className="relative overflow-hidden bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/30 rounded-lg p-2 transition-all duration-200"
+                      >
+                        {option.isRest ? (
+                          <div className="flex flex-col items-center justify-center h-24">
+                            <div className="text-white/60 text-2xl mb-1">𝄽</div>
+                            <span className="text-white/80 text-sm">Rest</span>
+                          </div>
+                        ) : (
+                          <img
+                            src={option.imagePath}
+                            alt={`Music for Set ${option.setNumber}`}
+                            className="w-full h-24 object-contain"
+                            onError={(e) => {
+                              // If image fails to load, show placeholder
+                              e.target.style.display = 'none';
+                              e.target.parentElement.innerHTML = `
+                                <div class="flex flex-col items-center justify-center h-24">
+                                  <div class="text-white/60 text-sm">Set ${option.setNumber}</div>
+                                </div>
+                              `;
+                            }}
+                          />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            );
+          })()}
+          
+          {/* Quiz Feedback */}
+          {quizMode && showQuizFeedback && (() => {
+            const fromSet = getQuizFromSet();
+            const toSetIndex = getQuizToSetIndex();
+            const toSet = movementData[toSetIndex];
+            if (!fromSet || !toSet) return null;
+            return (
+            <div className="bg-blue-700/20 border border-blue-500/30 rounded-lg p-4 mb-4">
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="text-white font-semibold flex items-center">
+                  <CheckCircle className="w-5 h-5 text-green-300 mr-2" />
+                  Quiz Results
+                </h4>
+                {trophyCount > 0 && (
+                  <div className="flex items-center bg-yellow-600/20 px-2 py-1 rounded-lg">
+                    <Trophy className="w-4 h-4 text-yellow-400 mr-1" />
+                    <span className="text-yellow-300 text-sm font-semibold">{trophyCount}</span>
+                  </div>
+                )}
+              </div>
+              
+              <div className="space-y-2 text-sm">
+                {quizAnswers.position && (
+                  <div className="flex items-center">
+                    {(() => {
+                      const nextSet = toSet;
+                      const actualPos = parsePosition(nextSet.leftRight, nextSet.homeVisitor);
+                      const { x: actualX, y: actualY } = transformForDirectorView(actualPos.x, actualPos.y);
+                      
+                      // Transform the actual position to screen coordinates if zoomed
+                      let compareX = actualX;
+                      let compareY = actualY;
+                      
+                      if (zoomToFit) {
+                        const currentSet = movementData[currentSetIndex];
+                        if (currentSet) {
+                          const bbox = calculateBoundingBox(currentSet.set, false);
+                          if (bbox) {
+                            const targetCenterX = bbox.x + bbox.width / 2;
+                            const targetCenterY = bbox.y + bbox.height / 2;
+                            
+                            // Calculate zoom scale
+                            const margin = 50;
+                            const availableWidth = FIELD_LENGTH - 2 * margin;
+                            const availableHeight = FIELD_WIDTH - 2 * margin;
+                            const scaleX = availableWidth / bbox.width;
+                            const scaleY = availableHeight / bbox.height;
+                            const scale = Math.min(scaleX, scaleY, 4);
+                            
+                            // Apply transformations
+                            compareX = (actualX - targetCenterX) * scale + FIELD_LENGTH / 2;
+                            compareY = (actualY - targetCenterY) * scale + FIELD_WIDTH / 2;
+                          }
+                        }
+                      }
+                      
+                      const distance = Math.sqrt(
+                        Math.pow(quizAnswers.position.x - compareX, 2) + 
+                        Math.pow(quizAnswers.position.y - compareY, 2)
+                      );
+                      const tolerance = FIELD_WIDTH * 0.15; // Same 15% tolerance (60 pixels)
+                      const isCorrect = distance < tolerance;
+                      return (
+                        <>
+                          {isCorrect ? (
+                            <CheckCircle className="w-4 h-4 text-green-300 mr-2" />
+                          ) : (
+                            <XCircle className="w-4 h-4 text-red-300 mr-2" />
+                          )}
+                          <span className="text-white/80">
+                            Position: {isCorrect ? 'Correct!' : (
+                              <>
+                                <span className="text-red-300">Incorrect</span>
+                                <span className="text-white/60 ml-2">→ Actual: {nextSet.leftRight} | {nextSet.homeVisitor}</span>
+                              </>
+                            )}
+                          </span>
+                        </>
+                      );
+                    })()}
+                  </div>
+                )}
+                
+                {quizAnswers.counts !== undefined && (
+                  <div>
+                    {(() => {
+                      const nextSet = toSet;
+                      const actualCounts = parseInt(nextSet.counts) || 8;
+                      const userCounts = parseInt(quizAnswers.counts);
+                      const tip = nextSet.tip || '';
+                      
+                      // Check if this was a components question
+                      if (quizAnswers.components && quizAnswers.components.length > 0) {
+                        // Parse actual components from tip for comparison
+                        const actualComponents = [];
+                        const movePattern = /move[^,]*?for\s+(\d+)\s+counts?/gi;
+                        const holdPattern = /hold(?:\s+for)?\s+(\d+)\s+counts?/gi;
+                        
+                        const allMatches = [];
+                        let match;
+                        
+                        while ((match = movePattern.exec(tip)) !== null) {
+                          allMatches.push({
+                            type: 'move',
+                            counts: parseInt(match[1]),
+                            index: match.index
+                          });
+                        }
+                        
+                        while ((match = holdPattern.exec(tip)) !== null) {
+                          allMatches.push({
+                            type: 'hold',
+                            counts: parseInt(match[1]),
+                            index: match.index
+                          });
+                        }
+                        
+                        allMatches.sort((a, b) => a.index - b.index);
+                        
+                        let componentsCorrect = userCounts === actualCounts;
+                        if (componentsCorrect && allMatches.length > 0) {
+                          // Check individual components
+                          for (let i = 0; i < Math.max(allMatches.length, quizAnswers.components.length); i++) {
+                            if (!allMatches[i] || !quizAnswers.components[i] ||
+                                allMatches[i].type !== quizAnswers.components[i].type ||
+                                allMatches[i].counts !== quizAnswers.components[i].counts) {
+                              componentsCorrect = false;
+                              break;
+                            }
+                          }
+                        }
+                        
+                        return (
+                          <div className="space-y-1">
+                            <div className="flex items-center">
+                              {componentsCorrect ? (
+                                <CheckCircle className="w-4 h-4 text-green-300 mr-2" />
+                              ) : (
+                                <XCircle className="w-4 h-4 text-red-300 mr-2" />
+                              )}
+                              <span className="text-white/80">
+                                Total Counts: {actualCounts} {userCounts !== actualCounts && <span className="text-red-300">(You: {userCounts})</span>}
+                              </span>
+                            </div>
+                            <div className="ml-6 text-sm space-y-1">
+                              {quizAnswers.components.map((comp, idx) => (
+                                <div key={idx} className="text-white/60">
+                                  Component {idx + 1}: {comp.type} {comp.counts} counts
+                                </div>
+                              ))}
+                              {tip && (
+                                <div className="text-yellow-300 text-xs mt-1">
+                                  Tip: {tip}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      } else {
+                        // Simple counts display
+                        const isCorrect = userCounts === actualCounts;
+                        return (
+                          <div className="flex items-center">
+                            {isCorrect ? (
+                              <CheckCircle className="w-4 h-4 text-green-300 mr-2" />
+                            ) : (
+                              <XCircle className="w-4 h-4 text-red-300 mr-2" />
+                            )}
+                            <span className="text-white/80">
+                              Counts: {actualCounts}
+                            </span>
+                          </div>
+                        );
+                      }
+                    })()}
+                  </div>
+                )}
+                
+                {quizAnswers.facing && (
+                  <div className="flex items-center">
+                    {quizAnswers.facing === (toSet.orientation || 'Front') ? (
+                      <CheckCircle className="w-4 h-4 text-green-300 mr-2" />
+                    ) : (
+                      <XCircle className="w-4 h-4 text-red-300 mr-2" />
+                    )}
+                    <span className="text-white/80">
+                      Facing: {toSet.orientation || 'Front'}
+                    </span>
+                  </div>
+                )}
+                
+                {quizAnswers.music && (
+                  <div className="flex items-start">
+                    <div className="mt-1">
+                      {quizAnswers.music.isCorrect ? (
+                        <CheckCircle className="w-4 h-4 text-green-300 mr-2" />
+                      ) : (
+                        <XCircle className="w-4 h-4 text-red-300 mr-2" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <span className="text-white/80 text-sm">Music:</span>
+                      <div className="mt-1">
+                        {getMusicAvailability(toSet.set) ? (
+                          <img
+                            src={getMusicImagePath(movement, toSet.set)}
+                            alt={`Music for Set ${toSet.set}`}
+                            className="h-16 w-auto rounded border border-white/20"
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              e.target.parentElement.innerHTML = '<div class="text-white/60 text-sm">Music image not available</div>';
+                            }}
+                          />
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            <div className="text-white/60 text-2xl">𝄽</div>
+                            <span className="text-white/80 text-sm">Rest</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+              </div>
+              
+              <div className="mt-3 pt-3 border-t border-white/20">
+                <p className="text-white/80 mb-2">
+                  Overall Score: {quizScore.correct}/{quizScore.total} ({quizScore.total > 0 ? Math.round((quizScore.correct / quizScore.total) * 100) : 0}%)
+                </p>
+                <button
+                  onClick={nextQuizSet}
+                  className="px-4 py-2 bg-green-600/20 hover:bg-green-600/30 border border-green-500/30 rounded text-white"
+                >
+                  {currentSetIndex < movementData.length - 2 ? 'Next Set' : 'Finish Quiz'}
+                </button>
+              </div>
+            </div>
+            );
+          })()}
+          
           {/* Playback controls */}
-          <div className="flex items-center justify-center space-x-4">
-          <button
-            onClick={handleReset}
-            className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200"
-          >
-            <SkipBack className="w-5 h-5 text-white" />
-          </button>
-          
-          <button
-            onClick={handlePrevious}
-            disabled={currentSetIndex === 0}
-            className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <ChevronLeft className="w-5 h-5 text-white" />
-          </button>
-          
-          <button
-            onClick={handlePlayPause}
-            className="bg-red-600/30 hover:bg-red-600/40 border border-red-500/30 rounded-lg p-3 transition-all duration-200"
-          >
-            {isPlaying ? (
-              <Pause className="w-6 h-6 text-white" />
-            ) : (
-              <Play className="w-6 h-6 text-white" />
-            )}
-          </button>
-          
-          <button
-            onClick={handleNext}
-            disabled={currentSetIndex >= movementData.length - 1}
-            className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <ChevronRight className="w-5 h-5 text-white" />
-          </button>
-          
-          <div className="bg-red-600/20 border border-red-500/30 rounded-lg px-3 py-1">
-            <span className="text-white text-sm font-semibold">
-              {currentSetIndex + 1} / {movementData.length}
-            </span>
-          </div>
-          </div>
+          {!quizMode && (
+            <div className="flex items-center justify-center space-x-4">
+              <button
+                onClick={handleReset}
+                className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200"
+              >
+                <SkipBack className="w-5 h-5 text-white" />
+              </button>
+              
+              <button
+                onClick={handlePrevious}
+                disabled={currentSetIndex === 0}
+                className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft className="w-5 h-5 text-white" />
+              </button>
+              
+              <button
+                onClick={handlePlayPause}
+                className="bg-red-600/30 hover:bg-red-600/40 border border-red-500/30 rounded-lg p-3 transition-all duration-200"
+              >
+                {isPlaying ? (
+                  <Pause className="w-6 h-6 text-white" />
+                ) : (
+                  <Play className="w-6 h-6 text-white" />
+                )}
+              </button>
+              
+              <button
+                onClick={handleNext}
+                disabled={currentSetIndex >= movementData.length - 1}
+                className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronRight className="w-5 h-5 text-white" />
+              </button>
+              
+              <div className="bg-red-600/20 border border-red-500/30 rounded-lg px-3 py-1">
+                <span className="text-white text-sm font-semibold">
+                  {currentSetIndex + 1} / {movementData.length}
+                </span>
+              </div>
+            </div>
+          )}
           </>
         ) : (
           /* Show message when no performer is selected in staff view */
@@ -1960,48 +3170,74 @@ const PathVisualizerModal = ({
           </div>
         )}
         
-        {/* Options */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4 pb-4 max-w-md mx-auto">
-          <label className="flex items-center text-white/80 text-sm justify-center md:justify-start">
-            <input
-              type="checkbox"
-              checked={showPaths}
-              onChange={(e) => setShowPaths(e.target.checked)}
-              className="mr-2"
-            />
-            Show movement paths
-          </label>
-          <label className="flex items-center text-white/80 text-sm justify-center md:justify-start">
-            <input
-              type="checkbox"
-              checked={showOtherPerformers}
-              onChange={(e) => setShowOtherPerformers(e.target.checked)}
-              className="mr-2"
-            />
-            Show other performers
-          </label>
-          <label className="flex items-center text-white/80 text-sm justify-center md:justify-start">
-            <input
-              type="checkbox"
-              checked={show4StepMarks}
-              onChange={(e) => setShow4StepMarks(e.target.checked)}
-              className="mr-2"
-            />
-            Show 4-step ticks
-          </label>
-          <label className="flex items-center text-white/80 text-sm justify-center md:justify-start">
-            <input
-              type="checkbox"
-              checked={directorView}
-              onChange={(e) => setDirectorView(e.target.checked)}
-              className="mr-2"
-            />
-            Director's view
-          </label>
+        {/* Options - hidden during quiz mode */}
+        {!quizMode && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4 pb-4 max-w-md mx-auto">
+            <label className="flex items-center text-white/80 text-sm justify-center md:justify-start">
+              <input
+                type="checkbox"
+                checked={showPaths}
+                onChange={(e) => setShowPaths(e.target.checked)}
+                className="mr-2"
+              />
+              Show movement paths
+            </label>
+            <label className="flex items-center text-white/80 text-sm justify-center md:justify-start">
+              <input
+                type="checkbox"
+                checked={showOtherPerformers}
+                onChange={(e) => setShowOtherPerformers(e.target.checked)}
+                className="mr-2"
+              />
+              Show other performers
+            </label>
+            <label className="flex items-center text-white/80 text-sm justify-center md:justify-start">
+              <input
+                type="checkbox"
+                checked={show4StepMarks}
+                onChange={(e) => setShow4StepMarks(e.target.checked)}
+                className="mr-2"
+              />
+              Show 4-step ticks
+            </label>
+            <label className="flex items-center text-white/80 text-sm justify-center md:justify-start">
+              <input
+                type="checkbox"
+                checked={directorView}
+                onChange={(e) => setDirectorView(e.target.checked)}
+                className="mr-2"
+              />
+              Director's view
+            </label>
+          </div>
+        )}
+        
+        {/* Quiz Mode Toggle */}
+        <div className="flex justify-center mt-2 pb-4">
+          <button
+            onClick={() => {
+              if (quizMode) {
+                exitQuizMode();
+              } else {
+                startQuiz();
+              }
+            }}
+            disabled={currentSetIndex >= movementData.length - 1}
+            className={`flex items-center px-4 py-2 rounded-lg transition-all duration-200 ${
+              quizMode 
+                ? 'bg-purple-600/30 hover:bg-purple-600/40 border border-purple-500/30' 
+                : 'bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/30'
+            } ${currentSetIndex >= movementData.length - 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            <Brain className="w-5 h-5 text-purple-300 mr-2" />
+            <span className="text-white">
+              {quizMode ? 'Exit Quiz Mode' : 'Start Quiz Mode'}
+            </span>
+          </button>
         </div>
         
         {/* Legend when showing other performers - outside grid */}
-        {showOtherPerformers && (
+        {showOtherPerformers && !quizMode && (
           <div className="flex items-center justify-center flex-wrap gap-x-4 gap-y-2 mt-3 text-xs pb-4">
             <div className="flex items-center">
               <div className="w-3 h-3 rounded-full mr-1 ml-1" style={{ backgroundColor: '#ef4444' }}></div>
@@ -2056,6 +3292,31 @@ const PathVisualizerModal = ({
           movement={movement}
           setNumber={currentSet.set}
         />
+      )}
+      
+      {/* Perfect Score Badge */}
+      {showPerfectBadge && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center pointer-events-none">
+          <div className="bg-gradient-to-br from-yellow-600 via-yellow-500 to-yellow-600 p-1 rounded-2xl animate-pulse">
+            <div className="bg-black/90 rounded-2xl p-8 text-center">
+              <div className="mb-4">
+                <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full shadow-lg">
+                  <Trophy className="w-12 h-12 text-white" />
+                </div>
+              </div>
+              <h3 className="text-3xl font-bold text-yellow-400 mb-2">Perfect Score!</h3>
+              <p className="text-white text-lg mb-1">100% Accuracy</p>
+              <p className="text-white/80">Movement {movement} Complete</p>
+              <div className="mt-4 flex justify-center gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="text-yellow-400 text-2xl animate-pulse" style={{ animationDelay: `${i * 0.1}s` }}>
+                    ⭐
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -411,9 +411,9 @@ function parseOrientationTables(lines) {
 }
 
 // Generate tip and movement vector based on movement details
-function generateTipAndVector(set, prevSet, countInfo, forms, counts, orientation) {
-  // First set is always starting position
-  if (set.set === 1) {
+function generateTipAndVector(set, prevSet, countInfo, forms, counts, orientation, movement) {
+  // Only the first set of movement 1 is starting position
+  if (movement === '1' && set.set === 1) {
     return { tip: 'Starting position', movementVector: null };
   }
   
@@ -602,13 +602,38 @@ function updatePerformerData(coordinatesPath, existingData) {
           const prevSet = sets[index - 1];
           // Get orientation for the PREVIOUS set (where we're moving FROM)
           const prevOrientation = orientations[performerType]?.[movement]?.[prevSet.set] || 'Front';
-          const { tip, movementVector } = generateTipAndVector(set, prevSet, countInfo, forms, counts, prevOrientation);
+          const { tip, movementVector } = generateTipAndVector(set, prevSet, countInfo, forms, counts, prevOrientation, movement);
           result.tip = tip;
           if (movementVector !== null) {
             result.movementVector = movementVector;
           }
         } else {
-          result.tip = 'Starting position';
+          // First set of a movement
+          if (movement === '1') {
+            result.tip = 'Starting position';
+          } else {
+            // Need to get the last set of the previous movement
+            const prevMovementNum = parseInt(movement) - 1;
+            const prevMovement = prevMovementNum.toString();
+            
+            if (existingData[symbol]?.movements?.[prevMovement]) {
+              const prevMovementSets = existingData[symbol].movements[prevMovement];
+              if (prevMovementSets.length > 0) {
+                const prevSet = prevMovementSets[prevMovementSets.length - 1];
+                // Get orientation for the PREVIOUS set
+                const prevOrientation = orientations[performerType]?.[prevMovement]?.[prevSet.set] || 'Front';
+                const { tip, movementVector } = generateTipAndVector(set, prevSet, countInfo, forms, counts, prevOrientation, movement);
+                result.tip = tip;
+                if (movementVector !== null) {
+                  result.movementVector = movementVector;
+                }
+              } else {
+                result.tip = 'Starting position'; // Fallback
+              }
+            } else {
+              result.tip = 'Starting position'; // Fallback
+            }
+          }
         }
         
         // nextSet attribute removed - app will read tip from next set directly

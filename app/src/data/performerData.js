@@ -251,7 +251,8 @@ export const performerData = {
           "homeVisitor": "0.5 steps behind Home Hash",
           "form": "Battery Arc",
           "orientation": "Front",
-          "tip": "Starting position"
+          "tip": "Move Left Forward (14-to-5) for 14 counts",
+          "movementVector": 279
         },
         {
           "set": 15,
@@ -563,7 +564,8 @@ export const performerData = {
           "homeVisitor": "3.25 steps behind Home Hash",
           "form": "Battery Arc",
           "orientation": "Front",
-          "tip": "Starting position"
+          "tip": "Move Left (15-to-5) for 14 counts",
+          "movementVector": 274
         },
         {
           "set": 15,
@@ -876,7 +878,8 @@ export const performerData = {
           "homeVisitor": "5.5 steps behind Home Hash",
           "form": "Battery Arc",
           "orientation": "Front",
-          "tip": "Starting position"
+          "tip": "Move Left (15-to-5) for 14 counts",
+          "movementVector": 270
         },
         {
           "set": 15,
@@ -1188,7 +1191,8 @@ export const performerData = {
           "homeVisitor": "6.0 steps in front of Home Hash",
           "form": "Battery Arc",
           "orientation": "Front",
-          "tip": "Starting position"
+          "tip": "Move Left Forward (14-to-5) for 14 counts",
+          "movementVector": 284
         },
         {
           "set": 15,
@@ -1500,7 +1504,8 @@ export const performerData = {
           "homeVisitor": "2.75 steps in front of Home Hash",
           "form": "Battery Arc",
           "orientation": "Front",
-          "tip": "Starting position"
+          "tip": "Move Left Forward (13-to-5) for 14 counts",
+          "movementVector": 282
         },
         {
           "set": 15,
@@ -1810,7 +1815,8 @@ export const performerData = {
           "homeVisitor": "7.0 steps behind Home Hash",
           "form": "Battery Arc",
           "orientation": "Right End Zone",
-          "tip": "Starting position"
+          "tip": "Move Left (15-to-5) for 14 counts",
+          "movementVector": 266
         },
         {
           "set": 15,
@@ -2120,7 +2126,8 @@ export const performerData = {
           "homeVisitor": "8.0 steps behind Home Hash",
           "form": "Battery Arc",
           "orientation": "Right End Zone",
-          "tip": "Starting position"
+          "tip": "Move Left Backward (15-to-5) for 14 counts",
+          "movementVector": 261
         },
         {
           "set": 15,
@@ -2429,7 +2436,8 @@ export const performerData = {
           "homeVisitor": "8.5 steps behind Home Hash",
           "form": "Battery Arc",
           "orientation": "Right End Zone",
-          "tip": "Starting position"
+          "tip": "Move Left Backward (14-to-5) for 14 counts",
+          "movementVector": 256
         },
         {
           "set": 15,
@@ -2739,7 +2747,8 @@ export const performerData = {
           "homeVisitor": "8.75 steps behind Home Hash",
           "form": "Battery Arc",
           "orientation": "Right End Zone",
-          "tip": "Starting position"
+          "tip": "Move Left Backward (13-to-5) for 14 counts",
+          "movementVector": 250
         },
         {
           "set": 15,
@@ -3049,7 +3058,8 @@ export const performerData = {
           "homeVisitor": "8.5 steps behind Home Hash",
           "form": "Battery Arc",
           "orientation": "Right End Zone",
-          "tip": "Starting position"
+          "tip": "Move Left Backward (12-to-5) for 14 counts",
+          "movementVector": 247
         },
         {
           "set": 15,

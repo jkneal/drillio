@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Home, ChevronRight, Users, Music, Play, SkipForward, ChevronLeft, Lightbulb, Map, Wifi, WifiOff, ArrowRight, Sparkles, StickyNote, Route } from 'lucide-react';
+import { Home, ChevronRight, Users, Music, Play, SkipForward, ChevronLeft, Lightbulb, Map, Wifi, WifiOff, ArrowRight, Sparkles, StickyNote, Route, Brain, Trophy } from 'lucide-react';
 import { movementsConfig } from '../data/movementsConfig';
 
 const AboutPage = () => {
@@ -194,6 +194,25 @@ const AboutPage = () => {
                   <li>Staff view with performer selection dropdown</li>
                   <li>Orientation arrows indicating which direction performers are facing at each position</li>
                 </ul>
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <Brain className="w-4 h-4 text-purple-300 mr-2 flex-shrink-0" />
+              <div className="text-white/80 text-sm">
+                <span className="font-semibold text-white">Quiz Mode:</span> Test your drill knowledge 
+                with interactive quizzes in Path Visualization. Practice positions, counts, facing directions, 
+                and music recognition. Earn trophies for perfect scores on complete movement run-throughs!
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <Music className="w-4 h-4 text-purple-300 mr-2 flex-shrink-0" />
+              <div className="text-white/80 text-sm">
+                <span className="font-semibold text-white">Music Review:</span> Access from the movement 
+                selection screen to review all music for a movement in one place. See each set with its 
+                rehearsal mark, movement tip, and music notation (or rest indicator) - perfect for memorizing 
+                music cues and transitions.
               </div>
             </div>
 

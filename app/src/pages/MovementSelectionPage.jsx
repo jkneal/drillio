@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {Trophy, Play, X, Route} from 'lucide-react';
+import {Trophy, Play, X, Route, Music} from 'lucide-react';
 import { performerData } from '../data/performerData';
 import { movementsConfig } from '../data/movementsConfig';
 import PathVisualizerModal from '../components/PathVisualizerModal';
@@ -119,6 +119,15 @@ const MovementSelectionPage = () => {
                     >
                       <Route className="w-4 h-4 mr-1" />
                       <span>Path</span>
+                    </button>
+                    <span className="text-white/30">|</span>
+                    <button
+                      onClick={() => navigate(`/music-review/${movement}`)}
+                      className="flex items-center text-purple-300 hover:text-purple-200 text-sm transition-colors"
+                      title="Review music for sets"
+                    >
+                      <Music className="w-4 h-4 mr-1" />
+                      <span>Music</span>
                     </button>
                   </div>
                 )}

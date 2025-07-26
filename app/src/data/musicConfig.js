@@ -94,8 +94,8 @@ export const musicConfig = {
       "23": true,
       "24": true,
       "25": true,
-      "26": true,
-      "27": false,
+      "26": false,
+      "27": true,
       "28": true
     },
     "TD": {

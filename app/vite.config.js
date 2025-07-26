@@ -9,6 +9,9 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['HSlogo.png', 'logo.png', 'music/**/*', 'video/**/*'],
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw.js',
       manifest: {
         name: 'Drillio - Marching Band Drill Book',
         short_name: 'Drillio',
@@ -17,6 +20,7 @@ export default defineConfig({
         background_color: '#000000',
         display: 'standalone',
         orientation: 'portrait',
+        permissions: ['notifications'],
         icons: [
           {
             src: 'logo.png',

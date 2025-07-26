@@ -14,7 +14,7 @@ export const rehearsalMarks = {
     "25": "H-I",
     "26": "I-J",
     "27": "J-K",
-    "28": "K-O"
+    "28": "K-"
   },
   // Movement 3
   "3": {
