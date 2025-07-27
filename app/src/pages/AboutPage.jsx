@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Home, ChevronRight, Users, Music, Play, SkipForward, ChevronLeft, Lightbulb, Map, Wifi, WifiOff, ArrowRight, Sparkles, StickyNote, Route, Brain, Trophy } from 'lucide-react';
 import { movementsConfig } from '../data/movementsConfig';
+import { APP_VERSION } from '../version';
 
 const AboutPage = () => {
   const navigate = useNavigate();
@@ -243,8 +244,42 @@ const AboutPage = () => {
 
         <div className="text-center">
           <p className="text-white/60 text-xs">
-            Drillio v1.0 • Made with ❤️ for Edgewood Marching Band
+            Drillio v{APP_VERSION} • Made with ❤️ for Edgewood Marching Band
           </p>
+          
+          {/* Force Update Button */}
+          <button
+            onClick={async () => {
+              if (confirm('This will clear all app data and force a fresh update. Continue?')) {
+                try {
+                  // Unregister all service workers
+                  if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    for (let registration of registrations) {
+                      await registration.unregister();
+                    }
+                  }
+                  
+                  // Clear all caches
+                  if ('caches' in window) {
+                    const cacheNames = await caches.keys();
+                    await Promise.all(
+                      cacheNames.map(cacheName => caches.delete(cacheName))
+                    );
+                  }
+                  
+                  // Force reload
+                  window.location.reload(true);
+                } catch (error) {
+                  console.error('Error forcing update:', error);
+                  alert('Update failed. Please try reinstalling the app.');
+                }
+              }
+            }}
+            className="mt-4 px-4 py-2 bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded text-white text-sm"
+          >
+            Force Update (Clear Cache)
+          </button>
         </div>
       </div>
     </div>
