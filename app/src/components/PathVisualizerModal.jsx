@@ -2686,6 +2686,7 @@ const PathVisualizerModal = ({
               {quizStep === 'position' && (
                 <div className="text-white/80">
                   <p className="mb-2">Touch on the field where you'll be for Set {toSet.set}</p>
+                  <p className="text-sm text-white/60">Tip: You can pinch to zoom for more precision</p>
                 </div>
               )}
               
