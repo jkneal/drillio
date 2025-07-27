@@ -150,10 +150,10 @@ const NotificationManager = () => {
           boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
         }}
       >
-        <div className="flex items-start justify-between mb-2">
+        <div className="flex items-center justify-between mb-1">
           <div className="flex items-center text-white">
             <Bell className="w-5 h-5 mr-2 flex-shrink-0" />
-            <h3 className="font-semibold">Enable Notifications</h3>
+            <h3 className="font-semibold" style={{"marginTop": ".3rem", "marginBottom": ".3rem"}}>Enable Notifications</h3>
           </div>
           <button
             onClick={() => {
@@ -167,7 +167,7 @@ const NotificationManager = () => {
         </div>
         
         <p className="text-white/90 text-sm mb-3">
-          Get reminders to practice your drill and updates about new features!
+          Get reminders to review your drill and updates about new features!
         </p>
         
         <div className="flex space-x-2">

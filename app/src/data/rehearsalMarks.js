@@ -1,7 +1,15 @@
 export const rehearsalMarks = {
   // Movement 1
   "1": {
-
+    "2": "A-B",
+    "3": "B-",
+    "5": "-C",
+    "6": "C-",
+    "8": "-D",
+    "9": "D-1 before E",
+    "11": "2.5 bars before F-H",
+    "12": "H-I",
+    "13": "I-End"
   },
   // Movement 2
   "2": {

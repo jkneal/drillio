@@ -30,6 +30,7 @@ const PathVisualizerModal = ({
   const [logoImage, setLogoImage] = useState(null);
   const [animatedCenter, setAnimatedCenter] = useState({ x: 0, y: 0 });
   const lastCenterRef = useRef({ x: 0, y: 0 });
+  const currentTransformRef = useRef({ scale: 1, centerX: 0, centerY: 0 });
   // Initialize selectedPerformerId with a saved value if in staff view
   const [selectedPerformerId, setSelectedPerformerId] = useState(() => {
     if (isStaffView) {
@@ -562,6 +563,16 @@ const PathVisualizerModal = ({
     let currentScale = 1;
     let zoomCenterX = 0;
     let zoomCenterY = 0;
+    
+    // Reset transform parameters when not zoomed
+    if (!zoomToFit) {
+      currentTransformRef.current = {
+        scale: 1,
+        centerX: 0,
+        centerY: 0
+      };
+    }
+    
     if (zoomToFit && movementData[currentSetIndex]) {
       // In quiz mode, use the display set (which shows the "from" position)
       const quizFromSet = getQuizFromSet();
@@ -655,10 +666,18 @@ const PathVisualizerModal = ({
         zoomCenterX = targetCenterX;
         zoomCenterY = targetCenterY;
         
+        // Store the actual transformation parameters for click handling
+        currentTransformRef.current = {
+          scale: scale,
+          centerX: zoomCenterX,
+          centerY: zoomCenterY
+        };
+        
         // Apply transformations - use same scale for both dimensions
         ctx.translate(FIELD_LENGTH / 2, FIELD_WIDTH / 2);
         ctx.scale(scale, scale); // Same scale for X and Y maintains aspect ratio
         ctx.translate(-zoomCenterX, -zoomCenterY);
+        
       }
     }
     
@@ -1289,6 +1308,78 @@ const PathVisualizerModal = ({
       });
     }
     
+    // Draw quiz indicators inside the transform (like dots are drawn) - MUST be before ctx.restore()
+    if (quizMode && quizClickPosition && (quizStep === 'position' || showQuizFeedback)) {
+      // Draw user's clicked position at field coordinates
+      ctx.strokeStyle = '#ffff00';
+      ctx.lineWidth = 2;
+      ctx.globalAlpha = 0.8;
+      
+      // Draw crosshair
+      ctx.beginPath();
+      ctx.moveTo(quizClickPosition.x - 10, quizClickPosition.y);
+      ctx.lineTo(quizClickPosition.x + 10, quizClickPosition.y);
+      ctx.moveTo(quizClickPosition.x, quizClickPosition.y - 10);
+      ctx.lineTo(quizClickPosition.x, quizClickPosition.y + 10);
+      ctx.stroke();
+      
+      // Draw circle
+      ctx.beginPath();
+      ctx.arc(quizClickPosition.x, quizClickPosition.y, 5, 0, 2 * Math.PI);
+      ctx.stroke();
+      
+      // If showing feedback and position was incorrect, also show the actual position
+      if (showQuizFeedback && quizAnswers.position) {
+        const movementData = getMovementData();
+        const toSetIndex = getQuizToSetIndex();
+        const nextSet = movementData[toSetIndex];
+        if (nextSet) {
+          const actualPos = parsePosition(nextSet.leftRight, nextSet.homeVisitor);
+          const { x: actualX, y: actualY } = transformForDirectorView(actualPos.x, actualPos.y);
+          
+          // Compare in field coordinates (both are now in field space)
+          const distance = Math.sqrt(
+            Math.pow(quizAnswers.position.x - actualX, 2) + 
+            Math.pow(quizAnswers.position.y - actualY, 2)
+          );
+          const tolerance = FIELD_WIDTH * 0.05; // 20 pixels (5% of 400)
+          const isCorrect = distance < tolerance;
+          
+          if (!isCorrect) {
+            // Draw actual position in green (inside the transform like dots)
+            ctx.strokeStyle = '#00ff00';
+            ctx.fillStyle = '#00ff00';
+            ctx.lineWidth = 3;
+            ctx.globalAlpha = 0.9;
+            
+            // Draw crosshair for actual position at field coordinates
+            ctx.beginPath();
+            ctx.moveTo(actualX - 12, actualY);
+            ctx.lineTo(actualX + 12, actualY);
+            ctx.moveTo(actualX, actualY - 12);
+            ctx.lineTo(actualX, actualY + 12);
+            ctx.stroke();
+            
+            // Draw filled circle for actual position
+            ctx.beginPath();
+            ctx.arc(actualX, actualY, 6, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Draw connecting line
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1;
+            ctx.globalAlpha = 0.5;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(quizClickPosition.x, quizClickPosition.y);
+            ctx.lineTo(actualX, actualY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+          }
+        }
+      }
+    }
+    
     // Restore the context state before drawing UI elements
     ctx.restore();
     
@@ -1690,112 +1781,9 @@ const PathVisualizerModal = ({
       ctx.restore();
     }
     
-    
-    // Draw quiz click position if in quiz mode
-    if (quizMode && quizClickPosition) {
-      ctx.save();
-      
-      // Draw user's clicked position
-      ctx.strokeStyle = '#ffff00';
-      ctx.lineWidth = 2;
-      ctx.globalAlpha = 0.8;
-      
-      // Draw crosshair
-      ctx.beginPath();
-      ctx.moveTo(quizClickPosition.x - 10, quizClickPosition.y);
-      ctx.lineTo(quizClickPosition.x + 10, quizClickPosition.y);
-      ctx.moveTo(quizClickPosition.x, quizClickPosition.y - 10);
-      ctx.lineTo(quizClickPosition.x, quizClickPosition.y + 10);
-      ctx.stroke();
-      
-      // Draw circle
-      ctx.beginPath();
-      ctx.arc(quizClickPosition.x, quizClickPosition.y, 5, 0, 2 * Math.PI);
-      ctx.stroke();
-      
-      // If showing feedback and position was incorrect, also show the actual position
-      if (showQuizFeedback && quizAnswers.position) {
-        const movementData = getMovementData();
-        const toSetIndex = getQuizToSetIndex();
-        const nextSet = movementData[toSetIndex];
-        if (nextSet) {
-          const actualPos = parsePosition(nextSet.leftRight, nextSet.homeVisitor);
-          const { x: actualX, y: actualY } = transformForDirectorView(actualPos.x, actualPos.y);
-          
-          // Transform the actual position to screen coordinates if zoomed
-          let screenActualX = actualX;
-          let screenActualY = actualY;
-          
-          if (zoomToFit) {
-            const displaySet = quizMode ? getQuizFromSet() : movementData[currentSetIndex];
-            if (displaySet) {
-              const bbox = calculateBoundingBox(displaySet.set, false);
-              if (bbox) {
-                const targetCenterX = bbox.x + bbox.width / 2;
-                const targetCenterY = bbox.y + bbox.height / 2;
-                
-                // Calculate zoom scale (same logic as in canvas drawing)
-                const margin = 50;
-                const availableWidth = FIELD_LENGTH - 2 * margin;
-                const availableHeight = FIELD_WIDTH - 2 * margin;
-                const scaleX = availableWidth / bbox.width;
-                const scaleY = availableHeight / bbox.height;
-                const scale = Math.min(scaleX, scaleY, 4);
-                
-                // Apply the same transformations to convert to screen space
-                screenActualX = (actualX - targetCenterX) * scale + FIELD_LENGTH / 2;
-                screenActualY = (actualY - targetCenterY) * scale + FIELD_WIDTH / 2;
-              }
-            }
-          }
-          
-          const distance = Math.sqrt(
-            Math.pow(quizAnswers.position.x - screenActualX, 2) + 
-            Math.pow(quizAnswers.position.y - screenActualY, 2)
-          );
-          const tolerance = FIELD_WIDTH * 0.15;
-          const isCorrect = distance < tolerance;
-          
-          if (!isCorrect) {
-            // Draw actual position in green
-            ctx.strokeStyle = '#00ff00';
-            ctx.fillStyle = '#00ff00';
-            ctx.lineWidth = 3;
-            ctx.globalAlpha = 0.9;
-            
-            // Draw crosshair for actual position
-            ctx.beginPath();
-            ctx.moveTo(screenActualX - 12, screenActualY);
-            ctx.lineTo(screenActualX + 12, screenActualY);
-            ctx.moveTo(screenActualX, screenActualY - 12);
-            ctx.lineTo(screenActualX, screenActualY + 12);
-            ctx.stroke();
-            
-            // Draw filled circle for actual position
-            ctx.beginPath();
-            ctx.arc(screenActualX, screenActualY, 6, 0, 2 * Math.PI);
-            ctx.fill();
-            
-            // Draw connecting line
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 1;
-            ctx.globalAlpha = 0.5;
-            ctx.setLineDash([5, 5]);
-            ctx.beginPath();
-            ctx.moveTo(quizClickPosition.x, quizClickPosition.y);
-            ctx.lineTo(screenActualX, screenActualY);
-            ctx.stroke();
-            ctx.setLineDash([]);
-          }
-        }
-      }
-      
-      ctx.restore();
-    }
-    
     // Final reset of global alpha
     ctx.globalAlpha = 1;
-  }, [show, currentSetIndex, showPaths, showOtherPerformers, show4StepMarks, movement, currentPerformerData, performerId, selectedPerformerId, animationProgress, isPlaying, currentCount, zoomToFit, directorView, quizMode, quizClickPosition, showQuizFeedback, quizAnswers]);
+  }, [show, currentSetIndex, showPaths, showOtherPerformers, show4StepMarks, movement, currentPerformerData, performerId, selectedPerformerId, animationProgress, isPlaying, currentCount, zoomToFit, directorView, quizMode, quizClickPosition, showQuizFeedback]);
   
   // Animation loop with smooth transitions
   useEffect(() => {
@@ -1967,18 +1955,48 @@ const PathVisualizerModal = ({
     
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
+    
+    // Calculate click position relative to canvas
+    const clickX = event.clientX - rect.left;
+    const clickY = event.clientY - rect.top;
+    
+    // Scale to canvas internal coordinates
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
     
-    const x = (event.clientX - rect.left) * scaleX;
-    const y = (event.clientY - rect.top) * scaleY;
+    const canvasX = clickX * scaleX;
+    const canvasY = clickY * scaleY;
     
-    // Store the clicked position directly - the canvas drawing will handle any transformations
-    setQuizClickPosition({ x, y });
+    
+    // Convert click to field coordinates for consistent storage
+    let fieldX = canvasX;
+    let fieldY = canvasY;
+    
+    // If zoomed, inverse transform to get field coordinates
+    if (zoomToFit && currentTransformRef.current.scale !== 1) {
+      // Use the exact transformation parameters that were used for drawing
+      const { scale, centerX, centerY } = currentTransformRef.current;
+      
+      // Inverse transform: screen -> field coordinates
+      fieldX = (canvasX - FIELD_LENGTH / 2) / scale + centerX;
+      fieldY = (canvasY - FIELD_WIDTH / 2) / scale + centerY;
+      
+    }
+    
+    // Validate coordinates before storing
+    if (isNaN(fieldX) || isNaN(fieldY)) {
+      console.error('Invalid field coordinates:', { fieldX, fieldY });
+      return;
+    }
+    
+    // Store field coordinates (no need to transform for director view here since the drawing already handles it)
+    const newPosition = { x: fieldX, y: fieldY };
+    setQuizClickPosition(newPosition);
+    
     
     // Automatically move to next quiz step
     setTimeout(() => {
-      setQuizAnswers(prev => ({ ...prev, position: { x, y } }));
+      setQuizAnswers(prev => ({ ...prev, position: newPosition }));
       setQuizStep('counts');
     }, 500);
   };
@@ -2234,7 +2252,6 @@ const PathVisualizerModal = ({
     let correct = 0;
     let total = 0;
     
-    console.log('Quiz answers:', answers); // Debug log
     
     // Check position
     if (answers.position) {
@@ -2242,49 +2259,13 @@ const PathVisualizerModal = ({
       const actualPos = parsePosition(nextSet.leftRight, nextSet.homeVisitor);
       const { x: actualX, y: actualY } = transformForDirectorView(actualPos.x, actualPos.y);
       
-      // Transform the actual position to screen coordinates if zoomed
-      let compareX = actualX;
-      let compareY = actualY;
-      
-      if (zoomToFit) {
-        const currentSet = movementData[currentSetIndex];
-        if (currentSet) {
-          const bbox = calculateBoundingBox(currentSet.set, false);
-          if (bbox) {
-            const targetCenterX = bbox.x + bbox.width / 2;
-            const targetCenterY = bbox.y + bbox.height / 2;
-            
-            // Calculate zoom scale (same logic as in canvas drawing)
-            const margin = 50;
-            const availableWidth = FIELD_LENGTH - 2 * margin;
-            const availableHeight = FIELD_WIDTH - 2 * margin;
-            const scaleX = availableWidth / bbox.width;
-            const scaleY = availableHeight / bbox.height;
-            const scale = Math.min(scaleX, scaleY, 4);
-            
-            // Apply the same transformations to convert to screen space
-            compareX = (actualX - targetCenterX) * scale + FIELD_LENGTH / 2;
-            compareY = (actualY - targetCenterY) * scale + FIELD_WIDTH / 2;
-          }
-        }
-      }
-      
+      // Compare in field coordinates (both are now in field space)
       const distance = Math.sqrt(
-        Math.pow(answers.position.x - compareX, 2) + 
-        Math.pow(answers.position.y - compareY, 2)
+        Math.pow(answers.position.x - actualX, 2) + 
+        Math.pow(answers.position.y - actualY, 2)
       );
-      // Use relative tolerance - 15% of field width for mobile experience
-      const tolerance = FIELD_WIDTH * 0.15; // 60 pixels (15% of 400)
-      console.log('Position check:', {
-        userPosition: answers.position,
-        actualPosition: { x: actualX, y: actualY },
-        transformedPosition: { x: compareX, y: compareY },
-        distance: distance,
-        tolerance: tolerance,
-        isCorrect: distance < tolerance,
-        isZoomed: zoomToFit,
-        fieldDimensions: { width: FIELD_WIDTH, length: FIELD_LENGTH }
-      });
+      // Use relative tolerance
+      const tolerance = FIELD_WIDTH * 0.05; // 20 pixels (5% of 400) - more precise
       if (distance < tolerance) correct++;
     }
     
@@ -2359,7 +2340,17 @@ const PathVisualizerModal = ({
     // Check facing
     if (answers.facing) {
       total++;
-      if (answers.facing === (nextSet.orientation || 'Front')) correct++;
+      const actualOrientation = nextSet.orientation || 'Front';
+      
+      // For quiz purposes, flip Left/Right End Zone due to field orientation
+      let expectedAnswer = actualOrientation;
+      if (actualOrientation === 'Left End Zone') {
+        expectedAnswer = 'Right End Zone';
+      } else if (actualOrientation === 'Right End Zone') {
+        expectedAnswer = 'Left End Zone';
+      }
+      
+      if (answers.facing === expectedAnswer) correct++;
     }
     
     // Check music
@@ -2371,7 +2362,6 @@ const PathVisualizerModal = ({
       }
     }
     
-    console.log('Score calculation - correct:', correct, 'total:', total); // Debug log
     
     setQuizScore(prev => ({
       correct: prev.correct + correct,
@@ -2527,7 +2517,7 @@ const PathVisualizerModal = ({
                   width={FIELD_LENGTH}
                   height={FIELD_WIDTH}
                   className="w-full h-auto"
-                  onClick={handleCanvasClick}
+                  onClick={quizMode && quizStep === 'position' ? handleCanvasClick : undefined}
                   style={{ 
                     maxWidth: '100%',
                     maxHeight: '60vh',
@@ -2545,11 +2535,12 @@ const PathVisualizerModal = ({
                 if (!nextSet) return null;
                 const actualPos = parsePosition(nextSet.leftRight, nextSet.homeVisitor);
                 const { x: actualX, y: actualY } = transformForDirectorView(actualPos.x, actualPos.y);
+                
                 const distance = Math.sqrt(
                   Math.pow(quizAnswers.position.x - actualX, 2) + 
                   Math.pow(quizAnswers.position.y - actualY, 2)
                 );
-                const tolerance = FIELD_WIDTH * 0.15;
+                const tolerance = FIELD_WIDTH * 0.05; // 20 pixels (5% of 400)
                 const isCorrect = distance < tolerance;
                 
                 if (!isCorrect) {
@@ -2904,38 +2895,12 @@ const PathVisualizerModal = ({
                       const actualPos = parsePosition(nextSet.leftRight, nextSet.homeVisitor);
                       const { x: actualX, y: actualY } = transformForDirectorView(actualPos.x, actualPos.y);
                       
-                      // Transform the actual position to screen coordinates if zoomed
-                      let compareX = actualX;
-                      let compareY = actualY;
-                      
-                      if (zoomToFit) {
-                        const currentSet = movementData[currentSetIndex];
-                        if (currentSet) {
-                          const bbox = calculateBoundingBox(currentSet.set, false);
-                          if (bbox) {
-                            const targetCenterX = bbox.x + bbox.width / 2;
-                            const targetCenterY = bbox.y + bbox.height / 2;
-                            
-                            // Calculate zoom scale
-                            const margin = 50;
-                            const availableWidth = FIELD_LENGTH - 2 * margin;
-                            const availableHeight = FIELD_WIDTH - 2 * margin;
-                            const scaleX = availableWidth / bbox.width;
-                            const scaleY = availableHeight / bbox.height;
-                            const scale = Math.min(scaleX, scaleY, 4);
-                            
-                            // Apply transformations
-                            compareX = (actualX - targetCenterX) * scale + FIELD_LENGTH / 2;
-                            compareY = (actualY - targetCenterY) * scale + FIELD_WIDTH / 2;
-                          }
-                        }
-                      }
-                      
+                      // Compare in field coordinates
                       const distance = Math.sqrt(
-                        Math.pow(quizAnswers.position.x - compareX, 2) + 
-                        Math.pow(quizAnswers.position.y - compareY, 2)
+                        Math.pow(quizAnswers.position.x - actualX, 2) + 
+                        Math.pow(quizAnswers.position.y - actualY, 2)
                       );
-                      const tolerance = FIELD_WIDTH * 0.15; // Same 15% tolerance (60 pixels)
+                      const tolerance = FIELD_WIDTH * 0.05; // 20 pixels (5% of 400)
                       const isCorrect = distance < tolerance;
                       return (
                         <>
@@ -3055,14 +3020,34 @@ const PathVisualizerModal = ({
                 
                 {quizAnswers.facing && (
                   <div className="flex items-center">
-                    {quizAnswers.facing === (toSet.orientation || 'Front') ? (
-                      <CheckCircle className="w-4 h-4 text-green-300 mr-2" />
-                    ) : (
-                      <XCircle className="w-4 h-4 text-red-300 mr-2" />
-                    )}
-                    <span className="text-white/80">
-                      Facing: {toSet.orientation || 'Front'}
-                    </span>
+                    {(() => {
+                      const actualOrientation = toSet.orientation || 'Front';
+                      let expectedAnswer = actualOrientation;
+                      if (actualOrientation === 'Left End Zone') {
+                        expectedAnswer = 'Right End Zone';
+                      } else if (actualOrientation === 'Right End Zone') {
+                        expectedAnswer = 'Left End Zone';
+                      }
+                      const isCorrect = quizAnswers.facing === expectedAnswer;
+                      
+                      return (
+                        <>
+                          {isCorrect ? (
+                            <CheckCircle className="w-4 h-4 text-green-300 mr-2" />
+                          ) : (
+                            <XCircle className="w-4 h-4 text-red-300 mr-2" />
+                          )}
+                          <span className="text-white/80">
+                            Facing: {expectedAnswer}
+                            {!isCorrect && (
+                              <span className="text-red-300 ml-2">
+                                (You answered: {quizAnswers.facing})
+                              </span>
+                            )}
+                          </span>
+                        </>
+                      );
+                    })()}
                   </div>
                 )}
                 
@@ -3082,7 +3067,7 @@ const PathVisualizerModal = ({
                           <img
                             src={getMusicImagePath(movement, toSet.set)}
                             alt={`Music for Set ${toSet.set}`}
-                            className="h-16 w-auto rounded border border-white/20"
+                            className="w-full max-w-[150px] rounded border border-white/20"
                             onError={(e) => {
                               e.target.style.display = 'none';
                               e.target.parentElement.innerHTML = '<div class="text-white/60 text-sm">Music image not available</div>';
