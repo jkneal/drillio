@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 // Version-based naming - increment this for each release
-const BUILD_VERSION = '1.2.0';
+const BUILD_VERSION = '1.2.1';
 
 // https://vite.dev/config/
 export default defineConfig({
