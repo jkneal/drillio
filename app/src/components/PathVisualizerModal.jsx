@@ -70,6 +70,8 @@ const PathVisualizerModal = ({
   const [trophyCount, setTrophyCount] = useState(0);
   const [quizStartIndex, setQuizStartIndex] = useState(0); // Track where quiz started
   const [crossMovementQuizCompleted, setCrossMovementQuizCompleted] = useState(false); // Track if we've done the cross-movement quiz
+  const [showFinalResults, setShowFinalResults] = useState(false);
+  const [finalQuizScore, setFinalQuizScore] = useState({ correct: 0, total: 0 });
   
   // Load trophy count when movement changes
   useEffect(() => {
@@ -177,6 +179,12 @@ const PathVisualizerModal = ({
     let x = 0;
     let y = 0;
     
+    // Add safety check for undefined inputs
+    if (!leftRight || !frontBack) {
+      console.error('parsePosition called with invalid inputs:', { leftRight, frontBack });
+      return { x: 0, y: 0 };
+    }
+    
     // Parse left-right position
     // Format examples:
     // "Left: 4 steps Inside 30 yd ln"
@@ -226,9 +234,6 @@ const PathVisualizerModal = ({
         // Inside always means toward the 50
         // Outside always means away from the 50 (toward the end zone)
         
-        // Debug log
-        console.log(`Position: ${direction} ${steps} "${inOut}" ${yardLine}, base x: ${x}, offset: ${stepOffsetPixels}, inOut type: ${typeof inOut}`);
-        
         if (inOut && inOut.toLowerCase() === 'inside') {
           if (direction === 'Left') {
             // Left = on RIGHT side of screen
@@ -254,8 +259,6 @@ const PathVisualizerModal = ({
           // This shouldn't happen in marching band drill, but handle it gracefully
           // Just place at the yard line without offset
         }
-        
-        console.log(`Final x: ${x}`);
       }
     }
     
@@ -1945,6 +1948,8 @@ const PathVisualizerModal = ({
     setQuizStartIndex(startIndex); // Remember where we started
     setCrossMovementQuizCompleted(false); // Reset cross-movement quiz flag
     setIsPlaying(false);
+    setShowFinalResults(false); // Reset final results modal
+    setShowPerfectBadge(false); // Reset perfect badge
     // Automatically enable helpful features for quiz
     setShow4StepMarks(true);
     setZoomToFit(true);
@@ -1980,7 +1985,6 @@ const PathVisualizerModal = ({
       // Inverse transform: screen -> field coordinates
       fieldX = (canvasX - FIELD_LENGTH / 2) / scale + centerX;
       fieldY = (canvasY - FIELD_WIDTH / 2) / scale + centerY;
-      
     }
     
     // Validate coordinates before storing
@@ -2001,6 +2005,45 @@ const PathVisualizerModal = ({
     }, 500);
   };
   
+  // Helper function to parse tip components
+  const parseTipComponents = (tip) => {
+    const moveMatches = tip.match(/move[^,]+?for\s+(\d+)\s+counts?/gi) || [];
+    const holdMatches = tip.match(/hold(?:\s+for)?\s+(\d+)\s+counts?/gi) || [];
+    
+    const allMatches = [];
+    
+    // Process move matches
+    moveMatches.forEach(matchStr => {
+      const countMatch = matchStr.match(/for\s+(\d+)\s+counts?/i);
+      if (countMatch) {
+        const index = tip.indexOf(matchStr);
+        allMatches.push({
+          type: 'move',
+          counts: parseInt(countMatch[1]),
+          index: index
+        });
+      }
+    });
+    
+    // Process hold matches
+    holdMatches.forEach(matchStr => {
+      const countMatch = matchStr.match(/(\d+)\s+counts?/i);
+      if (countMatch) {
+        const index = tip.indexOf(matchStr);
+        allMatches.push({
+          type: 'hold',
+          counts: parseInt(countMatch[1]),
+          index: index
+        });
+      }
+    });
+    
+    // Sort by position in string to get correct order
+    allMatches.sort((a, b) => a.index - b.index);
+    
+    return allMatches;
+  };
+  
   // Generate count options for quiz
   const generateCountOptions = (correctCount, hasHoldMove = false) => {
     const options = new Set();
@@ -2012,7 +2055,11 @@ const PathVisualizerModal = ({
     const isCorrectEven = correctCount % 2 === 0;
     
     // Generate 3 incorrect options (all even)
-    while (options.size < 4) {
+    let attempts = 0;
+    const maxAttempts = 50;
+    
+    while (options.size < 4 && attempts < maxAttempts) {
+      attempts++;
       let wrongCount;
       
       // Base the generation on the correct count value
@@ -2024,18 +2071,36 @@ const PathVisualizerModal = ({
         // For medium counts, use +/- 2, 4, or 6
         const offset = 2 * (Math.floor(Math.random() * 3) + 1);
         wrongCount = correctCount + (Math.random() < 0.5 ? -offset : offset);
-      } else {
+      } else if (correctCount <= 32) {
         // For larger counts, use +/- 4, 6, or 8
         const offset = 2 * (Math.floor(Math.random() * 3) + 2);
+        wrongCount = correctCount + (Math.random() < 0.5 ? -offset : offset);
+      } else {
+        // For very large counts (>32), use larger offsets
+        const offset = 2 * (Math.floor(Math.random() * 5) + 2); // 4, 6, 8, 10, or 12
         wrongCount = correctCount + (Math.random() < 0.5 ? -offset : offset);
       }
       
       // Make sure wrong count is even
       wrongCount = Math.round(wrongCount / 2) * 2;
       
-      // Ensure count is between 2 and 32 and different from correct
-      if (wrongCount >= 2 && wrongCount <= 32 && wrongCount !== correctCount) {
+      // Ensure count is at least 2 and different from correct
+      // Remove upper limit for very large counts
+      if (wrongCount >= 2 && wrongCount !== correctCount) {
         options.add(wrongCount);
+      }
+    }
+    
+    // If we still don't have enough options (shouldn't happen), add some defaults
+    if (options.size < 4) {
+      const defaults = [correctCount - 8, correctCount - 4, correctCount + 4, correctCount + 8]
+        .map(n => Math.max(2, Math.round(n / 2) * 2))
+        .filter(n => n !== correctCount);
+      
+      for (const defaultOpt of defaults) {
+        if (options.size < 4) {
+          options.add(defaultOpt);
+        }
       }
     }
     
@@ -2080,33 +2145,7 @@ const PathVisualizerModal = ({
     
     // Parse components from tip
     const components = [];
-    
-    // Pattern to match "Move ... for X counts" or "hold for X counts"
-    const movePattern = /move[^,]*?for\s+(\d+)\s+counts?/gi;
-    const holdPattern = /hold(?:\s+for)?\s+(\d+)\s+counts?/gi;
-    
-    // Collect all matches with their positions
-    const allMatches = [];
-    let match;
-    
-    while ((match = movePattern.exec(tip)) !== null) {
-      allMatches.push({
-        type: 'move',
-        counts: parseInt(match[1]),
-        index: match.index
-      });
-    }
-    
-    while ((match = holdPattern.exec(tip)) !== null) {
-      allMatches.push({
-        type: 'hold',
-        counts: parseInt(match[1]),
-        index: match.index
-      });
-    }
-    
-    // Sort by position in string to get correct order
-    allMatches.sort((a, b) => a.index - b.index);
+    const allMatches = parseTipComponents(tip);
     
     // Build components array
     allMatches.forEach(match => {
@@ -2131,7 +2170,7 @@ const PathVisualizerModal = ({
     });
     
     return { components, countOptions, actualCounts, tip };
-  }, [quizMode, quizStep, currentSetIndex]); // Dependencies
+  }, [quizMode, quizStep, currentSetIndex, movement, performerId, selectedPerformerId, isStaffView]); // Dependencies
   
   // Memoize music options for quiz
   const quizMusicOptions = useMemo(() => {
@@ -2284,29 +2323,7 @@ const PathVisualizerModal = ({
           if (tip) {
             // Parse actual components from tip
             const actualComponents = [];
-            const movePattern = /move[^,]*?for\s+(\d+)\s+counts?/gi;
-            const holdPattern = /hold(?:\s+for)?\s+(\d+)\s+counts?/gi;
-            
-            const allMatches = [];
-            let match;
-            
-            while ((match = movePattern.exec(tip)) !== null) {
-              allMatches.push({
-                type: 'move',
-                counts: parseInt(match[1]),
-                index: match.index
-              });
-            }
-            
-            while ((match = holdPattern.exec(tip)) !== null) {
-              allMatches.push({
-                type: 'hold',
-                counts: parseInt(match[1]),
-                index: match.index
-              });
-            }
-            
-            allMatches.sort((a, b) => a.index - b.index);
+            const allMatches = parseTipComponents(tip);
             
             // Check if user's components match
             let componentsCorrect = true;
@@ -2405,16 +2422,22 @@ const PathVisualizerModal = ({
       setQuizClickPosition(null);
       // Don't increment currentSetIndex - stay at 0 for the next quiz (set 14 → set 15)
     } else if (currentSetIndex < movementData.length - 2) {
+      // Only increment if we're not on the second-to-last set
+      // (movementData.length - 2 means we can still ask about one more transition)
       setCurrentSetIndex(prev => prev + 1);
       setQuizStep('position');
       setQuizAnswers({}); // This clears all answers including holdCounts/moveCounts
       setShowQuizFeedback(false);
       setQuizClickPosition(null);
     } else {
-      // Quiz completed - check if perfect score AND started from beginning
+      // Quiz completed - save final score and show results
+      // This triggers when currentSetIndex >= movementData.length - 2
+      // (i.e., we just completed the last possible quiz)
+      setFinalQuizScore({ ...quizScore });
+      setShowFinalResults(true);
+      
+      // Check if perfect score AND started from beginning
       const isPerfectScore = quizScore.correct === quizScore.total && quizScore.total > 0;
-      // For movement 1, must start from index 0
-      // For other movements, the quiz would have backed up, so starting from 0 is still correct
       const isCompleteMovement = quizStartIndex === 0;
       
       if (isPerfectScore && isCompleteMovement) {
@@ -2425,18 +2448,10 @@ const PathVisualizerModal = ({
         localStorage.setItem(trophyKey, newTrophyCount.toString());
         setTrophyCount(newTrophyCount);
         
-        setShowPerfectBadge(true);
-        // Auto-hide badge after 5 seconds
+        // Show trophy badge after a short delay
         setTimeout(() => {
-          setShowPerfectBadge(false);
-          exitQuizMode();
-        }, 5000);
-      } else if (isPerfectScore && !isCompleteMovement) {
-        // Perfect score but didn't start from beginning - show congratulations but no trophy
-        alert(`Great job! Perfect score from Set ${movementData[quizStartIndex].set} to the end. To earn a trophy, complete the entire movement from Set ${movementData[0].set}.`);
-        exitQuizMode();
-      } else {
-        exitQuizMode();
+          setShowPerfectBadge(true);
+        }, 500);
       }
     }
   };
@@ -2936,29 +2951,7 @@ const PathVisualizerModal = ({
                       if (quizAnswers.components && quizAnswers.components.length > 0) {
                         // Parse actual components from tip for comparison
                         const actualComponents = [];
-                        const movePattern = /move[^,]*?for\s+(\d+)\s+counts?/gi;
-                        const holdPattern = /hold(?:\s+for)?\s+(\d+)\s+counts?/gi;
-                        
-                        const allMatches = [];
-                        let match;
-                        
-                        while ((match = movePattern.exec(tip)) !== null) {
-                          allMatches.push({
-                            type: 'move',
-                            counts: parseInt(match[1]),
-                            index: match.index
-                          });
-                        }
-                        
-                        while ((match = holdPattern.exec(tip)) !== null) {
-                          allMatches.push({
-                            type: 'hold',
-                            counts: parseInt(match[1]),
-                            index: match.index
-                          });
-                        }
-                        
-                        allMatches.sort((a, b) => a.index - b.index);
+                        const allMatches = parseTipComponents(tip);
                         
                         let componentsCorrect = userCounts === actualCounts;
                         if (componentsCorrect && allMatches.length > 0) {
@@ -3091,12 +3084,34 @@ const PathVisualizerModal = ({
                 <p className="text-white/80 mb-2">
                   Overall Score: {quizScore.correct}/{quizScore.total} ({quizScore.total > 0 ? Math.round((quizScore.correct / quizScore.total) * 100) : 0}%)
                 </p>
-                <button
-                  onClick={nextQuizSet}
-                  className="px-4 py-2 bg-green-600/20 hover:bg-green-600/30 border border-green-500/30 rounded text-white"
-                >
-                  {currentSetIndex < movementData.length - 2 ? 'Next Set' : 'Finish Quiz'}
-                </button>
+                {(() => {
+                  // Check if this is the last possible quiz
+                  // The last quiz is when we're going from the second-to-last set to the last set
+                  const isLastQuiz = toSet.set === movementData[movementData.length - 1].set;
+                  
+                  if (!isLastQuiz) {
+                    return (
+                      <button
+                        onClick={nextQuizSet}
+                        className="px-4 py-2 bg-green-600/20 hover:bg-green-600/30 border border-green-500/30 rounded text-white"
+                      >
+                        Next Set
+                      </button>
+                    );
+                  } else {
+                    return (
+                      <button
+                        onClick={() => {
+                          // For the last set, show results
+                          nextQuizSet(); // This will handle trophy logic
+                        }}
+                        className="px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded text-white"
+                      >
+                        Show Results
+                      </button>
+                    );
+                  }
+                })()}
               </div>
             </div>
             );
@@ -3280,11 +3295,91 @@ const PathVisualizerModal = ({
         />
       )}
       
+      {/* Final Results Modal */}
+      {showFinalResults && !showPerfectBadge && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-purple-600/20 border border-purple-500/30 rounded-xl p-6 backdrop-blur-sm max-w-md w-full">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-2xl font-bold text-white">Quiz Complete!</h3>
+              <button
+                onClick={() => {
+                  setShowFinalResults(false);
+                  exitQuizMode();
+                }}
+                className="bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/30 rounded-lg p-icon transition-all duration-200"
+              >
+                <X className="w-5 h-5 text-white" />
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="bg-purple-700/20 border border-purple-500/30 rounded-lg p-6">
+                <div className="text-center">
+                  <div className="text-5xl font-bold text-white mb-2">
+                    {Math.round((finalQuizScore.correct / finalQuizScore.total) * 100)}%
+                  </div>
+                  <div className="text-white/80 text-lg">
+                    {finalQuizScore.correct} out of {finalQuizScore.total} correct
+                  </div>
+                </div>
+              </div>
+              
+              <div className="text-center text-white/80">
+                {finalQuizScore.correct === finalQuizScore.total ? (
+                  <div>
+                    <p className="text-green-400 font-semibold mb-2">Perfect Score! 🎉</p>
+                    {quizStartIndex === 0 ? (
+                      <p>You've earned a trophy for completing the entire movement!</p>
+                    ) : (
+                      <p>Great job! Complete the entire movement from the beginning to earn a trophy.</p>
+                    )}
+                  </div>
+                ) : (
+                  <p>Keep practicing to improve your score!</p>
+                )}
+              </div>
+              
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setShowFinalResults(false);
+                    setCurrentSetIndex(0);
+                    startQuiz();
+                  }}
+                  className="flex-1 px-4 py-2 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/30 rounded text-white"
+                >
+                  Try Again
+                </button>
+                <button
+                  onClick={() => {
+                    setShowFinalResults(false);
+                    exitQuizMode();
+                  }}
+                  className="flex-1 px-4 py-2 bg-gray-600/20 hover:bg-gray-600/30 border border-gray-500/30 rounded text-white"
+                >
+                  Exit Quiz
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* Perfect Score Badge */}
       {showPerfectBadge && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center pointer-events-none">
-          <div className="bg-gradient-to-br from-yellow-600 via-yellow-500 to-yellow-600 p-1 rounded-2xl animate-pulse">
-            <div className="bg-black/90 rounded-2xl p-8 text-center">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-gradient-to-br from-yellow-600 via-yellow-500 to-yellow-600 p-1 rounded-xl animate-pulse">
+            <div className="bg-yellow-900/90 backdrop-blur-sm rounded-xl p-8 text-center relative">
+              <button
+                onClick={() => {
+                  setShowPerfectBadge(false);
+                  setShowFinalResults(false);
+                  exitQuizMode();
+                }}
+                className="absolute top-2 right-2 text-white/60 hover:text-white"
+              >
+                <X className="w-6 h-6" />
+              </button>
               <div className="mb-4">
                 <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full shadow-lg">
                   <Trophy className="w-12 h-12 text-white" />
@@ -3300,6 +3395,16 @@ const PathVisualizerModal = ({
                   </div>
                 ))}
               </div>
+              <button
+                onClick={() => {
+                  setShowPerfectBadge(false);
+                  setShowFinalResults(false);
+                  exitQuizMode();
+                }}
+                className="mt-6 px-6 py-2 bg-yellow-600/20 hover:bg-yellow-600/30 border border-yellow-500/30 rounded text-white"
+              >
+                Continue
+              </button>
             </div>
           </div>
         </div>
