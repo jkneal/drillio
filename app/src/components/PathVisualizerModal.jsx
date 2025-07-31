@@ -661,8 +661,8 @@ const PathVisualizerModal = ({
         const scaleY = FIELD_WIDTH / fixedHeight;
         let scale = Math.min(scaleX, scaleY) * 0.85;
         
-        // Limit maximum zoom
-        const maxScale = 2.5;
+        // Limit maximum zoom - increased to allow more detailed viewing
+        const maxScale = 5.0;
         scale = Math.min(scale, maxScale);
         currentScale = scale;
         
