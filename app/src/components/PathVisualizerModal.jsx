@@ -3376,9 +3376,9 @@ const PathVisualizerModal = ({
                   setShowFinalResults(false);
                   exitQuizMode();
                 }}
-                className="absolute top-2 right-2 text-white/60 hover:text-white"
+                className="absolute top-2 right-2 text-white/60 hover:text-white bg-yellow-600/20 hover:bg-yellow-600/30 border border-yellow-500/30 rounded-lg p-icon transition-all duration-200"
               >
-                <X className="w-6 h-6" />
+                <X className="w-5 h-5" />
               </button>
               <div className="mb-4">
                 <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full shadow-lg">
