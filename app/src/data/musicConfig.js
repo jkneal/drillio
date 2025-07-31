@@ -77,9 +77,16 @@ export const musicConfig = {
       "23": true,
       "24": true,
       "25": true,
-      "26": true,
+      "26": false,
       "27": true,
-      "28": true
+      "28": true,
+      "29": false,
+      "30": true,
+      "31": true,
+      "32": true,
+      "33": true,
+      "34": true,
+      "35": true
     },
     "SD": {
       "14": true,
@@ -95,8 +102,15 @@ export const musicConfig = {
       "24": true,
       "25": true,
       "26": false,
-      "27": true,
-      "28": true
+      "27": false,
+      "28": true,
+      "29": false,
+      "30": true,
+      "31": true,
+      "32": true,
+      "33": true,
+      "34": true,
+      "35": true
     },
     "TD": {
       "14": true,
@@ -113,7 +127,14 @@ export const musicConfig = {
       "25": true,
       "26": false,
       "27": false,
-      "28": true
+      "28": true,
+      "29": false,
+      "30": true,
+      "31": true,
+      "32": true,
+      "33": true,
+      "34": true,
+      "35": true
     },
     "BD": {
       "14": true,
@@ -128,9 +149,16 @@ export const musicConfig = {
       "23": true,
       "24": true,
       "25": true,
-      "26": true,
+      "26": false,
       "27": true,
-      "28": true
+      "28": true,
+      "29": false,
+      "30": true,
+      "31": true,
+      "32": true,
+      "33": true,
+      "34": true,
+      "35": true
     }
   },
   // Movement 3
