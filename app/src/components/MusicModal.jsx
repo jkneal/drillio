@@ -177,10 +177,15 @@ const MusicModal = ({
       clientY = e.clientY;
     }
     
+    // Account for any zoom/scale
     const x = ((clientX - rect.left) / rect.width) * 100;
     const y = ((clientY - rect.top) / rect.height) * 100;
     
-    return { x, y };
+    // Clamp values between 0 and 100
+    return { 
+      x: Math.max(0, Math.min(100, x)), 
+      y: Math.max(0, Math.min(100, y)) 
+    };
   };
 
   const handleStart = (e) => {
@@ -263,20 +268,20 @@ const MusicModal = ({
           </button>
         </div>
         {!imageError && (
-          <div className="mb-4 flex gap-2 justify-center">
+          <div className="mb-4 flex gap-1 sm:gap-2 justify-center flex-wrap">
             <button
               onClick={() => {
                 setIsAddingNote(true);
                 setSelectedTemplate('hold');
                 setIsHighlighting(false);
               }}
-              className={`px-3 py-1 rounded-lg border transition-all duration-200 ${
+              className={`px-2 sm:px-3 py-1 rounded-lg border transition-all duration-200 text-xs sm:text-sm ${
                 isAddingNote && selectedTemplate === 'hold'
                   ? 'bg-blue-600/30 border-blue-500/50 text-white'
                   : 'bg-red-600/20 hover:bg-red-600/30 border-red-500/30 text-white'
               }`}
             >
-              <Plus className="w-4 h-4 inline mr-1" />
+              <Plus className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />
               Add Hold
             </button>
             <button
@@ -285,13 +290,13 @@ const MusicModal = ({
                 setSelectedTemplate('custom');
                 setIsHighlighting(false);
               }}
-              className={`px-3 py-1 rounded-lg border transition-all duration-200 ${
+              className={`px-2 sm:px-3 py-1 rounded-lg border transition-all duration-200 text-xs sm:text-sm ${
                 isAddingNote && selectedTemplate === 'custom'
                   ? 'bg-blue-600/30 border-blue-500/50 text-white'
                   : 'bg-red-600/20 hover:bg-red-600/30 border-red-500/30 text-white'
               }`}
             >
-              <Plus className="w-4 h-4 inline mr-1" />
+              <Plus className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />
               Add Custom
             </button>
             <button
@@ -301,14 +306,14 @@ const MusicModal = ({
                 setSelectedTemplate('');
                 setShowCustomInput(false);
               }}
-              className={`px-3 py-1 rounded-lg border transition-all duration-200 ${
+              className={`px-2 sm:px-3 py-1 rounded-lg border transition-all duration-200 text-xs sm:text-sm ${
                 isHighlighting
                   ? 'bg-yellow-600/30 border-yellow-500/50 text-white'
                   : 'bg-red-600/20 hover:bg-red-600/30 border-red-500/30 text-white'
               }`}
             >
-              <Highlighter className="w-4 h-4 inline mr-1" />
-              {isHighlighting ? 'Stop Highlighting' : 'Highlight'}
+              <Highlighter className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />
+              {isHighlighting ? 'Stop' : 'Highlight'}
             </button>
             {isAddingNote && (
               <button
@@ -317,7 +322,7 @@ const MusicModal = ({
                   setSelectedTemplate('');
                   setShowCustomInput(false);
                 }}
-                className="px-3 py-1 bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg text-white transition-all duration-200"
+                className="px-2 sm:px-3 py-1 bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg text-white transition-all duration-200 text-xs sm:text-sm"
               >
                 Cancel
               </button>

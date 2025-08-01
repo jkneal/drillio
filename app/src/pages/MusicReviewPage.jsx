@@ -213,15 +213,13 @@ const MusicReviewPage = () => {
                   )}
 
                   {/* Music Image or Rest */}
-                  <div className="bg-black/30 border border-white/10 rounded-lg p-4">
+                  <div className="bg-black/30 border border-white/10 rounded-lg p-4 text-center">
                     {hasMusic ? (
-                      <div className="text-center">
-                        <div className="relative inline-block" style={{ verticalAlign: 'top' }}>
-                          <img
-                            src={getMusicImagePath(set.set)}
-                            alt={`Music for Set ${set.set}`}
-                            className="max-w-full max-h-96 object-contain rounded"
-                            style={{ display: 'block', verticalAlign: 'top' }}
+                      <div className="relative inline-block">
+                        <img
+                          src={getMusicImagePath(set.set)}
+                          alt={`Music for Set ${set.set}`}
+                          className="max-w-full max-h-96 object-contain rounded"
                           onError={(e) => {
                             e.target.onerror = null;
                             e.target.parentElement.innerHTML = `
@@ -231,23 +229,23 @@ const MusicReviewPage = () => {
                             `;
                           }}
                         />
-                          
-                          {/* Expand button */}
-                          <button
-                            onClick={() => handleOpenModal(set.set)}
-                            className="absolute top-2 right-2 bg-red-600/80 hover:bg-red-600 border border-red-500/50 rounded-lg p-1.5 transition-all duration-200 shadow-lg"
-                            title="Expand and edit"
-                          >
-                            <Expand className="w-4 h-4 text-white" />
-                          </button>
-                          
-                          {/* SVG overlay for highlights */}
-                          <svg 
-                            className="absolute inset-0 w-full h-full pointer-events-none"
-                            viewBox="0 0 100 100"
-                            preserveAspectRatio="none"
-                            style={{ transform: 'translateY(18px)' }}
-                          >
+                        
+                        {/* Expand button */}
+                        <button
+                          onClick={() => handleOpenModal(set.set)}
+                          className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-red-600/80 hover:bg-red-600 border border-red-500/50 rounded-lg p-1 sm:p-1.5 transition-all duration-200 shadow-lg"
+                          title="Expand and edit"
+                        >
+                          <Expand className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                        </button>
+                        
+                        {/* SVG overlay for highlights */}
+                        <svg 
+                          className="absolute inset-0 w-full h-full pointer-events-none"
+                          viewBox="0 0 100 100"
+                          preserveAspectRatio="none"
+                          style={{ transform: 'translateY(18px)' }}
+                        >
                           {highlightsData[set.set]?.map((highlight) => (
                             <rect
                               key={highlight.id}
@@ -277,7 +275,6 @@ const MusicReviewPage = () => {
                             </div>
                           </div>
                         ))}
-                        </div>
                       </div>
                     ) : (
                       <div className="text-center py-12 bg-gray-800/30 rounded-lg">
