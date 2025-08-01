@@ -359,6 +359,10 @@
   background-color: rgba(220, 38, 38, 0.3);
 }
 
+[class*="bg-red-600/80"] {
+  background-color: rgba(220, 38, 38, 0.8);
+}
+
 [class*="bg-red-700/20"] {
   background-color: rgba(185, 28, 28, 0.2);
 }
@@ -430,6 +434,10 @@
 
 [class*="border-red-500/30"] {
   border-color: rgba(239, 68, 68, 0.3);
+}
+
+[class*="border-red-500/50"] {
+  border-color: rgba(239, 68, 68, 0.5);
 }
 
 [class*="border-green-500/30"] {
@@ -516,6 +524,10 @@
   background-color: rgba(220, 38, 38, 0.3);
 }
 
+[class*="hover:bg-red-600"]:hover {
+  background-color: rgb(220, 38, 38);
+}
+
 [class*="hover:bg-green-600/30"]:hover {
   background-color: rgba(22, 163, 74, 0.3);
 }
@@ -591,6 +603,14 @@
   top: 1rem;
 }
 
+.right-2 {
+  right: 0.5rem;
+}
+
+.right-4 {
+  right: 1rem;
+}
+
 .left-2 {
   left: 0.5rem;
 }
@@ -605,6 +625,10 @@
 
 .z-10 {
   z-index: 10;
+}
+
+.z-20 {
+  z-index: 20;
 }
 
 .z-50 {
@@ -740,6 +764,10 @@
 .py-3 {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
+}
+
+.p-1\.5 {
+  padding: 0.375rem;
 }
 
 .p-2 {
@@ -922,9 +950,17 @@ select option {
   border-color: rgba(255, 255, 255, 0.4);
 }
 
-/* Inline flex */
+/* Inline display utilities */
 .inline-flex {
   display: inline-flex;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.block {
+  display: block;
 }
 
 /* Nickname badge styles */

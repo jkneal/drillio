@@ -1,15 +1,20 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Music } from 'lucide-react';
+import { ChevronLeft, Music, Expand, Trash2 } from 'lucide-react';
 import { performerData } from '../data/performerData';
 import { rehearsalMarks } from '../data/rehearsalMarks';
 import { musicConfig } from '../data/musicConfig';
 import { movementsConfig } from '../data/movementsConfig';
+import MusicModal from '../components/MusicModal';
 
 const MusicReviewPage = () => {
   const { movement } = useParams();
   const navigate = useNavigate();
   const [selectedPerformerId, setSelectedPerformerId] = useState(null);
+  const [showMusicModal, setShowMusicModal] = useState(false);
+  const [selectedSetNumber, setSelectedSetNumber] = useState(null);
+  const [notesData, setNotesData] = useState({});
+  const [highlightsData, setHighlightsData] = useState({});
 
   // Get the selected performer from localStorage
   useEffect(() => {
@@ -21,6 +26,33 @@ const MusicReviewPage = () => {
       navigate('/');
     }
   }, [navigate]);
+
+  // Load notes and highlights for all sets when component mounts or performer changes
+  useEffect(() => {
+    if (!selectedPerformerId || !movement) return;
+    
+    const sets = performerData[selectedPerformerId]?.movements?.[movement] || [];
+    const newNotesData = {};
+    const newHighlightsData = {};
+    
+    sets.forEach(set => {
+      const notesKey = `musicNotes_${movement}_${set.set}_${selectedPerformerId}`;
+      const highlightsKey = `musicHighlights_${movement}_${set.set}_${selectedPerformerId}`;
+      
+      const savedNotes = localStorage.getItem(notesKey);
+      const savedHighlights = localStorage.getItem(highlightsKey);
+      
+      if (savedNotes) {
+        newNotesData[set.set] = JSON.parse(savedNotes);
+      }
+      if (savedHighlights) {
+        newHighlightsData[set.set] = JSON.parse(savedHighlights);
+      }
+    });
+    
+    setNotesData(newNotesData);
+    setHighlightsData(newHighlightsData);
+  }, [selectedPerformerId, movement]);
 
   // Get all sets for the movement
   const getSetsForMovement = () => {
@@ -58,6 +90,43 @@ const MusicReviewPage = () => {
     }
     
     return `/music/${prefix}${movement}-${setNumber}.png`;
+  };
+
+  // Handle opening music modal
+  const handleOpenModal = (setNumber) => {
+    setSelectedSetNumber(setNumber);
+    setShowMusicModal(true);
+  };
+
+  // Handle modal close and refresh data
+  const handleCloseModal = () => {
+    setShowMusicModal(false);
+    setSelectedSetNumber(null);
+    
+    // Reload notes and highlights after modal closes
+    if (!selectedPerformerId || !movement) return;
+    
+    const sets = performerData[selectedPerformerId]?.movements?.[movement] || [];
+    const newNotesData = {};
+    const newHighlightsData = {};
+    
+    sets.forEach(set => {
+      const notesKey = `musicNotes_${movement}_${set.set}_${selectedPerformerId}`;
+      const highlightsKey = `musicHighlights_${movement}_${set.set}_${selectedPerformerId}`;
+      
+      const savedNotes = localStorage.getItem(notesKey);
+      const savedHighlights = localStorage.getItem(highlightsKey);
+      
+      if (savedNotes) {
+        newNotesData[set.set] = JSON.parse(savedNotes);
+      }
+      if (savedHighlights) {
+        newHighlightsData[set.set] = JSON.parse(savedHighlights);
+      }
+    });
+    
+    setNotesData(newNotesData);
+    setHighlightsData(newHighlightsData);
   };
 
   // Early return if no performer selected
@@ -146,19 +215,70 @@ const MusicReviewPage = () => {
                   {/* Music Image or Rest */}
                   <div className="bg-black/30 border border-white/10 rounded-lg p-4">
                     {hasMusic ? (
-                      <img
-                        src={getMusicImagePath(set.set)}
-                        alt={`Music for Set ${set.set}`}
-                        className="w-full max-w-2xl mx-auto rounded"
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.parentElement.innerHTML = `
-                            <div class="text-center py-8">
-                              <p class="text-white/60">Failed to load music image</p>
+                      <div className="text-center">
+                        <div className="relative inline-block" style={{ verticalAlign: 'top' }}>
+                          <img
+                            src={getMusicImagePath(set.set)}
+                            alt={`Music for Set ${set.set}`}
+                            className="max-w-full max-h-96 object-contain rounded"
+                            style={{ display: 'block', verticalAlign: 'top' }}
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.parentElement.innerHTML = `
+                              <div class="text-center py-8">
+                                <p class="text-white/60">Failed to load music image</p>
+                              </div>
+                            `;
+                          }}
+                        />
+                          
+                          {/* Expand button */}
+                          <button
+                            onClick={() => handleOpenModal(set.set)}
+                            className="absolute top-2 right-2 bg-red-600/80 hover:bg-red-600 border border-red-500/50 rounded-lg p-1.5 transition-all duration-200 shadow-lg"
+                            title="Expand and edit"
+                          >
+                            <Expand className="w-4 h-4 text-white" />
+                          </button>
+                          
+                          {/* SVG overlay for highlights */}
+                          <svg 
+                            className="absolute inset-0 w-full h-full pointer-events-none"
+                            viewBox="0 0 100 100"
+                            preserveAspectRatio="none"
+                            style={{ transform: 'translateY(18px)' }}
+                          >
+                          {highlightsData[set.set]?.map((highlight) => (
+                            <rect
+                              key={highlight.id}
+                              x={highlight.x1}
+                              y={highlight.y1}
+                              width={highlight.x2 - highlight.x1}
+                              height={highlight.y2 - highlight.y1}
+                              fill="rgba(255, 235, 59, 0.5)"
+                              stroke="none"
+                              pointerEvents="none"
+                            />
+                          ))}
+                        </svg>
+                        
+                        {/* Notes overlay */}
+                        {notesData[set.set]?.map((note) => (
+                          <div
+                            key={note.id}
+                            className="absolute transform -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                            style={{ left: `${note.x}%`, top: `${note.y}%` }}
+                          >
+                            <div 
+                              className="px-2 py-1 rounded text-sm font-medium shadow-lg"
+                              style={{ backgroundColor: 'rgb(55, 65, 81)', color: 'white' }}
+                            >
+                              <span>{note.text}</span>
                             </div>
-                          `;
-                        }}
-                      />
+                          </div>
+                        ))}
+                        </div>
+                      </div>
                     ) : (
                       <div className="text-center py-12 bg-gray-800/30 rounded-lg">
                         <div className="text-white/40 text-6xl mb-2">𝄽</div>
@@ -173,6 +293,19 @@ const MusicReviewPage = () => {
           )}
         </div>
       </div>
+      
+      {/* Music Modal */}
+      {showMusicModal && selectedSetNumber && (
+        <MusicModal
+          show={showMusicModal}
+          onClose={handleCloseModal}
+          movement={movement}
+          setNumber={selectedSetNumber}
+          performerKey={selectedPerformerId}
+          totalSets={sets.length}
+          maxSetNumber={Math.max(...sets.map(s => s.set))}
+        />
+      )}
     </div>
   );
 };
