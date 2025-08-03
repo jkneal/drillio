@@ -130,7 +130,10 @@ const AboutPage = () => {
               <Music className="w-4 h-4 text-blue-300 mr-2 flex-shrink-0" />
               <div className="text-white/80 text-sm">
                 <span className="font-semibold text-white">Music Snippets:</span> Tap the music 
-                icon on any set (except Set 1) to view the corresponding music notation.
+                icon on any set (except Set 1) to view the corresponding music notation. You can add 
+                notes and highlights directly on the music - add "Hold" markers or custom text by 
+                clicking, drag to highlight important sections, and click annotations to delete them. 
+                All annotations are saved locally to your device.
               </div>
             </div>
 
@@ -213,7 +216,8 @@ const AboutPage = () => {
                 <span className="font-semibold text-white">Music Review:</span> Access from the movement 
                 selection screen to review all music for a movement in one place. See each set with its 
                 rehearsal mark, movement tip, and music notation (or rest indicator) - perfect for memorizing 
-                music cues and transitions.
+                music cues and transitions. Click the expand icon on any music image to open the full music 
+                modal where you can add notes and highlights.
               </div>
             </div>
 
