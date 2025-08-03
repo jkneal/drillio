@@ -269,6 +269,10 @@ const MusicModal = ({
     const updatedHighlights = highlights.filter(h => h.id !== highlightId);
     setHighlights(updatedHighlights);
     saveHighlights(updatedHighlights);
+    // Force re-render by clearing drawing state
+    setIsDrawing(false);
+    setDrawStart(null);
+    setDrawEnd(null);
   };
 
   return (
@@ -379,6 +383,7 @@ const MusicModal = ({
               
               {/* SVG overlay for drawing and highlights */}
               <svg 
+                key={`svg-${highlights.length}-${isDrawing}`}
                 className="absolute inset-0 w-full h-full pointer-events-none"
                 viewBox="0 0 100 100"
                 preserveAspectRatio="none"
@@ -412,6 +417,12 @@ const MusicModal = ({
                       style={{ cursor: 'pointer', pointerEvents: 'all' }}
                       onClick={(e) => {
                         e.stopPropagation();
+                        e.preventDefault();
+                        deleteHighlight(highlight.id);
+                      }}
+                      onTouchEnd={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
                         deleteHighlight(highlight.id);
                       }}
                       onMouseEnter={(e) => e.target.setAttribute('fill', 'rgba(255, 235, 59, 0.7)')}
