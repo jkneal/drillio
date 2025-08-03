@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { X, Map, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const DrillChartModal = ({ 
@@ -13,14 +13,26 @@ const DrillChartModal = ({
 }) => {
   const [currentSet, setCurrentSet] = useState(setNumber);
   const [imageError, setImageError] = useState(false);
+  const [scale, setScale] = useState(1);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isPinching, setIsPinching] = useState(false);
+  const lastTouchDistance = useRef(0);
   
   // Reset to original set when modal opens
   useEffect(() => {
     if (show) {
       setCurrentSet(setNumber);
       setImageError(false);
+      setScale(1);
+      setPosition({ x: 0, y: 0 });
     }
   }, [show, setNumber]);
+
+  // Reset zoom when changing sets
+  useEffect(() => {
+    setScale(1);
+    setPosition({ x: 0, y: 0 });
+  }, [currentSet]);
   
   if (!show) return null;
   
@@ -42,6 +54,44 @@ const DrillChartModal = ({
     return `/drill/${movement}-${currentSet}.png`;
   };
 
+  // Calculate distance between two touch points
+  const getTouchDistance = (touches) => {
+    if (touches.length < 2) return 0;
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  };
+
+  // Handle pinch zoom
+  const handleTouchStart = (e) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      setIsPinching(true);
+      lastTouchDistance.current = getTouchDistance(e.touches);
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (e.touches.length === 2 && isPinching) {
+      e.preventDefault();
+      const currentDistance = getTouchDistance(e.touches);
+      const delta = currentDistance - lastTouchDistance.current;
+      
+      // Calculate new scale
+      const scaleDelta = delta * 0.01;
+      const newScale = Math.min(Math.max(scale + scaleDelta, 0.5), 5);
+      setScale(newScale);
+      
+      lastTouchDistance.current = currentDistance;
+    }
+  };
+
+  const handleTouchEnd = (e) => {
+    if (e.touches.length < 2) {
+      setIsPinching(false);
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-red-600/20 border border-red-500/30 rounded-xl p-4 backdrop-blur-sm max-w-full max-h-full overflow-auto">
@@ -56,15 +106,45 @@ const DrillChartModal = ({
             <X className="w-5 h-5 text-white" />
           </button>
         </div>
+        {scale !== 1 && (
+          <div className="text-center mb-2">
+            <button
+              onClick={() => {
+                setScale(1);
+                setPosition({ x: 0, y: 0 });
+              }}
+              className="px-2 py-1 bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg text-white text-xs transition-all duration-200"
+            >
+              Reset Zoom
+            </button>
+          </div>
+        )}
         <div className="text-center">
           {!imageError ? (
-            <div>
-              <img
-                src={getCurrentImagePath()}
-                alt={`Drill chart for Movement ${movement}, Set ${currentSet}`}
-                className="max-w-full max-h-96 object-contain rounded"
-                onError={() => setImageError(true)}
-              />
+            <div 
+              className="relative inline-block overflow-hidden"
+              style={{ 
+                touchAction: isPinching ? 'none' : 'auto'
+              }}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
+              <div
+                style={{
+                  transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+                  transformOrigin: 'center',
+                  transition: isPinching ? 'none' : 'transform 0.2s'
+                }}
+              >
+                <img
+                  src={getCurrentImagePath()}
+                  alt={`Drill chart for Movement ${movement}, Set ${currentSet}`}
+                  className="max-w-full max-h-96 object-contain rounded"
+                  onError={() => setImageError(true)}
+                  draggable={false}
+                />
+              </div>
               <div className="flex justify-center items-center mt-4 space-x-4">
                 <button
                   onClick={handlePrevious}

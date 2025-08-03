@@ -24,9 +24,13 @@ const MusicModal = ({
   const [drawStart, setDrawStart] = useState(null);
   const [drawEnd, setDrawEnd] = useState(null);
   const [isDrawing, setIsDrawing] = useState(false);
+  const [scale, setScale] = useState(1);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isPinching, setIsPinching] = useState(false);
   const imageRef = useRef(null);
   const containerRef = useRef(null);
   const svgRef = useRef(null);
+  const lastTouchDistance = useRef(0);
   
   const noteTemplates = {
     hold: 'Hold',
@@ -39,6 +43,8 @@ const MusicModal = ({
       setCurrentSet(setNumber);
       setImageError(false);
       loadNotes();
+      setScale(1);
+      setPosition({ x: 0, y: 0 });
     }
   }, [show, setNumber]);
   
@@ -78,6 +84,8 @@ const MusicModal = ({
   useEffect(() => {
     if (show) {
       loadNotes();
+      setScale(1);
+      setPosition({ x: 0, y: 0 });
     }
   }, [currentSet, movement, performerKey]);
   
@@ -191,7 +199,8 @@ const MusicModal = ({
   };
 
   const handleStart = (e) => {
-    if (!isHighlighting) return;
+    if (!isHighlighting || isPinching) return;
+    if (e.touches && e.touches.length > 1) return; // Don't start drawing on multi-touch
     e.preventDefault();
     
     const { x, y } = getCoordinates(e);
@@ -271,6 +280,44 @@ const MusicModal = ({
     setIsDrawing(false);
     setDrawStart(null);
     setDrawEnd(null);
+  };
+
+  // Calculate distance between two touch points
+  const getTouchDistance = (touches) => {
+    if (touches.length < 2) return 0;
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  };
+
+  // Handle pinch zoom
+  const handleTouchStart = (e) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      setIsPinching(true);
+      lastTouchDistance.current = getTouchDistance(e.touches);
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (e.touches.length === 2 && isPinching) {
+      e.preventDefault();
+      const currentDistance = getTouchDistance(e.touches);
+      const delta = currentDistance - lastTouchDistance.current;
+      
+      // Calculate new scale
+      const scaleDelta = delta * 0.01;
+      const newScale = Math.min(Math.max(scale + scaleDelta, 0.5), 3);
+      setScale(newScale);
+      
+      lastTouchDistance.current = currentDistance;
+    }
+  };
+
+  const handleTouchEnd = (e) => {
+    if (e.touches.length < 2) {
+      setIsPinching(false);
+    }
   };
 
   return (
@@ -354,9 +401,38 @@ const MusicModal = ({
             Draw around an area to highlight. Click on highlights to delete them.
           </div>
         )}
+        {scale !== 1 && !imageError && (
+          <div className="text-center mb-2">
+            <button
+              onClick={() => {
+                setScale(1);
+                setPosition({ x: 0, y: 0 });
+              }}
+              className="px-2 py-1 bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg text-white text-xs transition-all duration-200"
+            >
+              Reset Zoom
+            </button>
+          </div>
+        )}
         <div className="text-center relative" ref={containerRef}>
           {!imageError ? (
-            <div className="relative inline-block" style={{ userSelect: 'none' }}>
+            <div 
+              className="relative inline-block overflow-hidden" 
+              style={{ 
+                userSelect: 'none',
+                touchAction: isPinching ? 'none' : 'auto'
+              }}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
+              <div
+                style={{
+                  transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+                  transformOrigin: 'center',
+                  transition: isPinching ? 'none' : 'transform 0.2s'
+                }}
+              >
               <img
                 ref={imageRef}
                 src={getCurrentImagePath()}
@@ -504,6 +580,7 @@ const MusicModal = ({
                   </div>
                 </div>
               )}
+              </div>
               <div className="flex justify-center items-center mt-4 space-x-4">
                 <button
                   onClick={handlePrevious}

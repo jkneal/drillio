@@ -51,6 +51,40 @@ registerRoute(
   })
 );
 
+// Cache drill images
+registerRoute(
+  ({ request, url }) => request.destination === 'image' && url.pathname.includes('/drill/'),
+  new CacheFirst({
+    cacheName: 'drill-images-cache',
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 200, // Cache up to 200 drill images
+        maxAgeSeconds: 60 * 24 * 60 * 60, // 60 days
+      }),
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
+    ],
+  })
+);
+
+// Cache music images
+registerRoute(
+  ({ request, url }) => request.destination === 'image' && url.pathname.includes('/music/'),
+  new CacheFirst({
+    cacheName: 'music-images-cache',
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 300, // Cache up to 300 music images
+        maxAgeSeconds: 60 * 24 * 60 * 60, // 60 days
+      }),
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
+    ],
+  })
+);
+
 // Cache Google Fonts
 registerRoute(
   ({ url }) => url.origin === 'https://fonts.googleapis.com',
