@@ -26,6 +26,7 @@ const MusicModal = ({
   const [isDrawing, setIsDrawing] = useState(false);
   const imageRef = useRef(null);
   const containerRef = useRef(null);
+  const svgRef = useRef(null);
   
   const noteTemplates = {
     hold: 'Hold',
@@ -163,9 +164,8 @@ const MusicModal = ({
   };
   
   const getCoordinates = (e) => {
-    // Get the SVG element's bounding rect instead of currentTarget
-    const svgElement = containerRef.current?.querySelector('svg');
-    const rect = svgElement ? svgElement.getBoundingClientRect() : e.currentTarget.getBoundingClientRect();
+    // Use the SVG ref if available, otherwise fall back
+    const rect = svgRef.current ? svgRef.current.getBoundingClientRect() : e.currentTarget.getBoundingClientRect();
     let clientX, clientY;
     
     if (e.touches && e.touches.length > 0) {
@@ -193,7 +193,6 @@ const MusicModal = ({
   const handleStart = (e) => {
     if (!isHighlighting) return;
     e.preventDefault();
-    e.stopPropagation();
     
     const { x, y } = getCoordinates(e);
     
@@ -205,7 +204,6 @@ const MusicModal = ({
   const handleMove = (e) => {
     if (!isHighlighting || !isDrawing) return;
     e.preventDefault();
-    e.stopPropagation();
     
     // For touch events, ensure we're tracking the same touch
     if (e.touches && e.touches.length > 1) return;
@@ -383,7 +381,7 @@ const MusicModal = ({
               
               {/* SVG overlay for drawing and highlights */}
               <svg 
-                key={`svg-${highlights.length}-${isDrawing}`}
+                ref={svgRef}
                 className="absolute inset-0 w-full h-full pointer-events-none"
                 viewBox="0 0 100 100"
                 preserveAspectRatio="none"
@@ -415,12 +413,7 @@ const MusicModal = ({
                       fill="rgba(255, 235, 59, 0.5)"
                       stroke="none"
                       style={{ cursor: 'pointer', pointerEvents: 'all' }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        deleteHighlight(highlight.id);
-                      }}
-                      onTouchEnd={(e) => {
+                      onPointerDown={(e) => {
                         e.stopPropagation();
                         e.preventDefault();
                         deleteHighlight(highlight.id);
