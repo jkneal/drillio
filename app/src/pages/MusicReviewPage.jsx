@@ -233,10 +233,10 @@ const MusicReviewPage = () => {
                         {/* Expand button */}
                         <button
                           onClick={() => handleOpenModal(set.set)}
-                          className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-red-600/80 hover:bg-red-600 border border-red-500/50 rounded-lg p-1 sm:p-1.5 transition-all duration-200 shadow-lg"
+                          className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-red-600/80 hover:bg-red-600 border border-red-500/50 rounded-lg p-1 sm:p-1.5 mobile-expand-btn transition-all duration-200 shadow-lg flex items-center justify-center"
                           title="Expand and edit"
                         >
-                          <Expand className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                          <Expand className="w-2 h-2 sm:w-4 sm:h-4 text-white" />
                         </button>
                         
                         {/* SVG overlay for highlights */}
@@ -268,7 +268,7 @@ const MusicReviewPage = () => {
                             style={{ left: `${note.x}%`, top: `${note.y}%` }}
                           >
                             <div 
-                              className="px-2 py-1 rounded text-sm font-medium shadow-lg"
+                              className="px-1 py-0.5 sm:px-2 sm:py-1 rounded text-xxs sm:text-base font-medium shadow-lg"
                               style={{ backgroundColor: 'rgb(55, 65, 81)', color: 'white' }}
                             >
                               <span>{note.text}</span>

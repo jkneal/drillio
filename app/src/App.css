@@ -241,8 +241,13 @@
   }
   
   .sm\:text-sm {
-    font-size: 0.875rem;
-    line-height: 1.25rem;
+    font-size: 0.875rem !important;
+    line-height: 1.25rem !important;
+  }
+  
+  .sm\:text-base {
+    font-size: 1rem !important;
+    line-height: 1.5rem !important;
   }
   
   .sm\:gap-2 {
@@ -252,6 +257,14 @@
   .sm\:px-3 {
     padding-left: 0.75rem;
     padding-right: 0.75rem;
+  }
+  
+  .sm\:w-3 {
+    width: 0.75rem;
+  }
+  
+  .sm\:h-3 {
+    height: 0.75rem;
   }
 }
 
@@ -278,6 +291,11 @@
   color: #fff;
 }
 
+.text-xxs {
+  font-size: 9px;
+  line-height: 12px;
+}
+
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
@@ -286,6 +304,11 @@
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
+}
+
+.text-base {
+  font-size: 1rem;
+  line-height: 1.5rem;
 }
 
 .text-lg {
@@ -682,6 +705,10 @@
   width: 0.625rem;
 }
 
+.w-2 {
+  width: 0.5rem;
+}
+
 .w-3 {
   width: 0.75rem;
 }
@@ -713,6 +740,10 @@
 
 .h-2\.5 {
   height: 0.625rem;
+}
+
+.h-2 {
+  height: 0.5rem;
 }
 
 .h-3 {
@@ -804,6 +835,37 @@
   padding-bottom: 0.75rem;
 }
 
+.p-0\.5 {
+  padding: 0.125rem;
+}
+
+.px-0\.5 {
+  padding-left: 0.125rem;
+  padding-right: 0.125rem;
+}
+
+.px-0\.25 {
+  padding-left: 0.0625rem;
+  padding-right: 0.0625rem;
+}
+
+.py-0\.25 {
+  padding-top: 0.0625rem;
+  padding-bottom: 0.0625rem;
+}
+
+.pt-0 {
+  padding-top: 0;
+}
+
+.pb-0 {
+  padding-bottom: 0;
+}
+
+.pb-0\.25 {
+  padding-bottom: 0.0625rem;
+}
+
 .p-1 {
   padding: 0.25rem;
 }
@@ -849,6 +911,18 @@
 .py-0\.5 {
   padding-top: 0.125rem;
   padding-bottom: 0.125rem;
+}
+
+@media (min-width: 640px) {
+  .sm\:px-2 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  .sm\:py-1 {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
 }
 
 .pt-2 {
@@ -946,6 +1020,13 @@ select option {
 
 [class*="to-pink-600/20"] {
   --tw-gradient-to: rgba(219, 39, 119, 0.2);
+}
+
+/* Mobile overrides for expand button */
+@media (max-width: 639px) {
+  .mobile-expand-btn {
+    padding: 0.0625rem !important;
+  }
 }
 
 /* Animation */

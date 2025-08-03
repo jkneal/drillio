@@ -209,7 +209,7 @@ const MusicModal = ({
   };
   
   const handleEnd = (e) => {
-    if (!isHighlighting || !isDrawing || !drawStart || !drawEnd) {
+    if (!isHighlighting || !isDrawing) {
       setIsDrawing(false);
       setDrawStart(null);
       setDrawEnd(null);
@@ -218,17 +218,28 @@ const MusicModal = ({
     
     e.preventDefault();
     
-    const width = Math.abs(drawEnd.x - drawStart.x);
-    const height = Math.abs(drawEnd.y - drawStart.y);
+    // Make sure we have valid start and end points
+    if (!drawStart) {
+      setIsDrawing(false);
+      setDrawStart(null);
+      setDrawEnd(null);
+      return;
+    }
+    
+    // If drawEnd is null (happens sometimes with single touch), use current position
+    const finalEnd = drawEnd || getCoordinates(e);
+    
+    const width = Math.abs(finalEnd.x - drawStart.x);
+    const height = Math.abs(finalEnd.y - drawStart.y);
     
     // Only create highlight if the rectangle has meaningful size
     if (width > 1 && height > 1) {
       const highlight = {
         id: Date.now(),
-        x1: Math.min(drawStart.x, drawEnd.x),
-        y1: Math.min(drawStart.y, drawEnd.y),
-        x2: Math.max(drawStart.x, drawEnd.x),
-        y2: Math.max(drawStart.y, drawEnd.y)
+        x1: Math.min(drawStart.x, finalEnd.x),
+        y1: Math.min(drawStart.y, finalEnd.y),
+        x2: Math.max(drawStart.x, finalEnd.x),
+        y2: Math.max(drawStart.y, finalEnd.y)
       };
       
       const updatedHighlights = [...highlights, highlight];
@@ -425,7 +436,7 @@ const MusicModal = ({
                   style={{ left: `${note.x}%`, top: `${note.y}%` }}
                 >
                   <div 
-                    className="px-2 py-1 rounded text-sm font-medium shadow-lg flex items-center gap-1"
+                    className="px-1 py-0.5 sm:px-2 sm:py-1 rounded text-xxs sm:text-base font-medium shadow-lg flex items-center gap-1"
                     style={{ backgroundColor: 'rgb(55, 65, 81)', color: 'white' }}
                   >
                     <span>{note.text}</span>
@@ -439,7 +450,7 @@ const MusicModal = ({
                       onMouseEnter={(e) => e.target.style.backgroundColor = 'rgb(75, 85, 99)'}
                       onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                     >
-                      <Trash2 className="w-3 h-3" />
+                      <Trash2 className="w-2 h-2 sm:w-3 sm:h-3" />
                     </button>
                   </div>
                 </div>
@@ -467,12 +478,12 @@ const MusicModal = ({
                         }
                       }}
                       placeholder="Enter note..."
-                      className="px-2 py-1 bg-gray-600 border border-gray-500 rounded text-sm text-white placeholder-gray-400"
+                      className="px-1 py-0.5 sm:px-2 sm:py-1 bg-gray-600 border border-gray-500 rounded text-xxs sm:text-base text-white placeholder-gray-400"
                       autoFocus
                     />
                     <button
                       onClick={handleCustomNoteSubmit}
-                      className="px-2 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600"
+                      className="px-1 py-0.5 sm:px-2 sm:py-1 bg-blue-500 text-white rounded text-xxs sm:text-sm hover:bg-blue-600"
                     >
                       Add
                     </button>
