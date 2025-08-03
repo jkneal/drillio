@@ -163,7 +163,9 @@ const MusicModal = ({
   };
   
   const getCoordinates = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+    // Get the SVG element's bounding rect instead of currentTarget
+    const svgElement = containerRef.current?.querySelector('svg');
+    const rect = svgElement ? svgElement.getBoundingClientRect() : e.currentTarget.getBoundingClientRect();
     let clientX, clientY;
     
     if (e.touches && e.touches.length > 0) {
@@ -191,6 +193,7 @@ const MusicModal = ({
   const handleStart = (e) => {
     if (!isHighlighting) return;
     e.preventDefault();
+    e.stopPropagation();
     
     const { x, y } = getCoordinates(e);
     
@@ -202,6 +205,10 @@ const MusicModal = ({
   const handleMove = (e) => {
     if (!isHighlighting || !isDrawing) return;
     e.preventDefault();
+    e.stopPropagation();
+    
+    // For touch events, ensure we're tracking the same touch
+    if (e.touches && e.touches.length > 1) return;
     
     const { x, y } = getCoordinates(e);
     
@@ -232,8 +239,8 @@ const MusicModal = ({
     const width = Math.abs(finalEnd.x - drawStart.x);
     const height = Math.abs(finalEnd.y - drawStart.y);
     
-    // Only create highlight if the rectangle has meaningful size
-    if (width > 1 && height > 1) {
+    // Only create highlight if the rectangle has meaningful size (lower threshold for mobile)
+    if (width > 0.5 && height > 0.5) {
       const highlight = {
         id: Date.now(),
         x1: Math.min(drawStart.x, finalEnd.x),
@@ -378,7 +385,10 @@ const MusicModal = ({
                 style={{ 
                   pointerEvents: isHighlighting ? 'auto' : 'none',
                   cursor: isHighlighting ? 'crosshair' : 'default',
-                  touchAction: isHighlighting ? 'none' : 'auto'
+                  touchAction: isHighlighting ? 'none' : 'auto',
+                  WebkitTouchCallout: 'none',
+                  WebkitUserSelect: 'none',
+                  userSelect: 'none'
                 }}
                 onMouseDown={handleStart}
                 onMouseMove={handleMove}
