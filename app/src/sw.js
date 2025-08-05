@@ -85,6 +85,26 @@ registerRoute(
   })
 );
 
+// Cache audio files (MP3s for movements)
+registerRoute(
+  ({ request, url }) => request.url.endsWith('.mp3') || request.url.endsWith('.m4a'),
+  new CacheFirst({
+    cacheName: 'audio-cache',
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 10, // Cache up to 10 audio files
+        maxAgeSeconds: 90 * 24 * 60 * 60, // 90 days
+      }),
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+        headers: {
+          'X-Is-Cacheable': 'true',
+        },
+      }),
+    ],
+  })
+);
+
 // Cache Google Fonts
 registerRoute(
   ({ url }) => url.origin === 'https://fonts.googleapis.com',

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { X, Play, Pause, SkipBack, SkipForward, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Maximize2, Map, Music, StickyNote, Brain, CheckCircle, XCircle, Trophy } from 'lucide-react';
+import { X, Play, Pause, SkipBack, SkipForward, ChevronLeft, ChevronRight, ChevronDown, ZoomIn, ZoomOut, Maximize2, Map, Music, StickyNote, Brain, CheckCircle, XCircle, Trophy, Volume2, VolumeX } from 'lucide-react';
 import { performerData } from '../data/performerData';
 import { rehearsalMarks } from '../data/rehearsalMarks';
 import DrillChartModal from './DrillChartModal';
@@ -7,6 +7,7 @@ import MusicModal from './MusicModal';
 import NotesModal from './NotesModal';
 import NicknameBadge from './NicknameBadge';
 import { musicConfig } from '../data/musicConfig';
+import { audioService } from '../services/audioService';
 
 const PathVisualizerModal = ({ 
   show, 
@@ -25,7 +26,9 @@ const PathVisualizerModal = ({
   const [directorView, setDirectorView] = useState(false);
   const [animationProgress, setAnimationProgress] = useState(0); // 0 to 1 for transition
   const [currentCount, setCurrentCount] = useState(0);
+  const [stepFlashVisible, setStepFlashVisible] = useState(false);
   const [zoomToFit, setZoomToFit] = useState(false);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1.0); // 1.0 = normal, 0.9 = 90%, 0.75 = 75%
   const animationRef = useRef(null);
   const [logoImage, setLogoImage] = useState(null);
   const [animatedCenter, setAnimatedCenter] = useState({ x: 0, y: 0 });
@@ -66,12 +69,20 @@ const PathVisualizerModal = ({
   const [quizClickPosition, setQuizClickPosition] = useState(null);
   const [quizScore, setQuizScore] = useState({ correct: 0, total: 0 });
   const [previousOptions, setPreviousOptions] = useState(null); // Store options before quiz
+  const [previousZoomState, setPreviousZoomState] = useState(null); // Store zoom state before animation
   const [showPerfectBadge, setShowPerfectBadge] = useState(false);
   const [trophyCount, setTrophyCount] = useState(0);
   const [quizStartIndex, setQuizStartIndex] = useState(0); // Track where quiz started
   const [crossMovementQuizCompleted, setCrossMovementQuizCompleted] = useState(false); // Track if we've done the cross-movement quiz
   const [showFinalResults, setShowFinalResults] = useState(false);
   const [finalQuizScore, setFinalQuizScore] = useState({ correct: 0, total: 0 });
+  
+  // Audio states
+  const [audioEnabled, setAudioEnabled] = useState(true);
+  const [audioLoaded, setAudioLoaded] = useState(false);
+  const audioInitializedRef = useRef(false);
+  const [isCountingOff, setIsCountingOff] = useState(false);
+  const [countOffNumber, setCountOffNumber] = useState(0);
   
   // Load trophy count when movement changes
   useEffect(() => {
@@ -116,7 +127,27 @@ const PathVisualizerModal = ({
     }
   }, [isStaffView, selectedPerformerId, movement]);
   
-  // Cleanup animation when modal closes
+  // Initialize audio when movement changes
+  useEffect(() => {
+    if (show && movement && (movement === '1' || movement === '2')) {
+      // Get movement data to pass to audio service
+      const movementData = selectedPerformerId && performerData[selectedPerformerId]?.movements[movement] 
+        ? performerData[selectedPerformerId].movements[movement]
+        : currentPerformerData?.movements[movement] || [];
+      
+      // Load audio for this movement
+      audioService.loadMovementAudio(movement).then((buffer) => {
+        if (buffer) {
+          // Set movement data for accurate marker calculation
+          audioService.setMovementData(movement, movementData);
+          setAudioLoaded(true);
+          audioInitializedRef.current = true;
+        }
+      });
+    }
+  }, [show, movement, selectedPerformerId, currentPerformerData]);
+  
+  // Cleanup animation and audio when modal closes
   useEffect(() => {
     if (!show) {
       // Stop animation
@@ -126,10 +157,17 @@ const PathVisualizerModal = ({
         cancelAnimationFrame(animationRef.current);
         animationRef.current = null;
       }
+      // Emergency stop audio to ensure it stops completely
+      audioService.emergencyStop();
       // Reset state
       setCurrentSetIndex(0);
       setAnimationProgress(0);
       setCurrentCount(0);
+      setStepFlashVisible(false);
+      setIsCountingOff(false);
+      setCountOffNumber(0);
+      // Reset zoom state
+      setPreviousZoomState(null);
       // Reset smooth center tracking only when modal closes
       if (!show) {
         lastCenterRef.current = { x: 0, y: 0 };
@@ -355,16 +393,44 @@ const PathVisualizerModal = ({
   
   // Get all positions for the current movement
   const getMovementData = () => {
+    let movementData = [];
+    
     // In staff view, use selected performer if available
     if (isStaffView && selectedPerformerId && performerData[selectedPerformerId]) {
       const performer = performerData[selectedPerformerId];
-      if (performer.movements && performer.movements[movement]) {
-        return performer.movements[movement];
+      if (performer.movements) {
+        if (movement === '2' && performer.movements['1']) {
+          // For movement 2, prepend set 13 from movement 1 as the starting position
+          const movement1Data = performer.movements['1'];
+          const set13 = movement1Data[movement1Data.length - 1]; // Last set of movement 1
+          if (set13 && set13.set === 13) {
+            movementData = [set13, ...(performer.movements[movement] || [])];
+          } else {
+            movementData = performer.movements[movement] || [];
+          }
+        } else {
+          movementData = performer.movements[movement] || [];
+        }
+      }
+    } else {
+      // Otherwise use passed performer data
+      if (!currentPerformerData?.movements) return [];
+      
+      if (movement === '2' && currentPerformerData.movements['1']) {
+        // For movement 2, prepend set 13 from movement 1 as the starting position
+        const movement1Data = currentPerformerData.movements['1'];
+        const set13 = movement1Data[movement1Data.length - 1]; // Last set of movement 1
+        if (set13 && set13.set === 13) {
+          movementData = [set13, ...(currentPerformerData.movements[movement] || [])];
+        } else {
+          movementData = currentPerformerData.movements[movement] || [];
+        }
+      } else {
+        movementData = currentPerformerData.movements[movement] || [];
       }
     }
-    // Otherwise use passed performer data
-    if (!currentPerformerData?.movements?.[movement]) return [];
-    return currentPerformerData.movements[movement];
+    
+    return movementData;
   };
   
   // Check if music is available for the current set
@@ -610,10 +676,70 @@ const PathVisualizerModal = ({
           }
         }
         
+        // Check if we're currently in a hold by parsing the tip
+        let isInHold = false;
+        if (isPlaying && currentSetIndex < movementData.length - 1) {
+          const nextSet = movementData[currentSetIndex + 1];
+          if (nextSet && nextSet.tip) {
+            // Parse components from tip to determine if we're in a hold
+            const tipComponents = [];
+            const moveMatches = nextSet.tip.match(/move[^,]+?for\s+(\d+)\s+counts?/gi) || [];
+            const holdMatches = nextSet.tip.match(/hold(?:\s+for)?\s+(\d+)\s+counts?/gi) || [];
+            
+            // Process move matches
+            moveMatches.forEach(matchStr => {
+              const countMatch = matchStr.match(/for\s+(\d+)\s+counts?/i);
+              if (countMatch) {
+                const index = nextSet.tip.indexOf(matchStr);
+                tipComponents.push({
+                  type: 'move',
+                  counts: parseInt(countMatch[1]),
+                  index: index
+                });
+              }
+            });
+            
+            // Process hold matches
+            holdMatches.forEach(matchStr => {
+              const countMatch = matchStr.match(/(\d+)\s+counts?/i);
+              if (countMatch) {
+                const index = nextSet.tip.indexOf(matchStr);
+                tipComponents.push({
+                  type: 'hold',
+                  counts: parseInt(countMatch[1]),
+                  index: index
+                });
+              }
+            });
+            
+            // Sort by index to get order
+            tipComponents.sort((a, b) => a.index - b.index);
+            
+            // If no components found but there's a tip mentioning hold, it's likely a simple hold
+            if (tipComponents.length === 0 && nextSet.tip.toLowerCase().includes('hold')) {
+              isInHold = true;
+            } else if (tipComponents.length > 0) {
+              // Determine which component we're in based on currentCount
+              let accumulatedCounts = 0;
+              for (const comp of tipComponents) {
+                if (currentCount <= accumulatedCounts + comp.counts) {
+                  isInHold = comp.type === 'hold';
+                  break;
+                }
+                accumulatedCounts += comp.counts;
+              }
+            }
+          }
+        }
+        
         // Smooth the center position to prevent jarring movements
         if (lastCenterRef.current.x === 0 && lastCenterRef.current.y === 0) {
           // First frame, set directly
           lastCenterRef.current = { x: targetCenterX, y: targetCenterY };
+        } else if (isInHold) {
+          // During holds, keep the exact same center without any recalculation
+          targetCenterX = lastCenterRef.current.x;
+          targetCenterY = lastCenterRef.current.y;
         } else {
           // Calculate distance to target
           const deltaX = targetCenterX - lastCenterRef.current.x;
@@ -1241,13 +1367,28 @@ const PathVisualizerModal = ({
             const prevMovementSets = otherPerformer.movements[prevMovement];
             otherPerformerDisplaySet = prevMovementSets[prevMovementSets.length - 1];
           }
+        } else if (movement === '2' && displaySetNumber === 13) {
+          // Special case: Movement 2 showing set 13 from movement 1
+          if (otherPerformer.movements && otherPerformer.movements['1']) {
+            const movement1Sets = otherPerformer.movements['1'];
+            otherPerformerDisplaySet = movement1Sets[movement1Sets.length - 1]; // Get last set (set 13) from movement 1
+          }
         } else if (otherPerformer.movements && otherPerformer.movements[movement]) {
           otherPerformerDisplaySet = otherPerformer.movements[movement].find(s => s.set === displaySetNumber);
         }
         
         if (otherPerformerDisplaySet) {
-          const otherPerformerNextSet = nextSet && otherPerformer.movements[movement] ? 
-            otherPerformer.movements[movement].find(s => s.set === displaySet.set + 1) : null;
+          let otherPerformerNextSet = null;
+          
+          // Handle transition from set 13 to 14 in movement 2
+          if (movement === '2' && displaySetNumber === 13 && nextSet) {
+            // Next set is set 14, which is the first set in movement 2
+            if (otherPerformer.movements && otherPerformer.movements['2']) {
+              otherPerformerNextSet = otherPerformer.movements['2'].find(s => s.set === 14);
+            }
+          } else if (nextSet && otherPerformer.movements[movement]) {
+            otherPerformerNextSet = otherPerformer.movements[movement].find(s => s.set === displaySet.set + 1);
+          }
           
           const pos = parsePosition(otherPerformerDisplaySet.leftRight, otherPerformerDisplaySet.homeVisitor);
             const { x: currentX, y: currentY } = transformForDirectorView(pos.x, pos.y);
@@ -1757,10 +1898,33 @@ const PathVisualizerModal = ({
         ctx.restore();
     }
     
+    // Draw count-off overlay
+    if (isCountingOff && countOffNumber > 0) {
+      ctx.save();
+      
+      // Semi-transparent background covering more of the screen
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+      ctx.fillRect(0, 0, FIELD_LENGTH, FIELD_WIDTH);
+      
+      // Large count number in center
+      ctx.font = 'bold 120px sans-serif';
+      ctx.fillStyle = countOffNumber === 1 || countOffNumber === 5 ? '#FFD700' : 'white';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(countOffNumber.toString(), FIELD_LENGTH / 2, FIELD_WIDTH / 2);
+      
+      // "COUNT OFF" text above
+      ctx.font = 'bold 30px sans-serif';
+      ctx.fillStyle = 'white';
+      ctx.fillText('COUNT OFF', FIELD_LENGTH / 2, FIELD_WIDTH / 2 - 100);
+      
+      ctx.restore();
+    }
+    
     // Draw count overlay during animation (after zoom transformation)
-    if (isPlaying && currentCount > 0 && movementData[currentSetIndex + 1]) {
+    if (isPlaying && currentCount > 0 && movementData[currentSetIndex + 1] && !isCountingOff) {
       const nextSet = movementData[currentSetIndex + 1];
-      const totalCounts = nextSet.counts || 8;
+      const totalCounts = parseInt(nextSet.counts) || 8;
       
       // Save context for UI drawing
       ctx.save();
@@ -1786,84 +1950,162 @@ const PathVisualizerModal = ({
     
     // Final reset of global alpha
     ctx.globalAlpha = 1;
-  }, [show, currentSetIndex, showPaths, showOtherPerformers, show4StepMarks, movement, currentPerformerData, performerId, selectedPerformerId, animationProgress, isPlaying, currentCount, zoomToFit, directorView, quizMode, quizClickPosition, showQuizFeedback]);
+  }, [show, currentSetIndex, showPaths, showOtherPerformers, show4StepMarks, movement, currentPerformerData, performerId, selectedPerformerId, animationProgress, isPlaying, currentCount, zoomToFit, directorView, quizMode, quizClickPosition, showQuizFeedback, isCountingOff, countOffNumber]);
   
-  // Animation loop with smooth transitions
+  // Animation loop with smooth transitions and audio sync
   useEffect(() => {
     if (!isPlaying) return;
     
     const movementData = getMovementData();
+    
     if (currentSetIndex >= movementData.length - 1) {
       setIsPlaying(false);
       setAnimationProgress(0);
       setCurrentCount(0);
+      setStepFlashVisible(false);
+      // Restore previous zoom state when animation ends
+      if (previousZoomState !== null) {
+        setZoomToFit(previousZoomState);
+        setPreviousZoomState(null);
+      }
+      // Stop audio when animation ends
+      if (audioEnabled) {
+        audioService.stop();
+      }
       return;
     }
     
     const nextSet = movementData[currentSetIndex + 1];
-    const totalCounts = nextSet?.counts || 8;
-    const msPerCount = 500; // 500ms per count (2 counts per second)
+    const totalCounts = parseInt(nextSet?.counts) || 8;
+    
+    // Calculate timing based on movement tempo and playback speed
+    const baseTempo = movement === '1' ? 140 : movement === '2' ? 170 : 120;
+    const adjustedTempo = baseTempo * playbackSpeed; // Adjust tempo for playback speed
+    const msPerBeat = 60000 / adjustedTempo; // milliseconds per beat
+    const msPerCount = msPerBeat; // Assuming 1 count = 1 beat
     const totalDuration = totalCounts * msPerCount;
     
-    // Parse hold and move counts from tip
+    // Parse all movement components from tip
     const tip = nextSet?.tip || '';
-    let holdCounts = 0;
-    let moveCounts = totalCounts;
+    const components = parseTipComponents(tip);
     
-    // Common patterns: "Hold 8", "Hold for 8 counts", "Hold 4, move 4", etc.
-    const holdMatch = tip.match(/hold(?:\s+for)?\s+(\d+)(?:\s+counts?)?/i);
-    const moveMatch = tip.match(/move(?:\s+for)?\s+(\d+)(?:\s+counts?)?/i);
+    // Sort components by their order in the tip
+    components.sort((a, b) => a.index - b.index);
     
-    if (holdMatch) {
-      holdCounts = parseInt(holdMatch[1]);
-    }
-    if (moveMatch) {
-      moveCounts = parseInt(moveMatch[1]);
-    } else if (holdCounts > 0) {
-      // If only hold is specified, calculate move counts
-      moveCounts = totalCounts - holdCounts;
+    // If no components found, assume simple move
+    if (components.length === 0) {
+      components.push({ type: 'move', counts: totalCounts, index: 0 });
     }
     
+    // Use audio context time if audio is playing, otherwise use performance.now()
+    let startTime;
+    let useAudioClock = false;
     
-    // Determine if hold is at start or end based on order in tip
-    const holdIndex = tip.toLowerCase().indexOf('hold');
-    const moveIndex = tip.toLowerCase().indexOf('move');
-    const holdFirst = holdIndex !== -1 && (moveIndex === -1 || holdIndex < moveIndex);
+    if (audioEnabled && audioLoaded && audioService.getIsPlaying()) {
+      // Use audio context for timing to prevent drift
+      const audioContext = audioService.getAudioContext();
+      if (audioContext) {
+        startTime = audioContext.currentTime;
+        useAudioClock = true;
+      }
+    }
     
-    let startTime = Date.now();
+    if (!useAudioClock) {
+      startTime = performance.now();
+    }
     
     const animate = () => {
-      const elapsed = Date.now() - startTime;
-      const currentCountProgress = elapsed / msPerCount;
+      let elapsed;
       
-      // Calculate movement progress based on hold/move pattern
-      let movementProgress = 0;
-      if (holdFirst && holdCounts > 0) {
-        // Hold at beginning, then move
-        if (currentCountProgress <= holdCounts) {
-          movementProgress = 0; // Stay at start during hold
+      if (useAudioClock && audioService.getIsPlaying()) {
+        // Get elapsed time from audio context to stay in sync
+        const audioContext = audioService.getAudioContext();
+        if (audioContext) {
+          elapsed = (audioContext.currentTime - startTime) * 1000; // Convert to milliseconds
         } else {
-          // Move during remaining counts
-          const moveProgress = (currentCountProgress - holdCounts) / moveCounts;
-          movementProgress = Math.min(moveProgress, 1);
-        }
-      } else if (!holdFirst && holdCounts > 0) {
-        // Move first, then hold
-        if (currentCountProgress <= moveCounts) {
-          movementProgress = currentCountProgress / moveCounts;
-        } else {
-          movementProgress = 1; // Stay at end during hold
+          // Fallback if audio context is lost
+          elapsed = performance.now() - startTime;
         }
       } else {
-        // No hold, just move
-        movementProgress = Math.min(currentCountProgress / totalCounts, 1);
+        elapsed = performance.now() - startTime;
       }
+      
+      const currentCountProgress = elapsed / msPerCount;
+      
+      // Calculate movement progress based on components
+      let movementProgress = 0;
+      let accumulatedCounts = 0;
+      let currentComponentIndex = 0;
+      
+      // Find which component we're in
+      for (let i = 0; i < components.length; i++) {
+        if (currentCountProgress <= accumulatedCounts + components[i].counts) {
+          currentComponentIndex = i;
+          break;
+        }
+        accumulatedCounts += components[i].counts;
+      }
+      
+      // Calculate total move distance
+      let totalMoveDistance = 0;
+      for (const comp of components) {
+        if (comp.type === 'move') {
+          totalMoveDistance += comp.counts;
+        }
+      }
+      
+      // Calculate current progress through all components
+      let currentMoveProgress = 0;
+      for (let i = 0; i <= currentComponentIndex; i++) {
+        const comp = components[i];
+        if (i < currentComponentIndex) {
+          // Completed component
+          if (comp.type === 'move') {
+            currentMoveProgress += comp.counts;
+          }
+        } else {
+          // Current component
+          const componentStartCount = accumulatedCounts;
+          const progressInComponent = currentCountProgress - componentStartCount;
+          if (comp.type === 'move') {
+            currentMoveProgress += Math.min(progressInComponent, comp.counts);
+          }
+        }
+      }
+      
+      // Movement progress is ratio of move progress to total move distance
+      movementProgress = totalMoveDistance > 0 ? Math.min(currentMoveProgress / totalMoveDistance, 1) : 0;
       
       setAnimationProgress(movementProgress);
       
       // Update count based on elapsed time - starts at 1 and counts up
-      const newCount = Math.min(Math.floor(elapsed / msPerCount) + 1, totalCounts);
+      // When using audio clock, no offset needed as we're synced to audio time
+      const countOffset = useAudioClock ? 0 : 25; // Only offset when not using audio clock
+      const adjustedElapsed = elapsed + countOffset;
+      const newCount = Math.min(Math.floor(adjustedElapsed / msPerCount) + 1, totalCounts);
       setCurrentCount(newCount);
+      
+      // Control step flash visibility based on raw elapsed time (not adjusted)
+      // This ensures the flash is perfectly synchronized with the beat
+      const elapsedInCurrentCount = elapsed % msPerCount;
+      const flashDuration = msPerCount * 0.5; // Show for 50% of the beat
+      
+      // Only show step flash if we're currently in a "move" component
+      let isInMoveComponent = false;
+      const currentCountForComponent = elapsed / msPerCount;
+      let componentAccumulated = 0;
+      for (const comp of components) {
+        if (currentCountForComponent <= componentAccumulated + comp.counts) {
+          isInMoveComponent = comp.type === 'move';
+          break;
+        }
+        componentAccumulated += comp.counts;
+      }
+      
+      setStepFlashVisible(isInMoveComponent && elapsedInCurrentCount < flashDuration);
+      
+      // Audio sync removed - was causing restart issues
+      // The audio and animation will stay in sync based on tempo calculations
       
       const timeProgress = Math.min(elapsed / totalDuration, 1);
       if (timeProgress < 1) {
@@ -1873,6 +2115,7 @@ const PathVisualizerModal = ({
         setCurrentSetIndex(prev => prev + 1);
         setAnimationProgress(0);
         setCurrentCount(0);
+        setStepFlashVisible(false);
       }
     };
     
@@ -1883,14 +2126,153 @@ const PathVisualizerModal = ({
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [isPlaying, currentSetIndex, movement]);
+  }, [isPlaying, currentSetIndex, movement, audioEnabled, audioLoaded, isStaffView, selectedPerformerId, currentPerformerData, playbackSpeed]);
   
-  const handlePlayPause = () => {
+  const handlePlayPause = async () => {
     const movementData = getMovementData();
+    let startingSetIndex = currentSetIndex;
+    
     if (currentSetIndex >= movementData.length - 1) {
+      startingSetIndex = 0;
       setCurrentSetIndex(0);
     }
-    setIsPlaying(!isPlaying);
+    
+    // If already counting off, ignore
+    if (isCountingOff) return;
+    
+    const newPlayingState = !isPlaying;
+    
+    // If starting to play, save zoom state and enable zoom
+    if (newPlayingState) {
+      // Save current zoom state before changing it
+      setPreviousZoomState(zoomToFit);
+      // Enable zoom for animation
+      setZoomToFit(true);
+    } else {
+      // Stopping - restore previous zoom state
+      if (previousZoomState !== null) {
+        setZoomToFit(previousZoomState);
+        setPreviousZoomState(null);
+      }
+    }
+    
+    // If starting to play, do count-off first
+    if (newPlayingState && audioEnabled && (movement === '1' || movement === '2')) {
+      setIsCountingOff(true);
+      
+      // Start metronome count-off with current playback speed
+      const countOffDuration = await audioService.playCountOff(movement, 8, playbackSpeed);
+      
+      // Animate the count-off numbers with adjusted tempo
+      const baseTempo = movement === '1' ? 140 : movement === '2' ? 170 : 120;
+      const adjustedTempo = baseTempo * playbackSpeed;
+      const msPerBeat = 60000 / adjustedTempo;
+      
+      // Prepare audio to start after count-off
+      const startAudioAfterCountOff = () => {
+        if (!audioLoaded) {
+          audioService.loadMovementAudio(movement).then((buffer) => {
+            if (buffer) {
+              audioService.setMovementData(movement, movementData);
+              setAudioLoaded(true);
+              
+              // Calculate starting position
+              let totalCountsToSet = 0;
+              for (let i = 1; i <= startingSetIndex; i++) {
+                totalCountsToSet += parseInt(movementData[i].counts) || 8;
+              }
+              
+              // Start audio from calculated position
+              audioService.play(movement, startingSetIndex, totalCountsToSet, playbackSpeed);
+            }
+          });
+        } else {
+          // Audio already loaded, calculate position and play
+          let totalCountsToSet = 0;
+          for (let i = 1; i <= startingSetIndex; i++) {
+            totalCountsToSet += parseInt(movementData[i].counts) || 8;
+          }
+          
+          // Start audio from calculated position
+          audioService.play(movement, startingSetIndex, totalCountsToSet, playbackSpeed);
+        }
+      };
+      
+      for (let i = 1; i <= 8; i++) {
+        setTimeout(() => {
+          setCountOffNumber(i);
+          if (i === 8) {
+            // After last count, start the actual animation and audio
+            setTimeout(() => {
+              setIsCountingOff(false);
+              setCountOffNumber(0);
+              setIsPlaying(true);
+              
+              // Start audio playback after count-off
+              startAudioAfterCountOff();
+            }, msPerBeat);
+          }
+        }, (i - 1) * msPerBeat);
+      }
+      
+      return; // Exit early, actual play will happen after count-off
+    }
+    
+    setIsPlaying(newPlayingState);
+    
+    
+    // Handle audio playback
+    if (audioEnabled && (movement === '1' || movement === '2')) {
+      if (newPlayingState) {
+        // If audio not loaded yet, load it first
+        if (!audioLoaded) {
+          audioService.loadMovementAudio(movement).then((buffer) => {
+            if (buffer) {
+              audioService.setMovementData(movement, movementData);
+              setAudioLoaded(true);
+              
+              // Now start playing from the correct position
+              let totalCountsToSet = 0;
+              
+              // Add counts for all completed transitions (sets 1 through currentSetIndex)
+              for (let i = 1; i <= currentSetIndex; i++) {
+                totalCountsToSet += parseInt(movementData[i].counts) || 8;
+              }
+              
+              // Add current animation progress counts if in middle of transition
+              if (animationProgress > 0 && currentSetIndex < movementData.length - 1) {
+                const nextSet = movementData[currentSetIndex + 1];
+                totalCountsToSet += animationProgress * (parseInt(nextSet?.counts) || 8);
+              }
+              
+              // Start audio from calculated position
+              audioService.play(movement, currentSetIndex, totalCountsToSet, playbackSpeed);
+            }
+          });
+        } else {
+          // Audio already loaded, calculate position and play
+          let totalCountsToSet = 0;
+          
+          // Add counts for all completed transitions (sets 1 through currentSetIndex)
+          for (let i = 1; i <= currentSetIndex; i++) {
+            const counts = parseInt(movementData[i].counts) || 8;
+            totalCountsToSet += counts;
+          }
+          
+          // Add current animation progress counts if in middle of transition
+          if (animationProgress > 0 && currentSetIndex < movementData.length - 1) {
+            const nextSet = movementData[currentSetIndex + 1];
+            totalCountsToSet += animationProgress * (parseInt(nextSet?.counts) || 8);
+          }
+          
+          // Start audio from calculated position
+          audioService.play(movement, currentSetIndex, totalCountsToSet, playbackSpeed);
+        }
+      } else {
+        audioService.pause();
+        setStepFlashVisible(false); // Reset flash when pausing
+      }
+    }
   };
   
   const handleReset = () => {
@@ -1898,22 +2280,60 @@ const PathVisualizerModal = ({
     setCurrentSetIndex(0);
     setAnimationProgress(0);
     setCurrentCount(0);
+    setStepFlashVisible(false);
+    setIsCountingOff(false);
+    setCountOffNumber(0);
+    // Restore previous zoom state if animation was playing
+    if (previousZoomState !== null) {
+      setZoomToFit(previousZoomState);
+      setPreviousZoomState(null);
+    }
+    // Stop audio and metronome
+    if (audioEnabled) {
+      audioService.stopMetronome();
+      audioService.stop();
+    }
   };
   
   const handleNext = () => {
     const movementData = getMovementData();
     if (currentSetIndex < movementData.length - 1) {
-      setCurrentSetIndex(prev => prev + 1);
+      const newSetIndex = currentSetIndex + 1;
+      setCurrentSetIndex(newSetIndex);
       setAnimationProgress(0);
       setCurrentCount(0);
+      setStepFlashVisible(false);
+      
+      // If playing, restart audio from new position
+      if (isPlaying && audioEnabled && audioLoaded && (movement === '1' || movement === '2')) {
+        let totalCountsToSet = 0;
+        // Add counts for all completed transitions up to the new set
+        for (let i = 1; i <= newSetIndex; i++) {
+          totalCountsToSet += parseInt(movementData[i].counts) || 8;
+        }
+        audioService.play(movement, newSetIndex, totalCountsToSet, playbackSpeed);
+      }
     }
   };
   
   const handlePrevious = () => {
     if (currentSetIndex > 0) {
-      setCurrentSetIndex(prev => prev - 1);
+      const newSetIndex = currentSetIndex - 1;
+      setCurrentSetIndex(newSetIndex);
       setAnimationProgress(0);
       setCurrentCount(0);
+      setStepFlashVisible(false);
+      
+      // If playing, restart audio from new position
+      if (isPlaying && audioEnabled && audioLoaded && (movement === '1' || movement === '2')) {
+        const movementData = getMovementData();
+        let totalCountsToSet = 0;
+        // Add counts for all completed transitions up to the new set
+        for (let i = 1; i <= newSetIndex; i++) {
+          totalCountsToSet += parseInt(movementData[i].counts) || 8;
+        }
+        audioService.play(movement, newSetIndex, totalCountsToSet, playbackSpeed);
+      }
     }
   };
   
@@ -2601,80 +3021,93 @@ const PathVisualizerModal = ({
           </button>
           </div>
           
-          {/* Current set info - hidden in quiz mode */}
-          {currentSet && !quizMode && (
-            <div className="bg-red-700/20 border border-red-500/30 rounded-lg p-3 mb-4">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <div className="text-white text-sm">
-                  <div className="flex items-center flex-wrap gap-2">
-                    <span className="font-semibold">Set {currentSet.set}:</span>
-                    {!quizMode && rehearsalMarks[movement]?.[String(currentSet.set)] && (
-                      <span className="px-2 py-0.5 bg-purple-600/20 border border-purple-500/30 rounded text-purple-300 text-xs font-bold">
-                        {rehearsalMarks[movement][String(currentSet.set)]}
-                      </span>
-                    )}
-                  </div>
-                  {!quizMode && (
-                    <div className="mt-1">
-                      {highlightNumbers(currentSet.leftRight)} | {highlightNumbers(currentSet.homeVisitor)}
-                      {currentSet.counts && <span className="ml-2">({currentSet.counts} counts)</span>}
-                    </div>
-                  )}
-                </div>
-                {(!isStaffView || selectedPerformerId) && !quizMode && (
-                  <div className="flex items-center space-x-2">
-                    <button
-                      onClick={() => setShowDrillChart(true)}
-                      className="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg p-icon-sm transition-all duration-200"
-                      title="View drill chart"
-                    >
-                      <Map className="w-5 h-5 text-blue-300" />
-                    </button>
-                    {getMusicAvailability(currentSet.set) && currentSet.set > 1 && (
-                      <button
-                        onClick={() => setShowMusic(true)}
-                        className="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg p-icon-sm transition-all duration-200"
-                        title="View music snippet"
-                      >
-                        <Music className="w-5 h-5 text-blue-300" />
-                      </button>
-                    )}
-                    <button
-                      onClick={() => setShowNotes(true)}
-                      className={`${checkHasNote(currentSet.set) ? 'bg-yellow-600/20 hover:bg-yellow-600/30 border border-yellow-500/30' : 'bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30'} rounded-lg p-icon-sm transition-all duration-200 relative`}
-                      title="Personal notes"
-                    >
-                      <StickyNote className={`w-5 h-5 ${checkHasNote(currentSet.set) ? 'text-yellow-300' : 'text-blue-300'}`} />
-                      {checkHasNote(currentSet.set) && (
-                        <div className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-400 rounded-full"></div>
+          {/* Current set info - different during animation */}
+          {currentSet && !quizMode && !isCountingOff && (
+            <>
+              {isPlaying && movementData[currentSetIndex + 1] ? (
+                // Animation mode display
+                <div className="bg-red-700/20 border border-red-500/30 rounded-lg p-3 mb-4">
+                  <div className="text-white">
+                    {/* Destination set info */}
+                    <div className="text-xl font-bold mb-2">
+                      To Set {movementData[currentSetIndex + 1].set}
+                      {rehearsalMarks[movement]?.[String(movementData[currentSetIndex + 1].set)] && (
+                        <span className="ml-2 px-2 py-1 bg-purple-600/20 border border-purple-500/30 rounded text-purple-300 text-base font-bold">
+                          {rehearsalMarks[movement][String(movementData[currentSetIndex + 1].set)]}
+                        </span>
                       )}
-                    </button>
-                  </div>
-                )}
-              </div>
-              {/* Show current tip normally, or next tip during animation */}
-              {!quizMode && (
-                <div className="flex items-center justify-between mt-2">
-                  {(isPlaying && movementData[currentSetIndex + 1]?.tip) ? (
-                    <div className="text-yellow-300 text-sm flex items-start">
-                      <span className="mr-1">💡</span>
-                      <span className="ml-1">{movementData[currentSetIndex + 1].tip}</span>
                     </div>
-                  ) : (
-                    currentSet.tip ? (
+                    {/* Tip for the transition */}
+                    {movementData[currentSetIndex + 1]?.tip && (
                       <div className="text-yellow-300 text-sm flex items-start">
                         <span className="mr-1">💡</span>
-                        <span>{currentSet.tip}</span>
+                        <span>{movementData[currentSetIndex + 1].tip}</span>
                       </div>
-                    ) : (
-                      <div></div>
-                    )
+                    )}
+                  </div>
+                </div>
+              ) : (
+                // Normal (not animating) display
+                <div className="bg-red-700/20 border border-red-500/30 rounded-lg p-3 mb-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    <div className="text-white text-sm">
+                      <div className="flex items-center flex-wrap gap-2">
+                        <span className="font-semibold">Set {currentSet.set}:</span>
+                        {rehearsalMarks[movement]?.[String(currentSet.set)] && (
+                          <span className="px-2 py-0.5 bg-purple-600/20 border border-purple-500/30 rounded text-purple-300 text-xs font-bold">
+                            {rehearsalMarks[movement][String(currentSet.set)]}
+                          </span>
+                        )}
+                      </div>
+                      <div className="mt-1">
+                        {highlightNumbers(currentSet.leftRight)} | {highlightNumbers(currentSet.homeVisitor)}
+                        {currentSet.counts && <span className="ml-2">({currentSet.counts} counts)</span>}
+                      </div>
+                    </div>
+                    {(!isStaffView || selectedPerformerId) && (
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => setShowDrillChart(true)}
+                          className="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg p-icon-sm transition-all duration-200"
+                          title="View drill chart"
+                        >
+                          <Map className="w-5 h-5 text-blue-300" />
+                        </button>
+                        {getMusicAvailability(currentSet.set) && currentSet.set > 1 && (
+                          <button
+                            onClick={() => setShowMusic(true)}
+                            className="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg p-icon-sm transition-all duration-200"
+                            title="View music snippet"
+                          >
+                            <Music className="w-5 h-5 text-blue-300" />
+                          </button>
+                        )}
+                        <button
+                          onClick={() => setShowNotes(true)}
+                          className={`${checkHasNote(currentSet.set) ? 'bg-yellow-600/20 hover:bg-yellow-600/30 border border-yellow-500/30' : 'bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30'} rounded-lg p-icon-sm transition-all duration-200 relative`}
+                          title="Personal notes"
+                        >
+                          <StickyNote className={`w-5 h-5 ${checkHasNote(currentSet.set) ? 'text-yellow-300' : 'text-blue-300'}`} />
+                          {checkHasNote(currentSet.set) && (
+                            <div className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-400 rounded-full"></div>
+                          )}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  {currentSet.tip && (
+                    <div className="text-yellow-300 text-sm flex items-start mt-2">
+                      <span className="mr-1">💡</span>
+                      <span>{currentSet.tip}</span>
+                    </div>
                   )}
                   {/* Nickname badge */}
-                  <NicknameBadge movement={movement} setNumber={currentSet.set} />
+                  <div className="flex justify-end mt-2">
+                    <NicknameBadge movement={movement} setNumber={currentSet.set} />
+                  </div>
                 </div>
               )}
-            </div>
+            </>
           )}
           
           {/* Quiz UI */}
@@ -3118,7 +3551,7 @@ const PathVisualizerModal = ({
           })()}
           
           {/* Playback controls */}
-          {!quizMode && (
+          {!quizMode && !isCountingOff && (
             <div className="flex items-center justify-center space-x-4">
               <button
                 onClick={handleReset}
@@ -3159,6 +3592,50 @@ const PathVisualizerModal = ({
                   {currentSetIndex + 1} / {movementData.length}
                 </span>
               </div>
+              
+              {/* Audio toggle button - only show for movements 1 and 2 */}
+              {(movement === '1' || movement === '2') && (
+                <>
+                  <button
+                    onClick={() => setAudioEnabled(!audioEnabled)}
+                    className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 ml-2"
+                    title={audioEnabled ? "Mute audio" : "Enable audio"}
+                  >
+                    {audioEnabled ? (
+                      <Volume2 className="w-5 h-5 text-white" />
+                    ) : (
+                      <VolumeX className="w-5 h-5 text-white" />
+                    )}
+                  </button>
+                  
+                  {/* Speed control dropdown */}
+                  <div className="relative ml-2">
+                    <select
+                      value={playbackSpeed}
+                      onChange={(e) => {
+                        const newSpeed = parseFloat(e.target.value);
+                        setPlaybackSpeed(newSpeed);
+                        // Update audio playback rate if currently playing
+                        if (isPlaying && audioService) {
+                          audioService.setPlaybackRate(newSpeed);
+                        }
+                      }}
+                      className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg px-2 py-1 text-white text-sm appearance-none pr-8 cursor-pointer"
+                      title="Playback speed"
+                    >
+                      <option value="1.0">100%</option>
+                      <option value="0.95">95%</option>
+                      <option value="0.9">90%</option>
+                      <option value="0.85">85%</option>
+                      <option value="0.8">80%</option>
+                      <option value="0.75">75%</option>
+                    </select>
+                    <div className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                      <ChevronDown className="w-4 h-4 text-white" />
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           )}
           </>
@@ -3171,51 +3648,154 @@ const PathVisualizerModal = ({
           </div>
         )}
         
-        {/* Options - hidden during quiz mode */}
+        {/* Animation display OR Options - hidden during quiz mode */}
         {!quizMode && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4 pb-4 max-w-md mx-auto">
-            <label className="flex items-center text-white/80 text-sm justify-center md:justify-start">
-              <input
-                type="checkbox"
-                checked={showPaths}
-                onChange={(e) => setShowPaths(e.target.checked)}
-                className="mr-2"
-              />
-              Show movement paths
-            </label>
-            <label className="flex items-center text-white/80 text-sm justify-center md:justify-start">
-              <input
-                type="checkbox"
-                checked={showOtherPerformers}
-                onChange={(e) => setShowOtherPerformers(e.target.checked)}
-                className="mr-2"
-              />
-              Show other performers
-            </label>
-            <label className="flex items-center text-white/80 text-sm justify-center md:justify-start">
-              <input
-                type="checkbox"
-                checked={show4StepMarks}
-                onChange={(e) => setShow4StepMarks(e.target.checked)}
-                className="mr-2"
-              />
-              Show 4-step ticks
-            </label>
-            <label className="flex items-center text-white/80 text-sm justify-center md:justify-start">
-              <input
-                type="checkbox"
-                checked={directorView}
-                onChange={(e) => setDirectorView(e.target.checked)}
-                className="mr-2"
-              />
-              Director's view
-            </label>
-          </div>
+          <>
+            {isCountingOff ? (
+              // Countdown display
+              <div className="mt-8 text-center">
+                <div className="text-6xl font-bold text-yellow-400 animate-pulse">
+                  Get Ready!
+                </div>
+              </div>
+            ) : isPlaying && movementData[currentSetIndex + 1] ? (
+              // Animation mode display
+              <div className="mt-4 space-y-4">
+                {/* Step/Hold display */}
+                <div className="flex justify-center" style={{ minHeight: '120px' }}>
+                  <div className="text-8xl font-bold">
+                    {(() => {
+                      const nextSet = movementData[currentSetIndex + 1];
+                      const tip = nextSet?.tip || '';
+                      
+                      // Parse components to determine current action
+                      const components = parseTipComponents(tip);
+                      components.sort((a, b) => a.index - b.index);
+                      
+                      if (components.length === 0) {
+                        components.push({ type: 'move', counts: parseInt(nextSet?.counts) || 8, index: 0 });
+                      }
+                      
+                      // Find which component we're in
+                      let accumulatedCounts = 0;
+                      let currentComponent = null;
+                      
+                      for (const comp of components) {
+                        if (currentCount <= accumulatedCounts + comp.counts) {
+                          currentComponent = comp;
+                          break;
+                        }
+                        accumulatedCounts += comp.counts;
+                      }
+                      
+                      const isHolding = currentComponent?.type === 'hold';
+                      
+                      if (isHolding) {
+                        return (
+                          <span className="text-yellow-400">
+                            HOLD
+                          </span>
+                        );
+                      } else if (stepFlashVisible) {
+                        return (
+                          <span className="text-green-400">
+                            STEP
+                          </span>
+                        );
+                      } else {
+                        return <span className="opacity-0">STEP</span>; // Keep space but invisible
+                      }
+                    })()}
+                  </div>
+                </div>
+                
+                {/* Music image for destination set */}
+                <div className="flex justify-center">
+                  {(() => {
+                    const nextSet = movementData[currentSetIndex + 1];
+                    const hasMusic = getMusicAvailability(nextSet?.set);
+                    
+                    if (hasMusic) {
+                      // Use the same getMusicImagePath function for consistency
+                      const imagePath = getMusicImagePath(movement, nextSet.set);
+                      
+                      return (
+                        <div className="bg-blue-700/20 border border-blue-500/30 rounded-lg p-4">
+                          <img 
+                            src={imagePath}
+                            alt={`Music for Set ${nextSet.set}`}
+                            className="max-w-full h-auto rounded"
+                            style={{ maxHeight: '200px' }}
+                            onError={(e) => {
+                              // Fallback to Staff version if performer-specific version not found
+                              if (!e.target.src.includes('Staff')) {
+                                e.target.src = `/music/Staff${movement}-${nextSet.set}.png`;
+                              }
+                            }}
+                          />
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div className="bg-gray-700/20 border border-gray-500/30 rounded-lg p-8">
+                          <div className="text-center">
+                            <div className="text-white/60 text-4xl mb-2">𝄽</div>
+                            <span className="text-white/80 text-lg">Rest</span>
+                          </div>
+                        </div>
+                      );
+                    }
+                  })()}
+                </div>
+              </div>
+            ) : (
+              // Normal options display when not animating
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4 pb-4 max-w-md mx-auto">
+                <label className="flex items-center text-white/80 text-sm justify-center md:justify-start">
+                  <input
+                    type="checkbox"
+                    checked={showPaths}
+                    onChange={(e) => setShowPaths(e.target.checked)}
+                    className="mr-2"
+                  />
+                  Show movement paths
+                </label>
+                <label className="flex items-center text-white/80 text-sm justify-center md:justify-start">
+                  <input
+                    type="checkbox"
+                    checked={showOtherPerformers}
+                    onChange={(e) => setShowOtherPerformers(e.target.checked)}
+                    className="mr-2"
+                  />
+                  Show other performers
+                </label>
+                <label className="flex items-center text-white/80 text-sm justify-center md:justify-start">
+                  <input
+                    type="checkbox"
+                    checked={show4StepMarks}
+                    onChange={(e) => setShow4StepMarks(e.target.checked)}
+                    className="mr-2"
+                  />
+                  Show 4-step ticks
+                </label>
+                <label className="flex items-center text-white/80 text-sm justify-center md:justify-start">
+                  <input
+                    type="checkbox"
+                    checked={directorView}
+                    onChange={(e) => setDirectorView(e.target.checked)}
+                    className="mr-2"
+                  />
+                  Director's view
+                </label>
+              </div>
+            )}
+          </>
         )}
         
-        {/* Quiz Mode Toggle */}
-        <div className="flex justify-center mt-2 pb-4">
-          <button
+        {/* Quiz Mode Toggle - hidden during animation and countdown */}
+        {!isPlaying && !isCountingOff && (
+          <div className="flex justify-center mt-2 pb-4">
+            <button
             onClick={() => {
               if (quizMode) {
                 exitQuizMode();
@@ -3235,10 +3815,11 @@ const PathVisualizerModal = ({
               {quizMode ? 'Exit Quiz Mode' : 'Start Quiz Mode'}
             </span>
           </button>
-        </div>
+          </div>
+        )}
         
         {/* Legend when showing other performers - outside grid */}
-        {showOtherPerformers && !quizMode && (
+        {showOtherPerformers && !quizMode && !isPlaying && !isCountingOff && (
           <div className="flex items-center justify-center flex-wrap gap-x-4 gap-y-2 mt-3 text-xs pb-4">
             <div className="flex items-center">
               <div className="w-3 h-3 rounded-full mr-1 ml-1" style={{ backgroundColor: '#ef4444' }}></div>

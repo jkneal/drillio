@@ -202,6 +202,24 @@ const AboutPage = () => {
             </div>
 
             <div className="flex items-start">
+              <Play className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
+              <div className="text-white/80 text-sm">
+                <span className="font-semibold text-white">Step Out Practice:</span> Practice your drill moves 
+                in sync with the music using the animation feature in Path Visualization. Features include:
+                <ul className="mt-2 ml-4 list-disc list-inside text-white/70">
+                  <li>Synchronized audio playback for Movements</li>
+                  <li>8-count metronome count-off before animation starts</li>
+                  <li>Large "STEP" and "HOLD" indicators that pulse with the beat</li>
+                  <li>Automatic zoom that follows your movement path</li>
+                  <li>Speed control (75%-100%) to slow down complex sequences</li>
+                  <li>Real-time count display showing your progress through each transition</li>
+                  <li>Music notation display for the destination set</li>
+                </ul>
+                Perfect for practicing drill timing and memorizing music cues!
+              </div>
+            </div>
+
+            <div className="flex items-start">
               <Brain className="w-4 h-4 text-purple-300 mr-2 flex-shrink-0" />
               <div className="text-white/80 text-sm">
                 <span className="font-semibold text-white">Quiz Mode:</span> Test your drill knowledge 
