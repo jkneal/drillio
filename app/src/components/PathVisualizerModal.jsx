@@ -136,14 +136,18 @@ const PathVisualizerModal = ({
         : currentPerformerData?.movements[movement] || [];
       
       // Load audio for this movement
-      audioService.loadMovementAudio(movement).then((buffer) => {
+      const initAudio = async () => {
+        // Initialize audio context first (important for mobile)
+        await audioService.initialize();
+        const buffer = await audioService.loadMovementAudio(movement);
         if (buffer) {
           // Set movement data for accurate marker calculation
           audioService.setMovementData(movement, movementData);
           setAudioLoaded(true);
           audioInitializedRef.current = true;
         }
-      });
+      };
+      initAudio();
     }
   }, [show, movement, selectedPerformerId, currentPerformerData]);
   
@@ -3552,91 +3556,105 @@ const PathVisualizerModal = ({
           
           {/* Playback controls */}
           {!quizMode && !isCountingOff && (
-            <div className="flex items-center justify-center space-x-4">
-              <button
-                onClick={handleReset}
-                className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200"
-              >
-                <SkipBack className="w-5 h-5 text-white" />
-              </button>
-              
-              <button
-                onClick={handlePrevious}
-                disabled={currentSetIndex === 0}
-                className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <ChevronLeft className="w-5 h-5 text-white" />
-              </button>
-              
-              <button
-                onClick={handlePlayPause}
-                className="bg-red-600/30 hover:bg-red-600/40 border border-red-500/30 rounded-lg p-3 transition-all duration-200"
-              >
-                {isPlaying ? (
-                  <Pause className="w-6 h-6 text-white" />
-                ) : (
-                  <Play className="w-6 h-6 text-white" />
-                )}
-              </button>
-              
-              <button
-                onClick={handleNext}
-                disabled={currentSetIndex >= movementData.length - 1}
-                className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <ChevronRight className="w-5 h-5 text-white" />
-              </button>
-              
-              <div className="bg-red-600/20 border border-red-500/30 rounded-lg px-3 py-1">
-                <span className="text-white text-sm font-semibold">
-                  {currentSetIndex + 1} / {movementData.length}
-                </span>
-              </div>
-              
-              {/* Audio toggle button - only show for movements 1 and 2 */}
-              {(movement === '1' || movement === '2') && (
-                <>
+            <>
+              {isPlaying ? (
+                // Simplified controls during animation - just pause button
+                <div className="flex items-center justify-center">
                   <button
-                    onClick={() => setAudioEnabled(!audioEnabled)}
-                    className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 ml-2"
-                    title={audioEnabled ? "Mute audio" : "Enable audio"}
+                    onClick={handlePlayPause}
+                    className="bg-red-600/30 hover:bg-red-600/40 border border-red-500/30 rounded-lg p-3 transition-all duration-200"
                   >
-                    {audioEnabled ? (
-                      <Volume2 className="w-5 h-5 text-white" />
-                    ) : (
-                      <VolumeX className="w-5 h-5 text-white" />
-                    )}
+                    <Pause className="w-6 h-6 text-white" />
                   </button>
-                  
-                  {/* Speed control dropdown */}
-                  <div className="relative ml-2">
-                    <select
-                      value={playbackSpeed}
-                      onChange={(e) => {
-                        const newSpeed = parseFloat(e.target.value);
-                        setPlaybackSpeed(newSpeed);
-                        // Update audio playback rate if currently playing
-                        if (isPlaying && audioService) {
-                          audioService.setPlaybackRate(newSpeed);
-                        }
-                      }}
-                      className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg px-2 py-1 text-white text-sm appearance-none pr-8 cursor-pointer"
-                      title="Playback speed"
+                </div>
+              ) : (
+                // Full controls when not playing
+                <div className="flex flex-col gap-3">
+                  {/* Main playback controls */}
+                  <div className="flex items-center justify-center space-x-4">
+                    <button
+                      onClick={handleReset}
+                      className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200"
                     >
-                      <option value="1.0">100%</option>
-                      <option value="0.95">95%</option>
-                      <option value="0.9">90%</option>
-                      <option value="0.85">85%</option>
-                      <option value="0.8">80%</option>
-                      <option value="0.75">75%</option>
-                    </select>
-                    <div className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                      <ChevronDown className="w-4 h-4 text-white" />
+                      <SkipBack className="w-5 h-5 text-white" />
+                    </button>
+                    
+                    <button
+                      onClick={handlePrevious}
+                      disabled={currentSetIndex === 0}
+                      className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <ChevronLeft className="w-5 h-5 text-white" />
+                    </button>
+                    
+                    <button
+                      onClick={handlePlayPause}
+                      className="bg-red-600/30 hover:bg-red-600/40 border border-red-500/30 rounded-lg p-3 transition-all duration-200"
+                    >
+                      <Play className="w-6 h-6 text-white" />
+                    </button>
+                    
+                    <button
+                      onClick={handleNext}
+                      disabled={currentSetIndex >= movementData.length - 1}
+                      className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <ChevronRight className="w-5 h-5 text-white" />
+                    </button>
+                    
+                    <div className="bg-red-600/20 border border-red-500/30 rounded-lg px-3 py-1">
+                      <span className="text-white text-sm font-semibold">
+                        {currentSetIndex + 1} / {movementData.length}
+                      </span>
                     </div>
                   </div>
-                </>
+                  
+                  {/* Audio controls on separate line for movements 1 and 2 */}
+                  {(movement === '1' || movement === '2') && (
+                    <div className="flex items-center justify-center space-x-3">
+                      <button
+                        onClick={() => setAudioEnabled(!audioEnabled)}
+                        className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200"
+                        title={audioEnabled ? "Mute audio" : "Enable audio"}
+                      >
+                        {audioEnabled ? (
+                          <Volume2 className="w-5 h-5 text-white" />
+                        ) : (
+                          <VolumeX className="w-5 h-5 text-white" />
+                        )}
+                      </button>
+                      
+                      {/* Speed control dropdown */}
+                      <div className="relative">
+                        <select
+                          value={playbackSpeed}
+                          onChange={(e) => {
+                            const newSpeed = parseFloat(e.target.value);
+                            setPlaybackSpeed(newSpeed);
+                            // Update audio playback rate if currently playing
+                            if (isPlaying && audioService) {
+                              audioService.setPlaybackRate(newSpeed);
+                            }
+                          }}
+                          className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg px-2 py-1 text-white text-sm appearance-none pr-8 cursor-pointer"
+                          title="Playback speed"
+                        >
+                          <option value="1.0">100%</option>
+                          <option value="0.95">95%</option>
+                          <option value="0.9">90%</option>
+                          <option value="0.85">85%</option>
+                          <option value="0.8">80%</option>
+                          <option value="0.75">75%</option>
+                        </select>
+                        <div className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                          <ChevronDown className="w-4 h-4 text-white" />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               )}
-            </div>
+            </>
           )}
           </>
         ) : (

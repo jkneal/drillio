@@ -26,6 +26,16 @@ class AudioService {
       this.gainNode = this.audioContext.createGain();
       this.gainNode.connect(this.audioContext.destination);
     }
+    
+    // Resume audio context if it's suspended (common on mobile)
+    if (this.audioContext.state === 'suspended') {
+      try {
+        await this.audioContext.resume();
+        console.log('Audio context resumed');
+      } catch (error) {
+        console.error('Failed to resume audio context:', error);
+      }
+    }
   }
 
   async loadMovementAudio(movement) {
@@ -95,6 +105,11 @@ class AudioService {
 
   async play(movement, setIndex = 0, totalCountsUpToPosition = 0, playbackRate = 1.0) {
     await this.initialize();
+    
+    // Ensure audio context is resumed (important for mobile)
+    if (this.audioContext && this.audioContext.state === 'suspended') {
+      await this.audioContext.resume();
+    }
     
     // Stop any currently playing audio
     this.stop();
@@ -241,6 +256,11 @@ class AudioService {
   // Play metronome count-off
   async playCountOff(movement, counts = 8, playbackRate = 1.0) {
     await this.initialize();
+    
+    // Ensure audio context is resumed (important for mobile)
+    if (this.audioContext && this.audioContext.state === 'suspended') {
+      await this.audioContext.resume();
+    }
     
     const baseTempo = this.tempos[movement] || 120;
     const adjustedTempo = baseTempo * playbackRate; // Adjust tempo for playback speed
