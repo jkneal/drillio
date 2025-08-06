@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Home, ChevronRight, Users, Music, Play, SkipForward, ChevronLeft, Lightbulb, Map, Wifi, WifiOff, ArrowRight, Sparkles, StickyNote, Route, Brain, Trophy } from 'lucide-react';
+import { Home, ChevronRight, Users, Music, Play, SkipForward, ChevronLeft, Lightbulb, Map, Wifi, WifiOff, ArrowRight, Sparkles, StickyNote, Route, Brain, Trophy, Repeat } from 'lucide-react';
 import { movementsConfig } from '../data/movementsConfig';
 import { APP_VERSION } from '../version';
 
@@ -210,6 +210,8 @@ const AboutPage = () => {
                   <li>Synchronized audio playback for Movements</li>
                   <li>8-count metronome count-off before animation starts</li>
                   <li>Large "STEP" and "HOLD" indicators that pulse with the beat</li>
+                  <li>Direction arrow indicator showing movement direction during steps</li>
+                  <li>Loop feature for repeating sections - select from/to sets and practice continuously</li>
                   <li>Automatic zoom that follows your movement path</li>
                   <li>Speed control (75%-100%) to slow down complex sequences</li>
                   <li>Real-time count display showing your progress through each transition</li>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { X, Play, Pause, SkipBack, SkipForward, ChevronLeft, ChevronRight, ChevronDown, ZoomIn, ZoomOut, Maximize2, Map, Music, StickyNote, Brain, CheckCircle, XCircle, Trophy, Volume2, VolumeX } from 'lucide-react';
+import { X, Play, Pause, SkipBack, SkipForward, ChevronLeft, ChevronRight, ChevronDown, ZoomIn, ZoomOut, Maximize2, Map, Music, StickyNote, Brain, CheckCircle, XCircle, Trophy, Volume2, VolumeX, Repeat } from 'lucide-react';
 import { performerData } from '../data/performerData';
 import { rehearsalMarks } from '../data/rehearsalMarks';
 import DrillChartModal from './DrillChartModal';
@@ -34,6 +34,11 @@ const PathVisualizerModal = ({
   const [animatedCenter, setAnimatedCenter] = useState({ x: 0, y: 0 });
   const lastCenterRef = useRef({ x: 0, y: 0 });
   const currentTransformRef = useRef({ scale: 1, centerX: 0, centerY: 0 });
+  
+  // Loop feature states
+  const [loopEnabled, setLoopEnabled] = useState(false);
+  const [loopFromSet, setLoopFromSet] = useState(0);
+  const [loopToSet, setLoopToSet] = useState(0);
   // Initialize selectedPerformerId with a saved value if in staff view
   const [selectedPerformerId, setSelectedPerformerId] = useState(() => {
     if (isStaffView) {
@@ -455,6 +460,41 @@ const PathVisualizerModal = ({
     return localStorage.getItem(key) !== null;
   };
   
+  // Get direction arrow based on movementVector (matching drill page display)
+  const getDirectionArrow = (toSet) => {
+    if (!toSet || toSet.movementVector === null || toSet.movementVector === undefined) return '';
+    
+    // movementVector uses: 0 = forward (north), 90 = right (east), 180 = backward (south), 270 = left (west)
+    let angle = toSet.movementVector;
+    
+    // In director view, rotate 180 degrees
+    if (directorView) {
+      angle = (angle + 180) % 360;
+    }
+    
+    // Map angle to arrow character
+    // Using 22.5 degree segments for 8-directional arrows
+    if ((angle >= 337.5 && angle <= 360) || (angle >= 0 && angle < 22.5)) {
+      return '↑';  // Forward/North
+    } else if (angle >= 22.5 && angle < 67.5) {
+      return '↗';  // Forward-Right/Northeast
+    } else if (angle >= 67.5 && angle < 112.5) {
+      return '→';  // Right/East
+    } else if (angle >= 112.5 && angle < 157.5) {
+      return '↘';  // Right-Backward/Southeast
+    } else if (angle >= 157.5 && angle < 202.5) {
+      return '↓';  // Backward/South
+    } else if (angle >= 202.5 && angle < 247.5) {
+      return '↙';  // Left-Backward/Southwest
+    } else if (angle >= 247.5 && angle < 292.5) {
+      return '←';  // Left/West
+    } else if (angle >= 292.5 && angle < 337.5) {
+      return '↖';  // Left-Forward/Northwest
+    }
+    
+    return '';
+  };
+  
   // Calculate bounding box for zoom to fit - includes current and next positions for smooth transitions
   const calculateBoundingBox = (currentSetNumber, includeNext = true) => {
     const positions = [];
@@ -635,13 +675,19 @@ const PathVisualizerModal = ({
       // In quiz mode, use the display set (which shows the "from" position)
       const quizFromSet = getQuizFromSet();
       const setForZoom = quizMode && quizFromSet ? quizFromSet : movementData[currentSetIndex];
-      const currentBbox = calculateBoundingBox(setForZoom.set, false); // Don't include next position
+      // During count off, don't recalculate bounding box - use cached transform
+      const currentBbox = !isCountingOff ? calculateBoundingBox(setForZoom.set, false) : null; // Don't include next position during normal operation
       
       // If animating, interpolate between current and next bounding boxes
       let targetCenterX = 0;
       let targetCenterY = 0;
       
-      if (currentBbox) {
+      if (isCountingOff) {
+        // During count off, use the cached transform to prevent movement
+        targetCenterX = currentTransformRef.current.centerX || 0;
+        targetCenterY = currentTransformRef.current.centerY || 0;
+        currentScale = currentTransformRef.current.scale || 1;
+      } else if (currentBbox) {
         targetCenterX = currentBbox.x + currentBbox.width / 2;
         targetCenterY = currentBbox.y + currentBbox.height / 2;
         
@@ -721,65 +767,70 @@ const PathVisualizerModal = ({
           }
         }
         
-        // Smooth the center position to prevent jarring movements
-        if (lastCenterRef.current.x === 0 && lastCenterRef.current.y === 0) {
-          // First frame, set directly
-          lastCenterRef.current = { x: targetCenterX, y: targetCenterY };
-        } else if (isInHold) {
-          // During holds, keep the exact same center without any recalculation
-          targetCenterX = lastCenterRef.current.x;
-          targetCenterY = lastCenterRef.current.y;
-        } else {
-          // Calculate distance to target
-          const deltaX = targetCenterX - lastCenterRef.current.x;
-          const deltaY = targetCenterY - lastCenterRef.current.y;
-          const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-          
-          // Adaptive smoothing based on distance
-          // Larger distances get more aggressive smoothing to prevent jumps
-          let smoothingFactor;
-          if (distance > 100) {
-            // Large jump detected (like when changing sets)
-            smoothingFactor = 0.95; // Very smooth
-          } else if (distance > 50) {
-            smoothingFactor = 0.92; // Moderate smoothing
+        // Skip all smoothing and scale calculations during count off
+        let scale = currentScale; // Use existing scale by default
+        
+        if (!isCountingOff) {
+          // Smooth the center position to prevent jarring movements
+          if (lastCenterRef.current.x === 0 && lastCenterRef.current.y === 0) {
+            // First frame, set directly
+            lastCenterRef.current = { x: targetCenterX, y: targetCenterY };
+          } else if (isInHold) {
+            // During holds, keep the exact same center without any recalculation
+            targetCenterX = lastCenterRef.current.x;
+            targetCenterY = lastCenterRef.current.y;
           } else {
-            smoothingFactor = isPlaying ? 0.88 : 0.85; // Normal smoothing
+            // Calculate distance to target
+            const deltaX = targetCenterX - lastCenterRef.current.x;
+            const deltaY = targetCenterY - lastCenterRef.current.y;
+            const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            
+            // Adaptive smoothing based on distance
+            // Larger distances get more aggressive smoothing to prevent jumps
+            let smoothingFactor;
+            if (distance > 100) {
+              // Large jump detected (like when changing sets)
+              smoothingFactor = 0.95; // Very smooth
+            } else if (distance > 50) {
+              smoothingFactor = 0.92; // Moderate smoothing
+            } else {
+              smoothingFactor = isPlaying ? 0.88 : 0.85; // Normal smoothing
+            }
+            
+            // Apply spring-like physics for more natural movement
+            const springStrength = 1 - smoothingFactor;
+            const velocityX = deltaX * springStrength;
+            const velocityY = deltaY * springStrength;
+            
+            // Limit maximum velocity to prevent too fast movements
+            const maxVelocity = 15;
+            const currentVelocity = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
+            if (currentVelocity > maxVelocity) {
+              const velocityScale = maxVelocity / currentVelocity;
+              targetCenterX = lastCenterRef.current.x + velocityX * velocityScale;
+              targetCenterY = lastCenterRef.current.y + velocityY * velocityScale;
+            } else {
+              targetCenterX = lastCenterRef.current.x + velocityX;
+              targetCenterY = lastCenterRef.current.y + velocityY;
+            }
+            
+            lastCenterRef.current = { x: targetCenterX, y: targetCenterY };
           }
           
-          // Apply spring-like physics for more natural movement
-          const springStrength = 1 - smoothingFactor;
-          const velocityX = deltaX * springStrength;
-          const velocityY = deltaY * springStrength;
+          // Use a fixed bounding box size based on all performers to avoid scale jumping
+          const fixedWidth = 40 * PIXELS_PER_YARD_LENGTH; // 40 yards wide view
+          const fixedHeight = 30 * PIXELS_PER_YARD_LENGTH; // 30 yards tall view
           
-          // Limit maximum velocity to prevent too fast movements
-          const maxVelocity = 15;
-          const currentVelocity = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
-          if (currentVelocity > maxVelocity) {
-            const scale = maxVelocity / currentVelocity;
-            targetCenterX = lastCenterRef.current.x + velocityX * scale;
-            targetCenterY = lastCenterRef.current.y + velocityY * scale;
-          } else {
-            targetCenterX = lastCenterRef.current.x + velocityX;
-            targetCenterY = lastCenterRef.current.y + velocityY;
-          }
+          // Calculate scale based on fixed size
+          const scaleX = FIELD_LENGTH / fixedWidth;
+          const scaleY = FIELD_WIDTH / fixedHeight;
+          scale = Math.min(scaleX, scaleY) * 0.85;
           
-          lastCenterRef.current = { x: targetCenterX, y: targetCenterY };
+          // Limit maximum zoom - increased to allow more detailed viewing
+          const maxScale = 5.0;
+          scale = Math.min(scale, maxScale);
+          currentScale = scale;
         }
-        
-        // Use a fixed bounding box size based on all performers to avoid scale jumping
-        const fixedWidth = 40 * PIXELS_PER_YARD_LENGTH; // 40 yards wide view
-        const fixedHeight = 30 * PIXELS_PER_YARD_LENGTH; // 30 yards tall view
-        
-        // Calculate scale based on fixed size
-        const scaleX = FIELD_LENGTH / fixedWidth;
-        const scaleY = FIELD_WIDTH / fixedHeight;
-        let scale = Math.min(scaleX, scaleY) * 0.85;
-        
-        // Limit maximum zoom - increased to allow more detailed viewing
-        const maxScale = 5.0;
-        scale = Math.min(scale, maxScale);
-        currentScale = scale;
         
         zoomCenterX = targetCenterX;
         zoomCenterY = targetCenterY;
@@ -1941,21 +1992,75 @@ const PathVisualizerModal = ({
     
     const movementData = getMovementData();
     
-    if (currentSetIndex >= movementData.length - 1) {
-      setIsPlaying(false);
-      setAnimationProgress(0);
-      setCurrentCount(0);
-      setStepFlashVisible(false);
-      // Restore previous zoom state when animation ends
-      if (previousZoomState !== null) {
-        setZoomToFit(previousZoomState);
-        setPreviousZoomState(null);
+    // Check if we've reached the end of the loop or the entire animation
+    const isAtLoopEnd = loopEnabled && currentSetIndex >= loopToSet;
+    const isAtAnimationEnd = !loopEnabled && currentSetIndex >= movementData.length - 1;
+    
+    if (isAtLoopEnd || isAtAnimationEnd) {
+      if (loopEnabled && currentSetIndex >= loopToSet) {
+        // Stop playing temporarily to trigger countdown
+        setIsPlaying(false);
+        setCurrentSetIndex(loopFromSet);
+        setAnimationProgress(0);
+        setCurrentCount(0);
+        setStepFlashVisible(false);
+        
+        // Start countdown for next loop iteration
+        if (audioEnabled && (movement === '1' || movement === '2')) {
+          setIsCountingOff(true);
+          
+          // Start metronome count-off with current playback speed
+          audioService.playCountOff(movement, 8, playbackSpeed).then(() => {
+            // After count-off, restart audio at loop start position
+            let totalCountsToSet = 0;
+            for (let i = 1; i <= loopFromSet; i++) {
+              totalCountsToSet += parseInt(movementData[i].counts) || 8;
+            }
+            audioService.play(movement, loopFromSet, totalCountsToSet, playbackSpeed);
+          });
+          
+          // Animate the count-off numbers with adjusted tempo
+          const baseTempo = movement === '1' ? 140 : movement === '2' ? 170 : 120;
+          const adjustedTempo = baseTempo * playbackSpeed;
+          const msPerBeat = 60000 / adjustedTempo;
+          
+          for (let i = 1; i <= 8; i++) {
+            setTimeout(() => {
+              setCountOffNumber(i);
+              if (i === 8) {
+                // After last count, restart the animation
+                setTimeout(() => {
+                  setIsCountingOff(false);
+                  setCountOffNumber(0);
+                  setIsPlaying(true);
+                }, msPerBeat);
+              }
+            }, i * msPerBeat);
+          }
+        } else {
+          // No audio, just restart immediately
+          setTimeout(() => {
+            setIsPlaying(true);
+          }, 100);
+        }
+        return;
+      } else {
+        // End of animation (no loop or reached end)
+        setIsPlaying(false);
+        setAnimationProgress(0);
+        setCurrentCount(0);
+        setStepFlashVisible(false);
+        // Restore previous zoom state when animation ends
+        if (previousZoomState !== null) {
+          setZoomToFit(previousZoomState);
+          setPreviousZoomState(null);
+        }
+        // Stop audio when animation ends
+        if (audioEnabled) {
+          audioService.stop();
+        }
+        return;
       }
-      // Stop audio when animation ends
-      if (audioEnabled) {
-        audioService.stop();
-      }
-      return;
     }
     
     const nextSet = movementData[currentSetIndex + 1];
@@ -2109,15 +2214,30 @@ const PathVisualizerModal = ({
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [isPlaying, currentSetIndex, movement, audioEnabled, audioLoaded, isStaffView, selectedPerformerId, currentPerformerData, playbackSpeed]);
+  }, [isPlaying, currentSetIndex, movement, audioEnabled, audioLoaded, isStaffView, selectedPerformerId, currentPerformerData, playbackSpeed, loopEnabled, loopFromSet, loopToSet]);
   
   const handlePlayPause = async () => {
     const movementData = getMovementData();
     let startingSetIndex = currentSetIndex;
     
-    if (currentSetIndex >= movementData.length - 1) {
-      startingSetIndex = 0;
-      setCurrentSetIndex(0);
+    // Handle loop boundaries when starting playback
+    if (loopEnabled) {
+      // If we're at or past the loop end, restart from loop beginning
+      if (currentSetIndex >= loopToSet) {
+        startingSetIndex = loopFromSet;
+        setCurrentSetIndex(loopFromSet);
+      }
+      // If we're before the loop start, jump to loop start
+      else if (currentSetIndex < loopFromSet) {
+        startingSetIndex = loopFromSet;
+        setCurrentSetIndex(loopFromSet);
+      }
+    } else {
+      // Normal behavior - restart from beginning if at end
+      if (currentSetIndex >= movementData.length - 1) {
+        startingSetIndex = 0;
+        setCurrentSetIndex(0);
+      }
     }
     
     // If already counting off, ignore
@@ -3545,7 +3665,7 @@ const PathVisualizerModal = ({
                 </div>
               ) : (
                 // Full controls when not playing
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <div className="flex flex-col items-center justify-center gap-3">
                   {/* Main playback controls group */}
                   <div className="flex items-center justify-center gap-2">
                     <button
@@ -3585,56 +3705,124 @@ const PathVisualizerModal = ({
                     </div>
                   </div>
                   
-                  {/* Audio controls group - wraps to new line on mobile */}
-                  {(movement === '1' || movement === '2') && (
-                    <div className="flex items-center gap-2">
-                      <div className="hidden sm:block w-px h-8 bg-white/20" />
-                      
-                      <button
-                        onClick={() => {
-                          const newAudioEnabled = !audioEnabled;
-                          setAudioEnabled(newAudioEnabled);
-                          // Set volume based on mute state
-                          if (audioService) {
-                            audioService.setVolume(newAudioEnabled ? 1.0 : 0);
-                          }
-                        }}
-                        className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200"
-                        title={audioEnabled ? "Mute audio" : "Enable audio"}
-                      >
-                        {audioEnabled ? (
-                          <Volume2 className="w-5 h-5 text-white" />
-                        ) : (
-                          <VolumeX className="w-5 h-5 text-white" />
-                        )}
-                      </button>
-                      
-                      {/* Speed control dropdown with inline styles for consistent padding */}
-                      <select
-                        value={playbackSpeed}
-                        onChange={(e) => {
-                          const newSpeed = parseFloat(e.target.value);
-                          setPlaybackSpeed(newSpeed);
-                          if (isPlaying && audioService) {
-                            audioService.setPlaybackRate(newSpeed);
-                          }
-                        }}
-                        className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg text-white text-sm cursor-pointer"
-                        style={{ 
-                          padding: '6px 12px',
-                          minWidth: '85px'
-                        }}
-                        title="Playback speed"
-                      >
-                        <option value="1.0">100%</option>
-                        <option value="0.95">95%</option>
-                        <option value="0.9">90%</option>
-                        <option value="0.85">85%</option>
-                        <option value="0.8">80%</option>
-                        <option value="0.75">75%</option>
-                      </select>
-                    </div>
-                  )}
+                  {/* Audio and Loop controls - on same line */}
+                  <div className="flex flex-wrap items-center justify-center gap-2">
+                    {/* Audio controls */}
+                    {(movement === '1' || movement === '2') && (
+                      <>
+                        <button
+                          onClick={() => {
+                            const newAudioEnabled = !audioEnabled;
+                            setAudioEnabled(newAudioEnabled);
+                            // Set volume based on mute state
+                            if (audioService) {
+                              audioService.setVolume(newAudioEnabled ? 1.0 : 0);
+                            }
+                          }}
+                          className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200"
+                          title={audioEnabled ? "Mute audio" : "Enable audio"}
+                        >
+                          {audioEnabled ? (
+                            <Volume2 className="w-5 h-5 text-white" />
+                          ) : (
+                            <VolumeX className="w-5 h-5 text-white" />
+                          )}
+                        </button>
+                        
+                        {/* Speed control dropdown with inline styles for consistent padding */}
+                        <select
+                          value={playbackSpeed}
+                          onChange={(e) => {
+                            const newSpeed = parseFloat(e.target.value);
+                            setPlaybackSpeed(newSpeed);
+                            if (isPlaying && audioService) {
+                              audioService.setPlaybackRate(newSpeed);
+                            }
+                          }}
+                          className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg text-white text-sm cursor-pointer"
+                          style={{ 
+                            padding: '6px 12px',
+                            minWidth: '85px'
+                          }}
+                          title="Playback speed"
+                        >
+                          <option value="1.0">100%</option>
+                          <option value="0.95">95%</option>
+                          <option value="0.9">90%</option>
+                          <option value="0.85">85%</option>
+                          <option value="0.8">80%</option>
+                          <option value="0.75">75%</option>
+                        </select>
+                        
+                        <div className="w-px h-6 bg-white/20" />
+                      </>
+                    )}
+                    
+                    {/* Loop controls */}
+                    <button
+                      onClick={() => {
+                        setLoopEnabled(!loopEnabled);
+                        if (!loopEnabled) {
+                          // Initialize loop range to current set and next set
+                          setLoopFromSet(currentSetIndex);
+                          setLoopToSet(Math.min(currentSetIndex + 1, movementData.length - 1));
+                        }
+                      }}
+                      className={`${loopEnabled ? 'bg-blue-600/30 border-blue-500/30' : 'bg-red-600/20 border-red-500/30'} hover:opacity-80 rounded-lg p-icon-sm transition-all duration-200`}
+                      title="Loop section"
+                    >
+                      <Repeat className={`w-5 h-5 ${loopEnabled ? 'text-blue-400' : 'text-white'}`} />
+                    </button>
+                    
+                    {loopEnabled && (
+                      <>
+                        <span className="text-white/60 text-sm">From:</span>
+                        <select
+                          value={loopFromSet}
+                          onChange={(e) => {
+                            const newFrom = parseInt(e.target.value);
+                            setLoopFromSet(newFrom);
+                            // Ensure 'to' is at least 'from'
+                            if (loopToSet < newFrom) {
+                              setLoopToSet(newFrom);
+                            }
+                          }}
+                          className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg text-white text-sm cursor-pointer"
+                          style={{ 
+                            padding: '6px 24px 6px 12px',
+                            minWidth: '85px'
+                          }}
+                        >
+                          {movementData.map((set, idx) => (
+                            <option key={idx} value={idx}>
+                              Set {set.set}
+                            </option>
+                          ))}
+                        </select>
+                        
+                        <span className="text-white/60 text-sm">To:</span>
+                        <select
+                          value={loopToSet}
+                          onChange={(e) => setLoopToSet(parseInt(e.target.value))}
+                          className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg text-white text-sm cursor-pointer"
+                          style={{ 
+                            padding: '6px 24px 6px 12px',
+                            minWidth: '85px'
+                          }}
+                        >
+                          {movementData.map((set, idx) => (
+                            <option 
+                              key={idx} 
+                              value={idx}
+                              disabled={idx < loopFromSet}
+                            >
+                              Set {set.set}
+                            </option>
+                          ))}
+                        </select>
+                      </>
+                    )}
+                  </div>
                 </div>
               )}
             </>
@@ -3663,51 +3851,70 @@ const PathVisualizerModal = ({
               // Animation mode display
               <div className="mt-4 space-y-4">
                 {/* Step/Hold display */}
-                <div className="flex justify-center" style={{ minHeight: '120px' }}>
-                  <div className="text-8xl font-bold">
-                    {(() => {
-                      const nextSet = movementData[currentSetIndex + 1];
-                      const tip = nextSet?.tip || '';
-                      
-                      // Parse components to determine current action
-                      const components = parseTipComponents(tip);
-                      components.sort((a, b) => a.index - b.index);
-                      
-                      if (components.length === 0) {
-                        components.push({ type: 'move', counts: parseInt(nextSet?.counts) || 8, index: 0 });
+                <div className="flex justify-center items-center" style={{ minHeight: '120px' }}>
+                  {(() => {
+                    const currentSet = movementData[currentSetIndex];
+                    const nextSet = movementData[currentSetIndex + 1];
+                    const tip = nextSet?.tip || '';
+                    
+                    // Parse components to determine current action
+                    const components = parseTipComponents(tip);
+                    components.sort((a, b) => a.index - b.index);
+                    
+                    if (components.length === 0) {
+                      components.push({ type: 'move', counts: parseInt(nextSet?.counts) || 8, index: 0 });
+                    }
+                    
+                    // Find which component we're in
+                    let accumulatedCounts = 0;
+                    let currentComponent = null;
+                    
+                    for (const comp of components) {
+                      if (currentCount <= accumulatedCounts + comp.counts) {
+                        currentComponent = comp;
+                        break;
                       }
-                      
-                      // Find which component we're in
-                      let accumulatedCounts = 0;
-                      let currentComponent = null;
-                      
-                      for (const comp of components) {
-                        if (currentCount <= accumulatedCounts + comp.counts) {
-                          currentComponent = comp;
-                          break;
-                        }
-                        accumulatedCounts += comp.counts;
-                      }
-                      
-                      const isHolding = currentComponent?.type === 'hold';
-                      
-                      if (isHolding) {
-                        return (
-                          <span className="text-yellow-400">
-                            HOLD
-                          </span>
-                        );
-                      } else if (stepFlashVisible) {
-                        return (
-                          <span className="text-green-400">
-                            STEP
-                          </span>
-                        );
-                      } else {
-                        return <span className="opacity-0">STEP</span>; // Keep space but invisible
-                      }
-                    })()}
-                  </div>
+                      accumulatedCounts += comp.counts;
+                    }
+                    
+                    const isHolding = currentComponent?.type === 'hold';
+                    
+                    // Get direction arrow based on movementVector (not during holds)
+                    // Check if tip contains movement (similar to MovementVector component logic)
+                    const hasMovement = nextSet?.tip && /Move\s+(Forward|Right Forward|Right|Right Backward|Backward|Left Backward|Left|Left Forward)/i.test(nextSet.tip);
+                    const directionArrow = !isHolding && hasMovement ? getDirectionArrow(nextSet) : '';
+                    
+                    return (
+                      <div className="flex items-center gap-4">
+                        {/* Direction arrow on the left */}
+                        {directionArrow && (
+                          <div className="text-6xl text-blue-400">
+                            {directionArrow}
+                          </div>
+                        )}
+                        {!directionArrow && !isHolding && (
+                          <div className="text-6xl opacity-0">
+                            <span>&nbsp;&nbsp;&nbsp;</span>
+                          </div>
+                        )}
+                        
+                        {/* Step/Hold text */}
+                        <div className="text-8xl font-bold">
+                          {isHolding ? (
+                            <span className="text-yellow-400">
+                              HOLD
+                            </span>
+                          ) : stepFlashVisible ? (
+                            <span className="text-green-400">
+                              STEP
+                            </span>
+                          ) : (
+                            <span className="opacity-0">STEP</span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
                 
                 {/* Music image for destination set */}
