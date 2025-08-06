@@ -2903,6 +2903,11 @@ const PathVisualizerModal = ({
                 cancelAnimationFrame(animationRef.current);
                 animationRef.current = null;
               }
+              // Stop audio when closing modal
+              if (audioService) {
+                audioService.emergencyStop();
+              }
+              setIsPlaying(false);
               onClose();
             }}
             className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon transition-all duration-200"
@@ -3615,7 +3620,14 @@ const PathVisualizerModal = ({
                       <div className="hidden sm:block w-px h-8 bg-white/20" />
                       
                       <button
-                        onClick={() => setAudioEnabled(!audioEnabled)}
+                        onClick={() => {
+                          const newAudioEnabled = !audioEnabled;
+                          setAudioEnabled(newAudioEnabled);
+                          // Set volume based on mute state
+                          if (audioService) {
+                            audioService.setVolume(newAudioEnabled ? 1.0 : 0);
+                          }
+                        }}
                         className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200"
                         title={audioEnabled ? "Mute audio" : "Enable audio"}
                       >

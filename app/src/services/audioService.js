@@ -262,43 +262,53 @@ class AudioService {
       this.audioElement.preload = 'auto';
     }
     
-    // Set the source
-    this.audioElement.src = `/audio/${movement}.mp3`;
+    // Set the source if changed
+    const audioSrc = `/audio/${movement}.mp3`;
+    if (this.audioElement.src !== window.location.origin + audioSrc) {
+      this.audioElement.src = audioSrc;
+      
+      // Wait for audio to be ready
+      await new Promise((resolve, reject) => {
+        const canPlay = () => {
+          this.audioElement.removeEventListener('canplaythrough', canPlay);
+          this.audioElement.removeEventListener('error', onError);
+          resolve();
+        };
+        const onError = () => {
+          this.audioElement.removeEventListener('canplaythrough', canPlay);
+          this.audioElement.removeEventListener('error', onError);
+          reject(new Error('Failed to load audio'));
+        };
+        this.audioElement.addEventListener('canplaythrough', canPlay);
+        this.audioElement.addEventListener('error', onError);
+        this.audioElement.load();
+      });
+    }
+    
+    // Set playback rate
     this.audioElement.playbackRate = playbackRate;
     
     // Calculate start time
     const startOffset = this.calculateTimeForSet(movement, setIndex, totalCountsUpToPosition);
     
-    // Wait for audio to be ready
-    await new Promise((resolve) => {
-      const canPlay = () => {
-        this.audioElement.removeEventListener('canplay', canPlay);
-        resolve();
-      };
-      this.audioElement.addEventListener('canplay', canPlay);
-      this.audioElement.load();
-    });
-    
-    // Set start time and play
+    // Set start time
     this.audioElement.currentTime = startOffset;
     
+    // Store start time for sync (similar to Web Audio API)
+    this.startTime = performance.now() / 1000 - startOffset;
+    
     try {
-      await this.audioElement.play();
+      const playPromise = this.audioElement.play();
+      if (playPromise !== undefined) {
+        await playPromise;
+      }
       this.isPlaying = true;
       this.currentMovement = movement;
-      console.log('HTML5 Audio playback started');
+      console.log('HTML5 Audio playback started at offset:', startOffset);
     } catch (error) {
       console.error('HTML5 Audio playback failed:', error);
-      // Try one more time with user interaction
-      setTimeout(async () => {
-        try {
-          await this.audioElement.play();
-          this.isPlaying = true;
-          this.currentMovement = movement;
-        } catch (retryError) {
-          console.error('Retry also failed:', retryError);
-        }
-      }, 100);
+      // Don't retry - let user try again
+      this.isPlaying = false;
     }
   }
 
@@ -365,6 +375,19 @@ class AudioService {
     // Stop metronome
     this.stopMetronome();
     
+    // Stop HTML5 audio if using fallback
+    if (this.audioElement) {
+      try {
+        this.audioElement.pause();
+        this.audioElement.currentTime = 0;
+        // Remove event listeners to prevent memory leaks
+        this.audioElement.src = '';
+        this.audioElement.load();
+      } catch (e) {
+        console.error('Error in emergency stop for HTML5 audio:', e);
+      }
+    }
+    
     // Disconnect and null everything
     if (this.currentSource) {
       try {
@@ -394,18 +417,34 @@ class AudioService {
   }
 
   setVolume(volume) {
+    // Set volume for HTML5 audio if using fallback
+    if (this.audioElement) {
+      this.audioElement.volume = Math.max(0, Math.min(1, volume));
+    }
+    
     if (this.gainNode) {
       this.gainNode.gain.value = Math.max(0, Math.min(1, volume));
     }
   }
   
   setPlaybackRate(rate) {
+    // Set playback rate for HTML5 audio if using fallback
+    if (this.audioElement) {
+      this.audioElement.playbackRate = rate;
+      console.log('Setting HTML5 audio playback rate to:', rate);
+    }
+    
     if (this.currentSource) {
       this.currentSource.playbackRate.value = rate;
     }
   }
 
   getCurrentTime() {
+    // For Safari fallback, use HTML5 audio currentTime
+    if (this.useFallback && this.audioElement) {
+      return this.audioElement.currentTime;
+    }
+    
     if (this.isPlaying && this.audioContext) {
       return this.audioContext.currentTime - this.startTime;
     }
@@ -414,6 +453,12 @@ class AudioService {
   
   // Get the audio context for timing sync
   getAudioContext() {
+    // For Safari fallback, return a mock object with current time
+    if (this.useFallback) {
+      return {
+        currentTime: performance.now() / 1000
+      };
+    }
     return this.audioContext;
   }
   
