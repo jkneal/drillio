@@ -38,6 +38,12 @@ class AudioService {
     console.log('Safari/iOS detected:', this.useFallback);
   }
   
+  // Get the audio startup delay for Safari (in milliseconds)
+  getStartupDelay() {
+    // Safari/iOS HTML5 audio typically has 100-200ms latency
+    return this.useFallback ? 150 : 0;
+  }
+  
   setupUserInteractionListener() {
     const handleUserInteraction = async () => {
       if (!this.userInteracted) {
@@ -260,6 +266,8 @@ class AudioService {
     if (!this.audioElement) {
       this.audioElement = new Audio();
       this.audioElement.preload = 'auto';
+      // Set crossorigin for better caching
+      this.audioElement.crossOrigin = 'anonymous';
     }
     
     // Set the source if changed
@@ -267,18 +275,31 @@ class AudioService {
     if (this.audioElement.src !== window.location.origin + audioSrc) {
       this.audioElement.src = audioSrc;
       
-      // Wait for audio to be ready
+      // Wait for audio to be fully buffered
       await new Promise((resolve, reject) => {
+        let timeout;
+        
         const canPlay = () => {
+          clearTimeout(timeout);
           this.audioElement.removeEventListener('canplaythrough', canPlay);
           this.audioElement.removeEventListener('error', onError);
           resolve();
         };
+        
         const onError = () => {
+          clearTimeout(timeout);
           this.audioElement.removeEventListener('canplaythrough', canPlay);
           this.audioElement.removeEventListener('error', onError);
           reject(new Error('Failed to load audio'));
         };
+        
+        // Add timeout to prevent infinite waiting
+        timeout = setTimeout(() => {
+          this.audioElement.removeEventListener('canplaythrough', canPlay);
+          this.audioElement.removeEventListener('error', onError);
+          resolve(); // Proceed anyway after timeout
+        }, 5000);
+        
         this.audioElement.addEventListener('canplaythrough', canPlay);
         this.audioElement.addEventListener('error', onError);
         this.audioElement.load();
@@ -294,8 +315,9 @@ class AudioService {
     // Set start time
     this.audioElement.currentTime = startOffset;
     
-    // Store start time for sync (similar to Web Audio API)
-    this.startTime = performance.now() / 1000 - startOffset;
+    // Store start time for sync - add compensation for Safari latency
+    const latencyCompensation = 0.15; // 150ms compensation
+    this.startTime = (performance.now() / 1000) - startOffset + latencyCompensation;
     
     try {
       const playPromise = this.audioElement.play();
@@ -304,7 +326,7 @@ class AudioService {
       }
       this.isPlaying = true;
       this.currentMovement = movement;
-      console.log('HTML5 Audio playback started at offset:', startOffset);
+      console.log('HTML5 Audio playback started at offset:', startOffset, 'with latency compensation');
     } catch (error) {
       console.error('HTML5 Audio playback failed:', error);
       // Don't retry - let user try again
