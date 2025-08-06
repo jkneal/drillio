@@ -2207,21 +2207,13 @@ const PathVisualizerModal = ({
           setCountOffNumber(i);
           if (i === 8) {
             // After last count, start the actual animation and audio
-            setTimeout(async () => {
+            setTimeout(() => {
               setIsCountingOff(false);
               setCountOffNumber(0);
+              setIsPlaying(true);
               
               // Start audio playback after count-off
               startAudioAfterCountOff();
-              
-              // Add delay for Safari audio to start properly
-              const startupDelay = audioService.getStartupDelay();
-              if (startupDelay > 0) {
-                console.log(`Delaying animation start by ${startupDelay}ms for Safari audio sync`);
-                await new Promise(resolve => setTimeout(resolve, startupDelay));
-              }
-              
-              setIsPlaying(true);
             }, msPerBeat);
           }
         }, (i - 1) * msPerBeat);

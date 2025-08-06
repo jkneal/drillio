@@ -40,8 +40,8 @@ class AudioService {
   
   // Get the audio startup delay for Safari (in milliseconds)
   getStartupDelay() {
-    // Safari/iOS HTML5 audio typically has 100-200ms latency
-    return this.useFallback ? 150 : 0;
+    // No delay - it's inconsistent
+    return 0;
   }
   
   setupUserInteractionListener() {
@@ -315,9 +315,8 @@ class AudioService {
     // Set start time
     this.audioElement.currentTime = startOffset;
     
-    // Store start time for sync - add compensation for Safari latency
-    const latencyCompensation = 0.15; // 150ms compensation
-    this.startTime = (performance.now() / 1000) - startOffset + latencyCompensation;
+    // Store start time for sync
+    this.startTime = (performance.now() / 1000) - startOffset;
     
     try {
       const playPromise = this.audioElement.play();
@@ -326,7 +325,7 @@ class AudioService {
       }
       this.isPlaying = true;
       this.currentMovement = movement;
-      console.log('HTML5 Audio playback started at offset:', startOffset, 'with latency compensation');
+      console.log('HTML5 Audio playback started at offset:', startOffset);
     } catch (error) {
       console.error('HTML5 Audio playback failed:', error);
       // Don't retry - let user try again
