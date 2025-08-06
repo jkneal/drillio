@@ -11,6 +11,10 @@ class AudioService {
     this.metronomeNodes = [];
     this.userInteracted = false;
     
+    // HTML5 Audio fallback for Safari
+    this.audioElement = null;
+    this.useFallback = false;
+    
     // Tempo configuration for each movement (BPM)
     this.tempos = {
       1: 140,
@@ -22,6 +26,16 @@ class AudioService {
     
     // Setup user interaction listener for Safari
     this.setupUserInteractionListener();
+    
+    // Check if we should use fallback (Safari detection)
+    this.checkSafariFallback();
+  }
+  
+  checkSafariFallback() {
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    this.useFallback = isSafari || isIOS;
+    console.log('Safari/iOS detected:', this.useFallback);
   }
   
   setupUserInteractionListener() {
@@ -175,6 +189,14 @@ class AudioService {
   }
 
   async play(movement, setIndex = 0, totalCountsUpToPosition = 0, playbackRate = 1.0) {
+    const movementNum = parseInt(movement);
+    
+    // Use HTML5 Audio fallback for Safari
+    if (this.useFallback) {
+      return this.playWithFallback(movementNum, setIndex, totalCountsUpToPosition, playbackRate);
+    }
+    
+    // Original Web Audio API implementation
     await this.initialize();
     
     // Ensure audio context is resumed (critical for Safari/mobile)
@@ -193,7 +215,6 @@ class AudioService {
     // Stop any currently playing audio
     this.stop();
     
-    const movementNum = parseInt(movement);
     const audioBuffer = await this.loadMovementAudio(movementNum);
     if (!audioBuffer) return;
     
@@ -228,8 +249,72 @@ class AudioService {
       }
     };
   }
+  
+  async playWithFallback(movement, setIndex, totalCountsUpToPosition, playbackRate) {
+    console.log('Using HTML5 Audio fallback for Safari');
+    
+    // Stop any currently playing audio
+    this.stop();
+    
+    // Create or reuse audio element
+    if (!this.audioElement) {
+      this.audioElement = new Audio();
+      this.audioElement.preload = 'auto';
+    }
+    
+    // Set the source
+    this.audioElement.src = `/audio/${movement}.mp3`;
+    this.audioElement.playbackRate = playbackRate;
+    
+    // Calculate start time
+    const startOffset = this.calculateTimeForSet(movement, setIndex, totalCountsUpToPosition);
+    
+    // Wait for audio to be ready
+    await new Promise((resolve) => {
+      const canPlay = () => {
+        this.audioElement.removeEventListener('canplay', canPlay);
+        resolve();
+      };
+      this.audioElement.addEventListener('canplay', canPlay);
+      this.audioElement.load();
+    });
+    
+    // Set start time and play
+    this.audioElement.currentTime = startOffset;
+    
+    try {
+      await this.audioElement.play();
+      this.isPlaying = true;
+      this.currentMovement = movement;
+      console.log('HTML5 Audio playback started');
+    } catch (error) {
+      console.error('HTML5 Audio playback failed:', error);
+      // Try one more time with user interaction
+      setTimeout(async () => {
+        try {
+          await this.audioElement.play();
+          this.isPlaying = true;
+          this.currentMovement = movement;
+        } catch (retryError) {
+          console.error('Retry also failed:', retryError);
+        }
+      }, 100);
+    }
+  }
 
   pause() {
+    // Handle HTML5 audio pause
+    if (this.audioElement && this.isPlaying) {
+      try {
+        this.pauseTime = this.audioElement.currentTime;
+        this.audioElement.pause();
+        this.isPlaying = false;
+        return;
+      } catch (e) {
+        console.error('Error pausing HTML5 audio:', e);
+      }
+    }
+    
     // Check for currentSource regardless of isPlaying flag
     if (this.currentSource) {
       this.pauseTime = this.audioContext.currentTime - this.startTime;
@@ -244,6 +329,16 @@ class AudioService {
   }
 
   stop() {
+    // Stop HTML5 audio if using fallback
+    if (this.audioElement) {
+      try {
+        this.audioElement.pause();
+        this.audioElement.currentTime = 0;
+      } catch (e) {
+        console.error('Error stopping HTML5 audio:', e);
+      }
+    }
+    
     // Always try to stop any playing source
     if (this.currentSource) {
       try {
@@ -334,6 +429,15 @@ class AudioService {
   
   // Play metronome count-off
   async playCountOff(movement, counts = 8, playbackRate = 1.0) {
+    // Skip metronome for Safari fallback - just return the duration
+    if (this.useFallback) {
+      const baseTempo = this.tempos[movement] || 120;
+      const adjustedTempo = baseTempo * playbackRate;
+      const beatDuration = 60 / adjustedTempo;
+      console.log('Skipping metronome for Safari, returning duration:', counts * beatDuration);
+      return counts * beatDuration;
+    }
+    
     await this.initialize();
     
     // Ensure audio context is resumed (important for mobile)
