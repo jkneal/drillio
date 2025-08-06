@@ -2007,17 +2007,13 @@ const PathVisualizerModal = ({
         
         // Start countdown for next loop iteration
         if (audioEnabled && (movement === '1' || movement === '2')) {
+          // First, stop any currently playing audio
+          audioService.stop();
+          
           setIsCountingOff(true);
           
           // Start metronome count-off with current playback speed
-          audioService.playCountOff(movement, 8, playbackSpeed).then(() => {
-            // After count-off, restart audio at loop start position
-            let totalCountsToSet = 0;
-            for (let i = 1; i <= loopFromSet; i++) {
-              totalCountsToSet += parseInt(movementData[i].counts) || 8;
-            }
-            audioService.play(movement, loopFromSet, totalCountsToSet, playbackSpeed);
-          });
+          audioService.playCountOff(movement, 8, playbackSpeed);
           
           // Animate the count-off numbers with adjusted tempo
           const baseTempo = movement === '1' ? 140 : movement === '2' ? 170 : 120;
@@ -2028,11 +2024,20 @@ const PathVisualizerModal = ({
             setTimeout(() => {
               setCountOffNumber(i);
               if (i === 8) {
-                // After last count, restart the animation
+                // After last count, restart the animation and audio
                 setTimeout(() => {
                   setIsCountingOff(false);
                   setCountOffNumber(0);
                   setIsPlaying(true);
+                  
+                  // Start audio at loop start position after countdown completes
+                  if (audioLoaded) {
+                    let totalCountsToSet = 0;
+                    for (let j = 1; j <= loopFromSet; j++) {
+                      totalCountsToSet += parseInt(movementData[j].counts) || 8;
+                    }
+                    audioService.play(movement, loopFromSet, totalCountsToSet, playbackSpeed);
+                  }
                 }, msPerBeat);
               }
             }, i * msPerBeat);
