@@ -9,6 +9,7 @@ class AudioService {
     this.pauseTime = 0;
     this.gainNode = null;
     this.metronomeNodes = [];
+    this.userInteracted = false;
     
     // Tempo configuration for each movement (BPM)
     this.tempos = {
@@ -18,22 +19,55 @@ class AudioService {
     
     // Store set markers for each movement (in seconds)
     this.setMarkers = new Map();
+    
+    // Setup user interaction listener for Safari
+    this.setupUserInteractionListener();
+  }
+  
+  setupUserInteractionListener() {
+    const handleUserInteraction = async () => {
+      if (!this.userInteracted) {
+        this.userInteracted = true;
+        console.log('User interaction detected, initializing audio context');
+        await this.initialize();
+        // Remove listeners after first interaction
+        document.removeEventListener('touchstart', handleUserInteraction);
+        document.removeEventListener('click', handleUserInteraction);
+      }
+    };
+    
+    // Add listeners for user interaction
+    document.addEventListener('touchstart', handleUserInteraction, { once: false });
+    document.addEventListener('click', handleUserInteraction, { once: false });
   }
 
   async initialize() {
     if (!this.audioContext) {
-      this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      // Use webkitAudioContext for better Safari compatibility
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      this.audioContext = new AudioContext();
       this.gainNode = this.audioContext.createGain();
       this.gainNode.connect(this.audioContext.destination);
     }
     
-    // Resume audio context if it's suspended (common on mobile)
-    if (this.audioContext.state === 'suspended') {
+    // Always try to resume audio context (critical for Safari)
+    if (this.audioContext.state === 'suspended' || this.audioContext.state === 'interrupted') {
       try {
         await this.audioContext.resume();
-        console.log('Audio context resumed');
+        console.log('Audio context resumed, state:', this.audioContext.state);
       } catch (error) {
         console.error('Failed to resume audio context:', error);
+        // Try creating a new context as fallback
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          this.audioContext = new AudioContext();
+          this.gainNode = this.audioContext.createGain();
+          this.gainNode.connect(this.audioContext.destination);
+          await this.audioContext.resume();
+          console.log('Created new audio context, state:', this.audioContext.state);
+        } catch (fallbackError) {
+          console.error('Failed to create new audio context:', fallbackError);
+        }
       }
     }
   }
@@ -47,18 +81,55 @@ class AudioService {
     }
 
     try {
-      const response = await fetch(`/audio/${movementNum}.mp3`);
+      const response = await fetch(`/audio/${movementNum}.mp3`, {
+        mode: 'cors',
+        credentials: 'same-origin'
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const arrayBuffer = await response.arrayBuffer();
-      const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+      
+      // Safari sometimes needs a fresh copy of the buffer
+      const bufferCopy = arrayBuffer.slice(0);
+      
+      const audioBuffer = await this.audioContext.decodeAudioData(bufferCopy);
       this.audioBuffers.set(movementNum, audioBuffer);
       
       // Calculate set markers based on tempo and counts
       this.calculateSetMarkers(movementNum);
       
+      console.log(`Audio loaded for movement ${movement}, duration: ${audioBuffer.duration}s`);
       return audioBuffer;
     } catch (error) {
       console.error(`Failed to load audio for movement ${movement}:`, error);
-      return null;
+      // Try alternative loading method for Safari
+      try {
+        console.log('Trying alternative audio loading method...');
+        const response = await fetch(`/audio/${movementNum}.mp3`);
+        const blob = await response.blob();
+        const objectUrl = URL.createObjectURL(blob);
+        
+        // Create audio element as fallback
+        const audio = new Audio(objectUrl);
+        audio.preload = 'auto';
+        
+        return new Promise((resolve) => {
+          audio.addEventListener('canplaythrough', () => {
+            console.log('Audio loaded via fallback method');
+            resolve(null); // Return null to indicate fallback method
+          });
+          audio.addEventListener('error', () => {
+            console.error('Fallback audio loading also failed');
+            resolve(null);
+          });
+        });
+      } catch (fallbackError) {
+        console.error('All audio loading methods failed:', fallbackError);
+        return null;
+      }
     }
   }
 
@@ -106,9 +177,17 @@ class AudioService {
   async play(movement, setIndex = 0, totalCountsUpToPosition = 0, playbackRate = 1.0) {
     await this.initialize();
     
-    // Ensure audio context is resumed (important for mobile)
-    if (this.audioContext && this.audioContext.state === 'suspended') {
-      await this.audioContext.resume();
+    // Ensure audio context is resumed (critical for Safari/mobile)
+    if (this.audioContext) {
+      if (this.audioContext.state === 'suspended' || this.audioContext.state === 'interrupted') {
+        try {
+          await this.audioContext.resume();
+          console.log('Audio context resumed in play(), state:', this.audioContext.state);
+        } catch (error) {
+          console.error('Failed to resume audio context in play():', error);
+          return;
+        }
+      }
     }
     
     // Stop any currently playing audio

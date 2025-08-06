@@ -96,10 +96,7 @@ registerRoute(
         maxAgeSeconds: 90 * 24 * 60 * 60, // 90 days
       }),
       new CacheableResponsePlugin({
-        statuses: [0, 200],
-        headers: {
-          'X-Is-Cacheable': 'true',
-        },
+        statuses: [0, 200, 206], // Include 206 for partial content (range requests)
       }),
     ],
   })

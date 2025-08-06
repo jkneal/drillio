@@ -3569,9 +3569,9 @@ const PathVisualizerModal = ({
                 </div>
               ) : (
                 // Full controls when not playing
-                <div className="flex flex-col gap-3">
-                  {/* Main playback controls */}
-                  <div className="flex items-center justify-center space-x-4">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                  {/* Main playback controls group */}
+                  <div className="flex items-center justify-center gap-2">
                     <button
                       onClick={handleReset}
                       className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200"
@@ -3609,9 +3609,11 @@ const PathVisualizerModal = ({
                     </div>
                   </div>
                   
-                  {/* Audio controls on separate line for movements 1 and 2 */}
+                  {/* Audio controls group - wraps to new line on mobile */}
                   {(movement === '1' || movement === '2') && (
-                    <div className="flex items-center justify-center space-x-3">
+                    <div className="flex items-center gap-2">
+                      <div className="hidden sm:block w-px h-8 bg-white/20" />
+                      
                       <button
                         onClick={() => setAudioEnabled(!audioEnabled)}
                         className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200"
@@ -3624,32 +3626,30 @@ const PathVisualizerModal = ({
                         )}
                       </button>
                       
-                      {/* Speed control dropdown */}
-                      <div className="relative">
-                        <select
-                          value={playbackSpeed}
-                          onChange={(e) => {
-                            const newSpeed = parseFloat(e.target.value);
-                            setPlaybackSpeed(newSpeed);
-                            // Update audio playback rate if currently playing
-                            if (isPlaying && audioService) {
-                              audioService.setPlaybackRate(newSpeed);
-                            }
-                          }}
-                          className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg px-2 py-1 text-white text-sm appearance-none pr-8 cursor-pointer"
-                          title="Playback speed"
-                        >
-                          <option value="1.0">100%</option>
-                          <option value="0.95">95%</option>
-                          <option value="0.9">90%</option>
-                          <option value="0.85">85%</option>
-                          <option value="0.8">80%</option>
-                          <option value="0.75">75%</option>
-                        </select>
-                        <div className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                          <ChevronDown className="w-4 h-4 text-white" />
-                        </div>
-                      </div>
+                      {/* Speed control dropdown with inline styles for consistent padding */}
+                      <select
+                        value={playbackSpeed}
+                        onChange={(e) => {
+                          const newSpeed = parseFloat(e.target.value);
+                          setPlaybackSpeed(newSpeed);
+                          if (isPlaying && audioService) {
+                            audioService.setPlaybackRate(newSpeed);
+                          }
+                        }}
+                        className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg text-white text-sm cursor-pointer"
+                        style={{ 
+                          padding: '6px 12px',
+                          minWidth: '85px'
+                        }}
+                        title="Playback speed"
+                      >
+                        <option value="1.0">100%</option>
+                        <option value="0.95">95%</option>
+                        <option value="0.9">90%</option>
+                        <option value="0.85">85%</option>
+                        <option value="0.8">80%</option>
+                        <option value="0.75">75%</option>
+                      </select>
                     </div>
                   )}
                 </div>
