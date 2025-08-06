@@ -73,7 +73,6 @@ const PathVisualizerModal = ({
   const [showPerfectBadge, setShowPerfectBadge] = useState(false);
   const [trophyCount, setTrophyCount] = useState(0);
   const [quizStartIndex, setQuizStartIndex] = useState(0); // Track where quiz started
-  const [crossMovementQuizCompleted, setCrossMovementQuizCompleted] = useState(false); // Track if we've done the cross-movement quiz
   const [showFinalResults, setShowFinalResults] = useState(false);
   const [finalQuizScore, setFinalQuizScore] = useState({ correct: 0, total: 0 });
   
@@ -369,29 +368,15 @@ const PathVisualizerModal = ({
   
   // Get the quiz "to" set index
   const getQuizToSetIndex = () => {
-    if (quizMode && movement !== '1' && currentSetIndex === 0 && !crossMovementQuizCompleted) {
-      return 0; // First set of the movement (for cross-movement quiz)
-    }
-    return currentSetIndex + 1; // Normal case
+    // For movement 2+, index 0 is the last set of previous movement (e.g., set 13)
+    // So we always just go to the next index
+    return currentSetIndex + 1;
   };
   
   // Get the quiz "from" set when at the first set of a movement
   const getQuizFromSet = () => {
     const movementData = getMovementData();
-    
-    // If we're in quiz mode and at the first set of a non-first movement AND haven't completed the cross-movement quiz yet
-    if (quizMode && movement !== '1' && currentSetIndex === 0 && !crossMovementQuizCompleted) {
-      // Get the last set of the previous movement
-      const prevMovement = (parseInt(movement) - 1).toString();
-      const currentPerformerId = isStaffView ? selectedPerformerId : performerId;
-      
-      if (currentPerformerId && performerData[currentPerformerId]?.movements?.[prevMovement]) {
-        const prevMovementSets = performerData[currentPerformerId].movements[prevMovement];
-        return prevMovementSets[prevMovementSets.length - 1] || null;
-      }
-    }
-    
-    // Normal case - use current set from current movement
+    // Since movement 2 now includes set 13 at index 0, we can simply use the current index
     return movementData[currentSetIndex];
   };
   
@@ -1363,15 +1348,9 @@ const PathVisualizerModal = ({
         
         const otherPerformer = performerData[otherPerformerId];
         
-        // In quiz mode at first set of non-first movement, get from previous movement
+        // Get the appropriate set for other performers
         let otherPerformerDisplaySet = null;
-        if (quizMode && movement !== '1' && currentSetIndex === 0 && !crossMovementQuizCompleted) {
-          const prevMovement = (parseInt(movement) - 1).toString();
-          if (otherPerformer.movements && otherPerformer.movements[prevMovement]) {
-            const prevMovementSets = otherPerformer.movements[prevMovement];
-            otherPerformerDisplaySet = prevMovementSets[prevMovementSets.length - 1];
-          }
-        } else if (movement === '2' && displaySetNumber === 13) {
+        if (movement === '2' && displaySetNumber === 13) {
           // Special case: Movement 2 showing set 13 from movement 1
           if (otherPerformer.movements && otherPerformer.movements['1']) {
             const movement1Sets = otherPerformer.movements['1'];
@@ -2822,7 +2801,6 @@ const PathVisualizerModal = ({
     setShowQuizFeedback(false);
     setQuizClickPosition(null);
     setShowPerfectBadge(false);
-    setCrossMovementQuizCompleted(false);
     
     // Restore previous options if they were saved
     if (previousOptions) {
@@ -2838,17 +2816,7 @@ const PathVisualizerModal = ({
   const nextQuizSet = () => {
     const movementData = getMovementData();
     
-    // Special handling for first set of non-first movement
-    // If we're at index 0 and haven't completed the cross-movement quiz yet
-    if (movement !== '1' && currentSetIndex === 0 && !crossMovementQuizCompleted) {
-      // We just completed the cross-movement quiz, mark it as done
-      setCrossMovementQuizCompleted(true);
-      setQuizStep('position');
-      setQuizAnswers({});
-      setShowQuizFeedback(false);
-      setQuizClickPosition(null);
-      // Don't increment currentSetIndex - stay at 0 for the next quiz (set 14 → set 15)
-    } else if (currentSetIndex < movementData.length - 2) {
+    if (currentSetIndex < movementData.length - 2) {
       // Only increment if we're not on the second-to-last set
       // (movementData.length - 2 means we can still ask about one more transition)
       setCurrentSetIndex(prev => prev + 1);
