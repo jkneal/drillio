@@ -3932,20 +3932,76 @@ const PathVisualizerModal = ({
                       // Use the same getMusicImagePath function for consistency
                       const imagePath = getMusicImagePath(movement, nextSet.set);
                       
+                      // Load notes and highlights for this set
+                      const currentPerformerId = isStaffView ? selectedPerformerId : performerId;
+                      const notesKey = `musicNotes_${movement}_${nextSet.set}_${currentPerformerId}`;
+                      const highlightsKey = `musicHighlights_${movement}_${nextSet.set}_${currentPerformerId}`;
+                      
+                      const savedNotes = localStorage.getItem(notesKey);
+                      const savedHighlights = localStorage.getItem(highlightsKey);
+                      
+                      const notes = savedNotes ? JSON.parse(savedNotes) : [];
+                      const highlights = savedHighlights ? JSON.parse(savedHighlights) : [];
+                      
                       return (
                         <div className="bg-blue-700/20 border border-blue-500/30 rounded-lg p-4">
-                          <img 
-                            src={imagePath}
-                            alt={`Music for Set ${nextSet.set}`}
-                            className="max-w-full h-auto rounded"
-                            style={{ maxHeight: '200px' }}
-                            onError={(e) => {
-                              // Fallback to Staff version if performer-specific version not found
-                              if (!e.target.src.includes('Staff')) {
-                                e.target.src = `/music/Staff${movement}-${nextSet.set}.png`;
-                              }
-                            }}
-                          />
+                          <div className="relative inline-block">
+                            <img 
+                              src={imagePath}
+                              alt={`Music for Set ${nextSet.set}`}
+                              className="max-w-full h-auto rounded block"
+                              style={{ maxHeight: '200px' }}
+                              onError={(e) => {
+                                // Fallback to Staff version if performer-specific version not found
+                                if (!e.target.src.includes('Staff')) {
+                                  e.target.src = `/music/Staff${movement}-${nextSet.set}.png`;
+                                }
+                              }}
+                            />
+                            
+                            {/* SVG overlay for highlights */}
+                            <svg 
+                              className="absolute inset-0 w-full h-full pointer-events-none"
+                              viewBox="0 0 100 100"
+                              preserveAspectRatio="none"
+                            >
+                              {highlights.map((highlight) => (
+                                <rect
+                                  key={highlight.id}
+                                  x={highlight.x1}
+                                  y={highlight.y1}
+                                  width={highlight.x2 - highlight.x1}
+                                  height={highlight.y2 - highlight.y1}
+                                  fill="rgba(255, 235, 59, 0.5)"
+                                  stroke="none"
+                                  pointerEvents="none"
+                                />
+                              ))}
+                            </svg>
+                            
+                            {/* Notes overlay */}
+                            {notes.map((note) => (
+                              <div
+                                key={note.id}
+                                className="absolute pointer-events-none transform -translate-x-1/2 -translate-y-1/2"
+                                style={{
+                                  left: `${note.x}%`,
+                                  top: `${note.y}%`,
+                                  zIndex: 10
+                                }}
+                              >
+                                <div 
+                                  className="px-2 py-1 rounded text-xs font-bold whitespace-nowrap shadow-lg"
+                                  style={{ 
+                                    backgroundColor: note.isHold ? 'rgb(234, 179, 8)' : 'rgb(55, 65, 81)', 
+                                    color: 'white' 
+                                  }}
+                                >
+                                  {note.text}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       );
                     } else {

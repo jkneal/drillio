@@ -535,12 +535,12 @@ const MusicModal = ({
                         e.stopPropagation();
                         deleteNote(note.id);
                       }}
-                      className="rounded p-0.5"
+                      className="rounded p-1"
                       style={{ backgroundColor: 'transparent' }}
                       onMouseEnter={(e) => e.target.style.backgroundColor = 'rgb(75, 85, 99)'}
                       onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                     >
-                      <Trash2 className="w-2 h-2 sm:w-3 sm:h-3" />
+                      <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                     </button>
                   </div>
                 </div>
