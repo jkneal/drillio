@@ -133,7 +133,7 @@ const PathVisualizerModal = ({
   
   // Initialize audio when movement changes
   useEffect(() => {
-    if (show && movement && (movement === '1' || movement === '2')) {
+    if (show && movement) {
       // Get movement data to pass to audio service
       const movementData = selectedPerformerId && performerData[selectedPerformerId]?.movements[movement] 
         ? performerData[selectedPerformerId].movements[movement]
@@ -189,6 +189,21 @@ const PathVisualizerModal = ({
       setQuizClickPosition(null);
     }
   }, [show]);
+  
+  // Set initial set index based on movement
+  useEffect(() => {
+    if (show && movement) {
+      // Movement 1 starts from set 0 (beginning)
+      // Movement 2 visually continues from movement 1's end (but data starts at set 14)
+      // Movement 3 visually continues from movement 2's end (but data starts at set 36)
+      // Since each movement's data already has the correct starting positions 
+      // (e.g., movement 2's set 14 is where movement 1 ended, movement 3's set 36 is where movement 2 ended),
+      // we always start from index 0
+      setCurrentSetIndex(0);
+      setAnimationProgress(0);
+      setCurrentCount(0);
+    }
+  }, [show, movement]);
   
   // Field configuration
   const FIELD_CONFIG = 'high_school'; // 'high_school', 'college', or 'pro'
@@ -2006,7 +2021,7 @@ const PathVisualizerModal = ({
         setStepFlashVisible(false);
         
         // Start countdown for next loop iteration
-        if (audioEnabled && (movement === '1' || movement === '2')) {
+        if (audioEnabled) {
           // First, stop any currently playing audio
           audioService.stop();
           
@@ -2016,7 +2031,7 @@ const PathVisualizerModal = ({
           audioService.playCountOff(movement, 8, playbackSpeed);
           
           // Animate the count-off numbers with adjusted tempo
-          const baseTempo = movement === '1' ? 140 : movement === '2' ? 170 : 120;
+          const baseTempo = audioService.getTempo(movement);
           const adjustedTempo = baseTempo * playbackSpeed;
           const msPerBeat = 60000 / adjustedTempo;
           
@@ -2072,7 +2087,7 @@ const PathVisualizerModal = ({
     const totalCounts = parseInt(nextSet?.counts) || 8;
     
     // Calculate timing based on movement tempo and playback speed
-    const baseTempo = movement === '1' ? 140 : movement === '2' ? 170 : 120;
+    const baseTempo = audioService.getTempo(movement);
     const adjustedTempo = baseTempo * playbackSpeed; // Adjust tempo for playback speed
     const msPerBeat = 60000 / adjustedTempo; // milliseconds per beat
     const msPerCount = msPerBeat; // Assuming 1 count = 1 beat
@@ -2265,14 +2280,14 @@ const PathVisualizerModal = ({
     }
     
     // If starting to play, do count-off first
-    if (newPlayingState && audioEnabled && (movement === '1' || movement === '2')) {
+    if (newPlayingState && audioEnabled) {
       setIsCountingOff(true);
       
       // Start metronome count-off with current playback speed
       const countOffDuration = await audioService.playCountOff(movement, 8, playbackSpeed);
       
       // Animate the count-off numbers with adjusted tempo
-      const baseTempo = movement === '1' ? 140 : movement === '2' ? 170 : 120;
+      const baseTempo = audioService.getTempo(movement);
       const adjustedTempo = baseTempo * playbackSpeed;
       const msPerBeat = 60000 / adjustedTempo;
       
@@ -2330,7 +2345,7 @@ const PathVisualizerModal = ({
     
     
     // Handle audio playback
-    if (audioEnabled && (movement === '1' || movement === '2')) {
+    if (audioEnabled) {
       if (newPlayingState) {
         // If audio not loaded yet, load it first
         if (!audioLoaded) {
@@ -2416,7 +2431,7 @@ const PathVisualizerModal = ({
       setStepFlashVisible(false);
       
       // If playing, restart audio from new position
-      if (isPlaying && audioEnabled && audioLoaded && (movement === '1' || movement === '2')) {
+      if (isPlaying && audioEnabled && audioLoaded) {
         let totalCountsToSet = 0;
         // Add counts for all completed transitions up to the new set
         for (let i = 1; i <= newSetIndex; i++) {
@@ -2436,7 +2451,7 @@ const PathVisualizerModal = ({
       setStepFlashVisible(false);
       
       // If playing, restart audio from new position
-      if (isPlaying && audioEnabled && audioLoaded && (movement === '1' || movement === '2')) {
+      if (isPlaying && audioEnabled && audioLoaded) {
         const movementData = getMovementData();
         let totalCountsToSet = 0;
         // Add counts for all completed transitions up to the new set
@@ -3713,7 +3728,7 @@ const PathVisualizerModal = ({
                   {/* Audio and Loop controls - on same line */}
                   <div className="flex flex-wrap items-center justify-center gap-2">
                     {/* Audio controls */}
-                    {(movement === '1' || movement === '2') && (
+                    {audioEnabled && (
                       <>
                         <button
                           onClick={() => {

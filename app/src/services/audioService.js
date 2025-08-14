@@ -18,7 +18,8 @@ class AudioService {
     // Tempo configuration for each movement (BPM)
     this.tempos = {
       1: 140,
-      2: 170
+      2: 170,
+      3: 75
     };
     
     // Store set markers for each movement (in seconds)
@@ -153,8 +154,13 @@ class AudioService {
     }
   }
 
+  // Get tempo for a specific movement (returns default if not configured)
+  getTempo(movement) {
+    return this.tempos[movement] || 120;
+  }
+
   calculateSetMarkers(movement, movementData) {
-    const tempo = this.tempos[movement];
+    const tempo = this.getTempo(movement);
     if (!tempo) return;
     
     const beatDuration = 60 / tempo; // Duration of one beat in seconds
@@ -178,7 +184,7 @@ class AudioService {
 
   // Calculate time offset for a specific set and count within that set
   calculateTimeForSet(movement, setIndex, totalCountsUpToSet) {
-    const tempo = this.tempos[movement];
+    const tempo = this.getTempo(movement);
     if (!tempo) return 0;
     
     const beatDuration = 60 / tempo;
@@ -497,7 +503,7 @@ class AudioService {
   async playCountOff(movement, counts = 8, playbackRate = 1.0) {
     // Skip metronome for Safari fallback - just return the duration
     if (this.useFallback) {
-      const baseTempo = this.tempos[movement] || 120;
+      const baseTempo = this.getTempo(movement);
       const adjustedTempo = baseTempo * playbackRate;
       const beatDuration = 60 / adjustedTempo;
       console.log('Skipping metronome for Safari, returning duration:', counts * beatDuration);
@@ -511,7 +517,7 @@ class AudioService {
       await this.audioContext.resume();
     }
     
-    const baseTempo = this.tempos[movement] || 120;
+    const baseTempo = this.getTempo(movement);
     const adjustedTempo = baseTempo * playbackRate; // Adjust tempo for playback speed
     const beatDuration = 60 / adjustedTempo; // Duration of one beat in seconds
     const currentTime = this.audioContext.currentTime;
