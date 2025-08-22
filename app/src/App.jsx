@@ -38,10 +38,28 @@ function App() {
 
     // Handle service worker updates
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.ready.then(registration => {
+      // Use a timeout to prevent blocking if service worker isn't ready
+      const serviceWorkerPromise = navigator.serviceWorker.ready;
+      
+      // Set a timeout for service worker operations
+      const timeoutPromise = new Promise((resolve) => {
+        setTimeout(() => {
+          console.log('Service worker initialization timed out, continuing anyway');
+          resolve(null);
+        }, 5000); // 5 second timeout
+      });
+      
+      Promise.race([serviceWorkerPromise, timeoutPromise]).then(registration => {
+        if (!registration) {
+          console.log('Service worker not available, app will run without offline support');
+          return;
+        }
+        
         // Check for updates every 60 seconds
         setInterval(() => {
-          registration.update();
+          registration.update().catch(err => {
+            console.log('Service worker update check failed:', err);
+          });
         }, 60000);
 
         // Listen for new service worker
@@ -56,6 +74,8 @@ function App() {
             });
           }
         });
+      }).catch(err => {
+        console.error('Service worker initialization failed:', err);
       });
 
       // Listen for controller change
