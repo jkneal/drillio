@@ -32,7 +32,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['HSlogo.png', 'logo.png', 'music/**/*', 'video/**/*', 'audio/**/*'],
+      includeAssets: ['HSlogo.png', 'logo.png', 'music/**/*', 'video/**/*', 'audio/**/*', 'drill/**/*'],
       strategies: 'injectManifest',
       srcDir: 'src',
       filename: 'sw.js',
@@ -59,7 +59,7 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,mp3,m4a}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,jpeg,mp3,m4a}', 'drill/**/*.png'],
         maximumFileSizeToCacheInBytes: 20 * 1024 * 1024, // 20MB to accommodate audio files
         runtimeCaching: [
           {
