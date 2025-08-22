@@ -44,6 +44,8 @@ export default defineConfig({
         background_color: '#000000',
         display: 'standalone',
         orientation: 'portrait',
+        start_url: '/',
+        scope: '/',
         permissions: ['notifications'],
         icons: [
           {
