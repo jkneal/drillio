@@ -253,18 +253,42 @@ Orientation Snare
 36 Back
 37 Back
 38 Back
-39 Front
+39 Back
+40 Back
+41 Back
+42 Back
+43 Back
+44 Back
+45 Back
+46 Back
+47 Back
 
 Orientation Tenor
 3-Transient
 36 Back
 37 Back
 38 Back
-39 Front
+39 Back
+40 Back
+41 Back
+42 Back
+43 Back
+44 Back
+45 Back
+46 Back
+47 Back
 
 Orientation Bass Drum
 3-Transient
 36 Back
 37 Back
 38 Back
-39 Front
+39 Back
+40 Back
+41 Back
+42 Back
+43 Back
+44 Back
+45 Back
+46 Back
+47 Back
