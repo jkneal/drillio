@@ -5,13 +5,16 @@ const DrillChartModal = ({
   show, 
   onClose, 
   imagePath, 
-  movement, 
+  movement,
+  actualMovement, // The actual movement being shown (could be previous movement at transition)
   setNumber, 
+  isAtTransition = false, // Whether we're at the transition point (index 0 of non-first movement)
   totalSets = 0,
   minSetNumber = 1,
   maxSetNumber = 0
 }) => {
   const [currentSet, setCurrentSet] = useState(setNumber);
+  const [currentMovement, setCurrentMovement] = useState(actualMovement || movement);
   const [imageError, setImageError] = useState(false);
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -22,11 +25,12 @@ const DrillChartModal = ({
   useEffect(() => {
     if (show) {
       setCurrentSet(setNumber);
+      setCurrentMovement(actualMovement || movement);
       setImageError(false);
       setScale(1);
       setPosition({ x: 0, y: 0 });
     }
-  }, [show, setNumber]);
+  }, [show, setNumber, actualMovement, movement]);
 
   // Reset zoom when changing sets
   useEffect(() => {
@@ -40,6 +44,10 @@ const DrillChartModal = ({
     if (currentSet > minSetNumber) {
       setCurrentSet(currentSet - 1);
       setImageError(false);
+      // If we're moving back from the first set of current movement to previous movement
+      if (isAtTransition && currentSet === minSetNumber + 1) {
+        setCurrentMovement(actualMovement || movement);
+      }
     }
   };
   
@@ -47,11 +55,15 @@ const DrillChartModal = ({
     if (currentSet < maxSetNumber) {
       setCurrentSet(currentSet + 1);
       setImageError(false);
+      // If we're at transition and moving forward, switch to the actual movement
+      if (isAtTransition && currentSet === setNumber) {
+        setCurrentMovement(movement);
+      }
     }
   };
   
   const getCurrentImagePath = () => {
-    return `/drill/${movement}-${currentSet}.png`;
+    return `/drill/${currentMovement}-${currentSet}.png`;
   };
 
   // Calculate distance between two touch points
@@ -97,7 +109,7 @@ const DrillChartModal = ({
       <div className="bg-red-600/20 border border-red-500/30 rounded-xl p-4 backdrop-blur-sm max-w-full max-h-full overflow-auto">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-white font-bold text-lg">
-            Drill Chart - Movement {movement}, Set {currentSet}
+            Drill Chart - Movement {currentMovement}, Set {currentSet}
           </h3>
           <button
             onClick={onClose}
@@ -139,7 +151,7 @@ const DrillChartModal = ({
               >
                 <img
                   src={getCurrentImagePath()}
-                  alt={`Drill chart for Movement ${movement}, Set ${currentSet}`}
+                  alt={`Drill chart for Movement ${currentMovement}, Set ${currentSet}`}
                   className="max-w-full max-h-96 object-contain rounded"
                   onError={() => setImageError(true)}
                   draggable={false}

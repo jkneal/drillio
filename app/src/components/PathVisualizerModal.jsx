@@ -408,12 +408,17 @@ const PathVisualizerModal = ({
     if (isStaffView && selectedPerformerId && performerData[selectedPerformerId]) {
       const performer = performerData[selectedPerformerId];
       if (performer.movements) {
-        if (movement === '2' && performer.movements['1']) {
-          // For movement 2, prepend set 13 from movement 1 as the starting position
-          const movement1Data = performer.movements['1'];
-          const set13 = movement1Data[movement1Data.length - 1]; // Last set of movement 1
-          if (set13 && set13.set === 13) {
-            movementData = [set13, ...(performer.movements[movement] || [])];
+        // For movements 2 and 3, prepend the last set from the previous movement as the starting position
+        if (movement !== '1') {
+          const prevMovement = (parseInt(movement) - 1).toString();
+          if (performer.movements[prevMovement]) {
+            const prevMovementData = performer.movements[prevMovement];
+            const lastSetOfPrevMovement = prevMovementData[prevMovementData.length - 1];
+            if (lastSetOfPrevMovement) {
+              movementData = [lastSetOfPrevMovement, ...(performer.movements[movement] || [])];
+            } else {
+              movementData = performer.movements[movement] || [];
+            }
           } else {
             movementData = performer.movements[movement] || [];
           }
@@ -425,12 +430,17 @@ const PathVisualizerModal = ({
       // Otherwise use passed performer data
       if (!currentPerformerData?.movements) return [];
       
-      if (movement === '2' && currentPerformerData.movements['1']) {
-        // For movement 2, prepend set 13 from movement 1 as the starting position
-        const movement1Data = currentPerformerData.movements['1'];
-        const set13 = movement1Data[movement1Data.length - 1]; // Last set of movement 1
-        if (set13 && set13.set === 13) {
-          movementData = [set13, ...(currentPerformerData.movements[movement] || [])];
+      // For movements 2 and 3, prepend the last set from the previous movement as the starting position
+      if (movement !== '1') {
+        const prevMovement = (parseInt(movement) - 1).toString();
+        if (currentPerformerData.movements[prevMovement]) {
+          const prevMovementData = currentPerformerData.movements[prevMovement];
+          const lastSetOfPrevMovement = prevMovementData[prevMovementData.length - 1];
+          if (lastSetOfPrevMovement) {
+            movementData = [lastSetOfPrevMovement, ...(currentPerformerData.movements[movement] || [])];
+          } else {
+            movementData = currentPerformerData.movements[movement] || [];
+          }
         } else {
           movementData = currentPerformerData.movements[movement] || [];
         }
@@ -1416,11 +1426,13 @@ const PathVisualizerModal = ({
         
         // Get the appropriate set for other performers
         let otherPerformerDisplaySet = null;
-        if (movement === '2' && displaySetNumber === 13) {
-          // Special case: Movement 2 showing set 13 from movement 1
-          if (otherPerformer.movements && otherPerformer.movements['1']) {
-            const movement1Sets = otherPerformer.movements['1'];
-            otherPerformerDisplaySet = movement1Sets[movement1Sets.length - 1]; // Get last set (set 13) from movement 1
+        
+        // For non-first movements at index 0, get the last set from previous movement
+        if (movement !== '1' && currentSetIndex === 0) {
+          const prevMovement = (parseInt(movement) - 1).toString();
+          if (otherPerformer.movements && otherPerformer.movements[prevMovement]) {
+            const prevMovementSets = otherPerformer.movements[prevMovement];
+            otherPerformerDisplaySet = prevMovementSets[prevMovementSets.length - 1]; // Get last set from previous movement
           }
         } else if (otherPerformer.movements && otherPerformer.movements[movement]) {
           otherPerformerDisplaySet = otherPerformer.movements[movement].find(s => s.set === displaySetNumber);
@@ -1429,11 +1441,14 @@ const PathVisualizerModal = ({
         if (otherPerformerDisplaySet) {
           let otherPerformerNextSet = null;
           
-          // Handle transition from set 13 to 14 in movement 2
-          if (movement === '2' && displaySetNumber === 13 && nextSet) {
-            // Next set is set 14, which is the first set in movement 2
-            if (otherPerformer.movements && otherPerformer.movements['2']) {
-              otherPerformerNextSet = otherPerformer.movements['2'].find(s => s.set === 14);
+          // Handle transition from previous movement's last set to current movement's first set
+          if (movement !== '1' && currentSetIndex === 0 && nextSet) {
+            // Next set is the first set in current movement
+            if (otherPerformer.movements && otherPerformer.movements[movement]) {
+              const firstSetNumber = otherPerformer.movements[movement][0]?.set;
+              if (firstSetNumber) {
+                otherPerformerNextSet = otherPerformer.movements[movement].find(s => s.set === firstSetNumber);
+              }
             }
           } else if (nextSet && otherPerformer.movements[movement]) {
             otherPerformerNextSet = otherPerformer.movements[movement].find(s => s.set === displaySet.set + 1);
@@ -4129,9 +4144,11 @@ const PathVisualizerModal = ({
       <DrillChartModal
         show={showDrillChart}
         onClose={() => setShowDrillChart(false)}
-        imagePath={`/drill/${movement}-${currentSet?.set || 1}.png`}
+        imagePath={`/drill/${movement !== '1' && currentSetIndex === 0 ? (parseInt(movement) - 1).toString() : movement}-${currentSet?.set || 1}.png`}
         movement={movement}
+        actualMovement={movement !== '1' && currentSetIndex === 0 ? (parseInt(movement) - 1).toString() : movement}
         setNumber={currentSet?.set || 1}
+        isAtTransition={movement !== '1' && currentSetIndex === 0}
         totalSets={movementData.length}
         minSetNumber={minSetNumber}
         maxSetNumber={maxSetNumber}
