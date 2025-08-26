@@ -163,10 +163,18 @@ export const musicConfig = {
   },
   // Movement 3
   "3": {
-    "Staff": {},
-    "SD": {},
-    "TD": {},
-    "BD": {}
+    "Staff": {
+      "49": true
+    },
+    "SD": {
+      "49": true
+    },
+    "TD": {
+      "49": true
+    },
+    "BD": {
+      "49": true
+    }
   },
   // Movement 4
   "4": {

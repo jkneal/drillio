@@ -41,7 +41,8 @@ export const rehearsalMarks = {
     "44": "E",
     "45": "-F",
     "46": "F-G",
-    "47": "G-"
+    "47": "G-H",
+    "48": "H-"
   },
   // Movement 4
   "4": {
