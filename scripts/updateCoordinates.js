@@ -4,6 +4,13 @@ const path = require('path');
 // Helper: convert a "Left: 3 steps Inside 40 yd ln" string
 //          → x-coordinate on 0-to-120 drill grid
 function parseYardLineToPosition(leftRight) {
+  // First check for "On 50 yd ln" format (without Left/Right)
+  const centerMatch = leftRight.match(/^On\s+50\s+yd\s+ln$/i);
+  if (centerMatch) {
+    // Center of field is exactly at x = 60
+    return 60;
+  }
+  
   // Same pattern, still case-insensitive (note the /i flag)
   const match = leftRight.match(
       /^(Left|Right):\s*(?:(\d+(?:\.\d+)?)\s*steps?\s*(Inside|Outside))?\s*(?:On\s+)?(\d+)\s*yd\s*ln$/i
@@ -214,41 +221,53 @@ function parsePerformerSection(lines) {
         line.includes('Set Measure Counts Left-Right Home-Visitor')) continue;
     
     // Parse set data - now includes optional Title column
-    // First try new format with Title column - updated to handle decimal measures like "28.5" and "Opening S"
-    // Also handle "46 to End" format by allowing spaces in title column
-    let setMatch = line.match(/^(\d+)\s+([\w\-\{\}]+)\s+(.+?)\s+(Left|Right):\s*(.+?)\s+((?:\d+\.?\d*\s*steps?\s*.+|On\s+.+))$/);
+    // First check for "On 50 yd ln" format (no Left/Right prefix)
+    let setMatch = line.match(/^(\d+)\s+([\w\-\{\}]+)\s+(.+?)\s+(On\s+50\s+yd\s+ln)\s+((?:\d+\.?\d*\s*steps?\s*.+|On\s+.+))$/);
     
-    if (!setMatch) {
-      // Try old format without Title column (for backward compatibility)
-      // Try to match set data - the home-visitor part can start with either a number or "On"
-      setMatch = line.match(/^(\d+)\s+(sub\s+\d+)\s*(\d+)\s+(Left|Right):\s*(.+?)\s+((?:\d+\.?\d*\s*steps?\s*.+|On\s+.+))$/);
-      if (!setMatch) {
-        // Try pattern for normal measures like "2 - 13"
-        setMatch = line.match(/^(\d+)\s+([\d\s-]+)\s+(\d+)\s+(Left|Right):\s*(.+?)\s+((?:\d+\.?\d*\s*steps?\s*.+|On\s+.+))$/);
-      }
-      if (!setMatch) {
-        // Try pattern for set 1 with no counts
-        setMatch = line.match(/^(\d+)\s+(\d+)\s+(Left|Right):\s*(.+?)\s+((?:\d+\.?\d*\s*steps?\s*.+|On\s+.+))$/);
-        if (setMatch) {
-          // Rearrange to match expected format
-          const [, setNum, measures, side, leftRight, homeVisitor] = setMatch;
-          setMatch = [setMatch[0], setNum, measures, '', side, leftRight, homeVisitor];
-        }
-      }
+    if (setMatch) {
+      // Handle "On 50 yd ln" case - treat as center position
+      const [, setNum, title, measures, leftRight, homeVisitor] = setMatch;
+      setMatch = [setMatch[0], setNum, measures, '', 'Center', leftRight, homeVisitor];
     } else {
-      // New format detected - extract without counts (Title format doesn't have counts column)
-      const [, setNum, title, measures, side, leftRight, homeVisitor] = setMatch;
-      setMatch = [setMatch[0], setNum, measures, '', side, leftRight, homeVisitor];
+      // First try new format with Title column - updated to handle decimal measures like "28.5" and "Opening S"
+      // Also handle "46 to End" format by allowing spaces in title column
+      setMatch = line.match(/^(\d+)\s+([\w\-\{\}]+)\s+(.+?)\s+(Left|Right):\s*(.+?)\s+((?:\d+\.?\d*\s*steps?\s*.+|On\s+.+))$/);
+      
+      if (!setMatch) {
+        // Try old format without Title column (for backward compatibility)
+        // Try to match set data - the home-visitor part can start with either a number or "On"
+        setMatch = line.match(/^(\d+)\s+(sub\s+\d+)\s*(\d+)\s+(Left|Right):\s*(.+?)\s+((?:\d+\.?\d*\s*steps?\s*.+|On\s+.+))$/);
+        if (!setMatch) {
+          // Try pattern for normal measures like "2 - 13"
+          setMatch = line.match(/^(\d+)\s+([\d\s-]+)\s+(\d+)\s+(Left|Right):\s*(.+?)\s+((?:\d+\.?\d*\s*steps?\s*.+|On\s+.+))$/);
+        }
+        if (!setMatch) {
+          // Try pattern for set 1 with no counts
+          setMatch = line.match(/^(\d+)\s+(\d+)\s+(Left|Right):\s*(.+?)\s+((?:\d+\.?\d*\s*steps?\s*.+|On\s+.+))$/);
+          if (setMatch) {
+            // Rearrange to match expected format
+            const [, setNum, measures, side, leftRight, homeVisitor] = setMatch;
+            setMatch = [setMatch[0], setNum, measures, '', side, leftRight, homeVisitor];
+          }
+        }
+      } else {
+        // New format detected - extract without counts (Title format doesn't have counts column)
+        const [, setNum, title, measures, side, leftRight, homeVisitor] = setMatch;
+        setMatch = [setMatch[0], setNum, measures, '', side, leftRight, homeVisitor];
+      }
     }
     
     if (setMatch && currentPerformer && currentMovement) {
       const [, setNum, measures, counts, side, leftRight, homeVisitor] = setMatch;
       
+      // Handle the leftRight field - for "On 50 yd ln" it's already complete
+      const leftRightValue = side === 'Center' ? leftRight : `${side}: ${leftRight}`;
+      
       performers[currentPerformer].movements[currentMovement].push({
         set: parseInt(setNum),
         measures: measures.trim(),
         counts: counts || '',
-        leftRight: `${side}: ${leftRight}`,
+        leftRight: leftRightValue,
         homeVisitor: homeVisitor.replace(/\s*\(HS\)$/, '')
       });
     }
