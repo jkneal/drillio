@@ -252,29 +252,18 @@ const PathVisualizerModal = ({
     // "Right: 2 steps Outside 45 yd ln"
     // "Left: On 35 yd ln"
     // "Right: 3.5 steps Inside 50 yd ln"
+    // "On 50 yd ln" (center of field, no Left/Right)
     
-    // Special case for "On" positions
-    const onMatch = leftRight.match(/^(Left|Right):\s*On\s*(\d+)\s*yd ln$/i);
-    if (onMatch) {
-      const [, direction, yardLine] = onMatch;
-      const yardLineNum = parseInt(yardLine);
-      
-      // STEP 1: Map Left/Right to screen coordinates
-      // Left in coordinates → Right on screen
-      // Right in coordinates → Left on screen
-      if (direction === 'Left') {
-        // Left = right side of screen (home side)
-        x = FIELD_LENGTH / 2 + (50 - yardLineNum) * PIXELS_PER_YARD_LENGTH;
-      } else {
-        // Right = left side of screen (visitor side)
-        x = FIELD_LENGTH / 2 - (50 - yardLineNum) * PIXELS_PER_YARD_LENGTH;
-      }
+    // Special case for "On 50 yd ln" without Left/Right prefix
+    const centerMatch = leftRight.match(/^On\s+50\s+yd\s+ln$/i);
+    if (centerMatch) {
+      // Center of field
+      x = FIELD_LENGTH / 2;
     } else {
-      // Regular position with steps
-      const leftRightMatch = leftRight.match(/^(Left|Right):\s*([\d.]+)\s*steps?\s*(Inside|Outside)?\s*(\d+)\s*yd ln$/i);
-      if (leftRightMatch) {
-        const [, direction, steps, inOut, yardLine] = leftRightMatch;
-        const stepsNum = parseFloat(steps);
+      // Special case for "On" positions with Left/Right
+      const onMatch = leftRight.match(/^(Left|Right):\s*On\s*(\d+)\s*yd ln$/i);
+      if (onMatch) {
+        const [, direction, yardLine] = onMatch;
         const yardLineNum = parseInt(yardLine);
         
         // STEP 1: Map Left/Right to screen coordinates
@@ -287,38 +276,57 @@ const PathVisualizerModal = ({
           // Right = left side of screen (visitor side)
           x = FIELD_LENGTH / 2 - (50 - yardLineNum) * PIXELS_PER_YARD_LENGTH;
         }
-        
-        // Apply step offset
-        const stepOffsetPixels = stepsNum * STEP_SIZE_YARDS * PIXELS_PER_YARD_LENGTH;
-        
-        // STEP 2: Apply Inside/Outside offsets
-        // Inside always means toward the 50
-        // Outside always means away from the 50 (toward the end zone)
-        
-        if (inOut && inOut.toLowerCase() === 'inside') {
+      } else {
+        // Regular position with steps
+        const leftRightMatch = leftRight.match(/^(Left|Right):\s*([\d.]+)\s*steps?\s*(Inside|Outside)?\s*(\d+)\s*yd ln$/i);
+        if (leftRightMatch) {
+          const [, direction, steps, inOut, yardLine] = leftRightMatch;
+          const stepsNum = parseFloat(steps);
+          const yardLineNum = parseInt(yardLine);
+          
+          // STEP 1: Map Left/Right to screen coordinates
+          // Left in coordinates → Right on screen
+          // Right in coordinates → Left on screen
           if (direction === 'Left') {
-            // Left = on RIGHT side of screen
-            // On right side: Inside goes left (toward 50)
-            x -= stepOffsetPixels;
+            // Left = right side of screen (home side)
+            x = FIELD_LENGTH / 2 + (50 - yardLineNum) * PIXELS_PER_YARD_LENGTH;
           } else {
-            // Right = on LEFT side of screen
-            // On left side: Inside goes right (toward 50)
-            x += stepOffsetPixels;
+            // Right = left side of screen (visitor side)
+            x = FIELD_LENGTH / 2 - (50 - yardLineNum) * PIXELS_PER_YARD_LENGTH;
           }
-        } else if (inOut && inOut.toLowerCase() === 'outside') {
-          if (direction === 'Left') {
-            // Left = on RIGHT side of screen
-            // On right side: Outside goes right (away from 50)
-            x += stepOffsetPixels;
+          
+          // Apply step offset
+          const stepOffsetPixels = stepsNum * STEP_SIZE_YARDS * PIXELS_PER_YARD_LENGTH;
+          
+          // STEP 2: Apply Inside/Outside offsets
+          // Inside always means toward the 50
+          // Outside always means away from the 50 (toward the end zone)
+          
+          if (inOut && inOut.toLowerCase() === 'inside') {
+            if (direction === 'Left') {
+              // Left = on RIGHT side of screen
+              // On right side: Inside goes left (toward 50)
+              x -= stepOffsetPixels;
+            } else {
+              // Right = on LEFT side of screen
+              // On left side: Inside goes right (toward 50)
+              x += stepOffsetPixels;
+            }
+          } else if (inOut && inOut.toLowerCase() === 'outside') {
+            if (direction === 'Left') {
+              // Left = on RIGHT side of screen
+              // On right side: Outside goes right (away from 50)
+              x += stepOffsetPixels;
+            } else {
+              // Right = on LEFT side of screen
+              // On left side: Outside goes left (away from 50)
+              x -= stepOffsetPixels;
+            }
           } else {
-            // Right = on LEFT side of screen
-            // On left side: Outside goes left (away from 50)
-            x -= stepOffsetPixels;
+            // No Inside/Outside specified
+            // This shouldn't happen in marching band drill, but handle it gracefully
+            // Just place at the yard line without offset
           }
-        } else {
-          // No Inside/Outside specified
-          // This shouldn't happen in marching band drill, but handle it gracefully
-          // Just place at the yard line without offset
         }
       }
     }
