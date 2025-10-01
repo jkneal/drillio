@@ -123,73 +123,7 @@ const NotificationManager = () => {
   };
 
 
-  if (!showBanner || permission !== 'default') {
-    return null;
-  }
-
-  return (
-    <div 
-      className="fixed top-20 left-4 right-4 md:left-auto md:right-4 md:max-w-sm z-[9999]" 
-      style={{ 
-        pointerEvents: 'auto',
-        position: 'fixed',
-        top: '5rem',
-        left: '1rem',
-        right: '1rem',
-        zIndex: 9999,
-        maxWidth: '24rem'
-      }}
-    >
-      <div 
-        className="bg-gradient-to-r from-purple-600 to-pink-600 backdrop-blur-sm rounded-lg p-4 shadow-2xl border-2 border-white/40"
-        style={{
-          background: 'linear-gradient(to right, #9333ea, #db2777)',
-          borderRadius: '0.5rem',
-          padding: '1rem',
-          border: '2px solid rgba(255, 255, 255, 0.4)',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
-        }}
-      >
-        <div className="flex items-center justify-between mb-1">
-          <div className="flex items-center text-white">
-            <Bell className="w-5 h-5 mr-2 flex-shrink-0" />
-            <h3 className="font-semibold" style={{"marginTop": ".3rem", "marginBottom": ".3rem"}}>Enable Notifications</h3>
-          </div>
-          <button
-            onClick={() => {
-              setShowBanner(false);
-              localStorage.setItem('drillioNotificationBannerDismissed', 'true');
-            }}
-            className="text-white/80 hover:text-white"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-        
-        <p className="text-white/90 text-sm mb-3">
-          Get reminders to review your drill and updates about new features!
-        </p>
-        
-        <div className="flex space-x-2">
-          <button
-            onClick={requestPermission}
-            className="flex-1 bg-white/20 hover:bg-white/30 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
-          >
-            Enable
-          </button>
-          <button
-            onClick={() => {
-              setShowBanner(false);
-              localStorage.setItem('drillioNotificationBannerDismissed', 'true');
-            }}
-            className="flex-1 bg-black/20 hover:bg-black/30 text-white/80 font-medium py-2 px-4 rounded-lg transition-colors duration-200"
-          >
-            Not Now
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+  return null;
 };
 
 export default NotificationManager;

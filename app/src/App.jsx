@@ -96,32 +96,6 @@ function App() {
 
   return (
     <Router>
-      {updateAvailable && (
-        <div className="fixed top-4 left-4 right-4 md:left-auto md:right-auto md:max-w-md md:mx-auto bg-gradient-to-r from-purple-600 to-pink-600 text-white p-4 rounded-lg shadow-lg text-center z-50">
-          <p className="text-sm mb-2">
-            A new version is available!
-          </p>
-          <div className="flex justify-center gap-2">
-            <button
-              onClick={() => {
-                setUpdateAvailable(false);
-                if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-                  navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' });
-                }
-              }}
-              className="px-3 py-1 bg-white/20 hover:bg-white/30 rounded text-sm font-semibold"
-            >
-              Update Now
-            </button>
-            <button
-              onClick={() => setUpdateAvailable(false)}
-              className="px-3 py-1 bg-black/20 hover:bg-black/30 rounded text-sm"
-            >
-              Later
-            </button>
-          </div>
-        </div>
-      )}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/movements" element={<MovementSelectionPage />} />
