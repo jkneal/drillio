@@ -179,7 +179,24 @@ export const musicConfig = {
   // Movement 4
   "4": {
     "Staff": {},
-    "SD": {},
+    "SD": {
+      "52": true,
+      "53": true,
+      "54": true,
+      "55": true,
+      "56": true,
+      "57": true,
+      "58": true,
+      "59": true,
+      "60": true,
+      "61": true,
+      "62": true,
+      "63": true,
+      "64": true,
+      "65": true,
+      "66": true,
+      "67": true
+    },
     "TD": {},
     "BD": {}
   },

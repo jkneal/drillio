@@ -261,12 +261,12 @@ Counts Snare
 53 Move 12
 54 Move 12
 55 Hold 8, Move 4, Hold 4
-56 Move 16
+56 Hold 16
 57 Move 12, Hold 16
 58 Move 12
 59 Move 12
-60 Move 12
-61 Move 6, Hold 7
+60 Move 10
+61 Move 6, Hold 6
 62 Hold 3, Move 7, Hold 24
 63 Move 16
 64 Move 8
@@ -280,12 +280,12 @@ Counts Tenor
 53 Move 12
 54 Move 12
 55 Hold 8, Move 4, Hold 4
-56 Move 16
+56 Hold 16
 57 Move 12, Hold 16
 58 Move 12
 59 Move 12
-60 Move 12
-61 Move 6, Hold 7
+60 Move 10
+61 Move 6, Hold 6
 62 Hold 3, Move 7, Hold 24
 63 Move 16
 64 Move 8
@@ -299,12 +299,12 @@ Counts Bass Drum
 53 Move 12
 54 Move 12
 55 Hold 8, Move 4, Hold 4
-56 Move 16
+56 Hold 16
 57 Move 12, Hold 16
 58 Move 12
 59 Move 12
-60 Move 12
-61 Move 6, Hold 7
+60 Move 10
+61 Move 6, Hold 6
 62 Hold 3, Move 7, Hold 24
 63 Move 16
 64 Move 8

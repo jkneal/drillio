@@ -46,6 +46,22 @@ export const rehearsalMarks = {
   },
   // Movement 4
   "4": {
+    "52": "A-B",
+    "53": "B-C",
+    "54": "C-D",
+    "55": "D-E",
+    "56": "E-F",
+    "57": "F-H",
+    "58": "H-I",
+    "59": "I-J",
+    "60": "J-K",
+    "61": "K-L",
+    "62": "L-O",
+    "63": "O-P",
+    "64": "P-2 before Q",
+    "65": "2 before Q-Q",
+    "66": "Q-R",
+    "67": "R-End"
   },
   // Movement 5
   "5": {

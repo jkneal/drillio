@@ -823,7 +823,7 @@ export const performerData = {
           "homeVisitor": "1.0 steps in front of Home Hash",
           "form": "_",
           "orientation": "Front",
-          "tip": "Hold"
+          "tip": "Hold for 16 counts"
         },
         {
           "set": 57,
@@ -861,23 +861,23 @@ export const performerData = {
         {
           "set": 60,
           "measures": "41 - 44",
-          "counts": "12",
+          "counts": "10",
           "leftRight": "Right: 1.0 steps inside 45 yd ln",
           "homeVisitor": "6.5 steps behind Home Hash",
           "form": "_",
           "orientation": "Front",
-          "tip": "Move Left Backward (14-to-5) for 12 counts",
+          "tip": "Move Left Backward (12-to-5) for 10 counts",
           "movementVector": 228
         },
         {
           "set": 61,
           "measures": "45 - 48",
-          "counts": "13",
+          "counts": "12",
           "leftRight": "Right: 3.0 steps outside 45 yd ln",
           "homeVisitor": "2.0 steps behind Home Hash",
           "form": "_",
           "orientation": "Front",
-          "tip": "Move Left Forward (8-to-5) for 6 counts, then hold for 7 counts",
+          "tip": "Move Left Forward (8-to-5) for 6 counts, then hold for 6 counts",
           "movementVector": 318
         },
         {
@@ -1557,7 +1557,7 @@ export const performerData = {
           "homeVisitor": "0.5 steps in front of Home Hash",
           "form": "_",
           "orientation": "Front",
-          "tip": "Hold"
+          "tip": "Hold for 16 counts"
         },
         {
           "set": 57,
@@ -1595,23 +1595,23 @@ export const performerData = {
         {
           "set": 60,
           "measures": "41 - 44",
-          "counts": "12",
+          "counts": "10",
           "leftRight": "Right: 2.0 steps outside 45 yd ln",
           "homeVisitor": "6.5 steps behind Home Hash",
           "form": "_",
           "orientation": "Front",
-          "tip": "Move Left Backward (14-to-5) for 12 counts",
+          "tip": "Move Left Backward (12-to-5) for 10 counts",
           "movementVector": 228
         },
         {
           "set": 61,
           "measures": "45 - 48",
-          "counts": "13",
+          "counts": "12",
           "leftRight": "Right: 2.0 steps inside 40 yd ln",
           "homeVisitor": "2.0 steps behind Home Hash",
           "form": "_",
           "orientation": "Front",
-          "tip": "Move Left Forward (8-to-5) for 6 counts, then hold for 7 counts",
+          "tip": "Move Left Forward (8-to-5) for 6 counts, then hold for 6 counts",
           "movementVector": 318
         },
         {
@@ -2292,7 +2292,7 @@ export const performerData = {
           "homeVisitor": "0.75 steps in front of Home Hash",
           "form": "_",
           "orientation": "Front",
-          "tip": "Hold"
+          "tip": "Hold for 16 counts"
         },
         {
           "set": 57,
@@ -2330,23 +2330,23 @@ export const performerData = {
         {
           "set": 60,
           "measures": "41 - 44",
-          "counts": "12",
+          "counts": "10",
           "leftRight": "Right: 3.0 steps inside 40 yd ln",
           "homeVisitor": "6.5 steps behind Home Hash",
           "form": "_",
           "orientation": "Front",
-          "tip": "Move Left Backward (14-to-5) for 12 counts",
+          "tip": "Move Left Backward (12-to-5) for 10 counts",
           "movementVector": 228
         },
         {
           "set": 61,
           "measures": "45 - 48",
-          "counts": "13",
+          "counts": "12",
           "leftRight": "Right: 1.0 steps outside 40 yd ln",
           "homeVisitor": "2.0 steps behind Home Hash",
           "form": "_",
           "orientation": "Front",
-          "tip": "Move Left Forward (8-to-5) for 6 counts, then hold for 7 counts",
+          "tip": "Move Left Forward (8-to-5) for 6 counts, then hold for 6 counts",
           "movementVector": 318
         },
         {
@@ -3026,7 +3026,7 @@ export const performerData = {
           "homeVisitor": "2.5 steps in front of Home Hash",
           "form": "_",
           "orientation": "Front",
-          "tip": "Hold"
+          "tip": "Hold for 16 counts"
         },
         {
           "set": 57,
@@ -3064,23 +3064,23 @@ export const performerData = {
         {
           "set": 60,
           "measures": "41 - 44",
-          "counts": "12",
+          "counts": "10",
           "leftRight": "Right: 1.0 steps outside 50 yd ln",
           "homeVisitor": "6.5 steps behind Home Hash",
           "form": "_",
           "orientation": "Front",
-          "tip": "Move Left Backward (14-to-5) for 12 counts",
+          "tip": "Move Left Backward (12-to-5) for 10 counts",
           "movementVector": 228
         },
         {
           "set": 61,
           "measures": "45 - 48",
-          "counts": "13",
+          "counts": "12",
           "leftRight": "Right: 3.0 steps inside 45 yd ln",
           "homeVisitor": "2.0 steps behind Home Hash",
           "form": "_",
           "orientation": "Front",
-          "tip": "Move Left Forward (8-to-5) for 6 counts, then hold for 7 counts",
+          "tip": "Move Left Forward (8-to-5) for 6 counts, then hold for 6 counts",
           "movementVector": 318
         },
         {
@@ -3760,7 +3760,7 @@ export const performerData = {
           "homeVisitor": "1.5 steps in front of Home Hash",
           "form": "_",
           "orientation": "Front",
-          "tip": "Hold"
+          "tip": "Hold for 16 counts"
         },
         {
           "set": 57,
@@ -3798,23 +3798,23 @@ export const performerData = {
         {
           "set": 60,
           "measures": "41 - 44",
-          "counts": "12",
+          "counts": "10",
           "leftRight": "Right: 4.0 steps outside 50 yd ln",
           "homeVisitor": "6.5 steps behind Home Hash",
           "form": "_",
           "orientation": "Front",
-          "tip": "Move Left Backward (14-to-5) for 12 counts",
+          "tip": "Move Left Backward (12-to-5) for 10 counts",
           "movementVector": 228
         },
         {
           "set": 61,
           "measures": "45 - 48",
-          "counts": "13",
+          "counts": "12",
           "leftRight": "Right: On 45 yd ln",
           "homeVisitor": "2.0 steps behind Home Hash",
           "form": "_",
           "orientation": "Front",
-          "tip": "Move Left Forward (8-to-5) for 6 counts, then hold for 7 counts",
+          "tip": "Move Left Forward (8-to-5) for 6 counts, then hold for 6 counts",
           "movementVector": 318
         },
         {
@@ -4492,7 +4492,7 @@ export const performerData = {
           "homeVisitor": "1.5 steps in front of Home Hash",
           "form": "_",
           "orientation": "Left End Zone",
-          "tip": "Hold"
+          "tip": "Hold for 16 counts"
         },
         {
           "set": 57,
@@ -4530,23 +4530,23 @@ export const performerData = {
         {
           "set": 60,
           "measures": "41 - 44",
-          "counts": "12",
+          "counts": "10",
           "leftRight": "Right: 2.5 steps outside 50 yd ln",
           "homeVisitor": "9.0 steps behind Home Hash",
           "form": "_",
           "orientation": "Left End Zone",
-          "tip": "Move Left Backward (9-to-5) for 12 counts",
+          "tip": "Move Left Backward (7-to-5) for 10 counts",
           "movementVector": 219
         },
         {
           "set": 61,
           "measures": "45 - 48",
-          "counts": "13",
+          "counts": "12",
           "leftRight": "Right: 1.5 steps inside 45 yd ln",
           "homeVisitor": "4.5 steps behind Home Hash",
           "form": "_",
           "orientation": "Left End Zone",
-          "tip": "Move Right Forward (8-to-5) for 6 counts, then hold for 7 counts",
+          "tip": "Move Right Forward (8-to-5) for 6 counts, then hold for 6 counts",
           "movementVector": 48
         },
         {
@@ -5224,7 +5224,7 @@ export const performerData = {
           "homeVisitor": "2.5 steps in front of Home Hash",
           "form": "_",
           "orientation": "Left End Zone",
-          "tip": "Hold"
+          "tip": "Hold for 16 counts"
         },
         {
           "set": 57,
@@ -5262,23 +5262,23 @@ export const performerData = {
         {
           "set": 60,
           "measures": "41 - 44",
-          "counts": "12",
+          "counts": "10",
           "leftRight": "Right: 2.5 steps inside 45 yd ln",
           "homeVisitor": "9.0 steps behind Home Hash",
           "form": "_",
           "orientation": "Left End Zone",
-          "tip": "Move Left Backward (9-to-5) for 12 counts",
+          "tip": "Move Left Backward (7-to-5) for 10 counts",
           "movementVector": 219
         },
         {
           "set": 61,
           "measures": "45 - 48",
-          "counts": "13",
+          "counts": "12",
           "leftRight": "Right: 1.5 steps outside 45 yd ln",
           "homeVisitor": "4.5 steps behind Home Hash",
           "form": "_",
           "orientation": "Left End Zone",
-          "tip": "Move Right Forward (8-to-5) for 6 counts, then hold for 7 counts",
+          "tip": "Move Right Forward (8-to-5) for 6 counts, then hold for 6 counts",
           "movementVector": 48
         },
         {
@@ -5955,7 +5955,7 @@ export const performerData = {
           "homeVisitor": "4.25 steps in front of Home Hash",
           "form": "_",
           "orientation": "Left End Zone",
-          "tip": "Hold"
+          "tip": "Hold for 16 counts"
         },
         {
           "set": 57,
@@ -5993,23 +5993,23 @@ export const performerData = {
         {
           "set": 60,
           "measures": "41 - 44",
-          "counts": "12",
+          "counts": "10",
           "leftRight": "Right: 0.5 steps outside 45 yd ln",
           "homeVisitor": "9.0 steps behind Home Hash",
           "form": "_",
           "orientation": "Left End Zone",
-          "tip": "Move Left Backward (9-to-5) for 12 counts",
+          "tip": "Move Left Backward (7-to-5) for 10 counts",
           "movementVector": 219
         },
         {
           "set": 61,
           "measures": "45 - 48",
-          "counts": "13",
+          "counts": "12",
           "leftRight": "Right: 3.5 steps inside 40 yd ln",
           "homeVisitor": "4.5 steps behind Home Hash",
           "form": "_",
           "orientation": "Left End Zone",
-          "tip": "Move Right Forward (8-to-5) for 6 counts, then hold for 7 counts",
+          "tip": "Move Right Forward (8-to-5) for 6 counts, then hold for 6 counts",
           "movementVector": 48
         },
         {
@@ -6687,7 +6687,7 @@ export const performerData = {
           "homeVisitor": "6.25 steps in front of Home Hash",
           "form": "_",
           "orientation": "Left End Zone",
-          "tip": "Hold"
+          "tip": "Hold for 16 counts"
         },
         {
           "set": 57,
@@ -6725,23 +6725,23 @@ export const performerData = {
         {
           "set": 60,
           "measures": "41 - 44",
-          "counts": "12",
+          "counts": "10",
           "leftRight": "Right: 3.5 steps outside 45 yd ln",
           "homeVisitor": "9.0 steps behind Home Hash",
           "form": "_",
           "orientation": "Left End Zone",
-          "tip": "Move Left Backward (9-to-5) for 12 counts",
+          "tip": "Move Left Backward (7-to-5) for 10 counts",
           "movementVector": 219
         },
         {
           "set": 61,
           "measures": "45 - 48",
-          "counts": "13",
+          "counts": "12",
           "leftRight": "Right: 0.5 steps inside 40 yd ln",
           "homeVisitor": "4.5 steps behind Home Hash",
           "form": "_",
           "orientation": "Left End Zone",
-          "tip": "Move Right Forward (8-to-5) for 6 counts, then hold for 7 counts",
+          "tip": "Move Right Forward (8-to-5) for 6 counts, then hold for 6 counts",
           "movementVector": 48
         },
         {
@@ -7419,7 +7419,7 @@ export const performerData = {
           "homeVisitor": "8.75 steps in front of Home Hash",
           "form": "_",
           "orientation": "Left End Zone",
-          "tip": "Hold"
+          "tip": "Hold for 16 counts"
         },
         {
           "set": 57,
@@ -7457,23 +7457,23 @@ export const performerData = {
         {
           "set": 60,
           "measures": "41 - 44",
-          "counts": "12",
+          "counts": "10",
           "leftRight": "Right: 1.5 steps inside 40 yd ln",
           "homeVisitor": "9.0 steps behind Home Hash",
           "form": "_",
           "orientation": "Left End Zone",
-          "tip": "Move Left Backward (9-to-5) for 12 counts",
+          "tip": "Move Left Backward (7-to-5) for 10 counts",
           "movementVector": 219
         },
         {
           "set": 61,
           "measures": "45 - 48",
-          "counts": "13",
+          "counts": "12",
           "leftRight": "Right: 2.5 steps outside 40 yd ln",
           "homeVisitor": "4.5 steps behind Home Hash",
           "form": "_",
           "orientation": "Left End Zone",
-          "tip": "Move Right Forward (8-to-5) for 6 counts, then hold for 7 counts",
+          "tip": "Move Right Forward (8-to-5) for 6 counts, then hold for 6 counts",
           "movementVector": 48
         },
         {
