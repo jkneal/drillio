@@ -1,338 +1,199 @@
-Performer: Symbol: SD1 Label: 63 4-Transient
+Performer: Symbol: SD1 Label: 63 5-Transient
 
 Set Title Measure Left-Right Home-Visitor
-52 4-Trans 2 - 5 Right: 1.5 steps inside 40 yd ln 9.5 steps in front of Home Hash (HS)
-53 4-Trans 6 - 9 Right: 0.5 steps outside 45 yd ln 0.25 steps in front of Home Hash (HS)
-54 4-Trans 10 - 13 Right: 2.25 steps inside 45 yd ln 1.5 steps behind Home Hash (HS)
-55 4-Trans 14 - 17 Right: 2.25 steps inside 45 yd ln 1.0 steps in front of Home Hash (HS)
-56 4-Trans 18 - 21 Right: 2.25 steps inside 45 yd ln 1.0 steps in front of Home Hash (HS)
-57 4-Trans 22 - 32 Right: 2.5 steps outside 50 yd ln 9.25 steps behind Home Hash (HS)
-58 4-Trans 33 - 36 Right: 3.0 steps inside 45 yd ln 8.0 steps behind Home Hash (HS)
-59 4-Trans 37 - 40 Right: 2.0 steps outside 50 yd ln 2.0 steps behind Home Hash (HS)
-60 4-Trans 41 - 44 Right: 1.0 steps inside 45 yd ln 6.5 steps behind Home Hash (HS)
-61 4-Trans 45 - 48 Right: 3.0 steps outside 45 yd ln 2.0 steps behind Home Hash (HS)
-62 4-Trans 49 - 60 Right: 2.0 steps inside 40 yd ln 1.5 steps in front of Home Hash (HS)
-63 4-Trans 61 - 64 Right: 3.0 steps outside 50 yd ln 9.25 steps behind Home Hash (HS)
-64 4-Trans sub 8 On 50 yd ln 4.0 steps behind Home Hash (HS)
-65 4-Trans 65 - 68 Left: On 45 yd ln 4.0 steps behind Home Hash (HS)
-66 4-Trans 69 - 74 Left: 3.0 steps inside 40 yd ln 2.5 steps behind Home Hash (HS)
-67 4-Trans 75 - 78 Left: On 45 yd ln On Home Hash (HS)
+68 5-Trans 2 - 4 Left: On 45 yd ln 5.0 steps in front of Visitor Hash (HS)
+69 5-Trans 5 - 7 Right: 4.0 steps outside 50 yd ln 13.5 steps behind Visitor Hash (HS)
+70 5-Trans 8 - 9 Right: 1.0 steps outside 50 yd ln 10.0 steps in front of Visitor side line
+71 5-Trans 10 - 11 Right: 1.0 steps outside 50 yd ln 10.0 steps in front of Visitor side line
+72 5-Trans 12 - 15 Right: 1.0 steps outside 50 yd ln 10.0 steps in front of Visitor side line
+73 5-Trans 16 - 19 Right: 1.0 steps outside 50 yd ln 10.0 steps in front of Visitor side line
+74 5-Trans 20 - End Right: 1.0 steps outside 50 yd ln 10.0 steps in front of Visitor side line
 
-Performer: Symbol: SD2 Label: 64 4-Transient
+Performer: Symbol: SD2 Label: 64 5-Transient
 
 Set Title Measure Left-Right Home-Visitor
-52 4-Trans 2 - 5 Right: 0.25 steps outside 40 yd ln 7.0 steps in front of Home Hash (HS)
-53 4-Trans 6 - 9 Right: 3.25 steps outside 45 yd ln 0.75 steps behind Home Hash (HS)
-54 4-Trans 10 - 13 Right: On 45 yd ln 2.0 steps behind Home Hash (HS)
-55 4-Trans 14 - 17 Right: On 45 yd ln 0.5 steps in front of Home Hash (HS)
-56 4-Trans 18 - 21 Right: On 45 yd ln 0.5 steps in front of Home Hash (HS)
-57 4-Trans 22 - 32 Right: 3.25 steps inside 45 yd ln 9.25 steps behind Home Hash (HS)
-58 4-Trans 33 - 36 Right: 1.5 steps inside 45 yd ln 5.5 steps behind Home Hash (HS)
-59 4-Trans 37 - 40 Right: 3.0 steps inside 45 yd ln 2.0 steps behind Home Hash (HS)
-60 4-Trans 41 - 44 Right: 2.0 steps outside 45 yd ln 6.5 steps behind Home Hash (HS)
-61 4-Trans 45 - 48 Right: 2.0 steps inside 40 yd ln 2.0 steps behind Home Hash (HS)
-62 4-Trans 49 - 60 Right: 1.0 steps outside 40 yd ln 1.5 steps in front of Home Hash (HS)
-63 4-Trans 61 - 64 Right: 2.0 steps inside 45 yd ln 9.5 steps behind Home Hash (HS)
-64 4-Trans sub 8 Right: 2.0 steps outside 50 yd ln 4.0 steps behind Home Hash (HS)
-65 4-Trans 65 - 68 Left: 2.0 steps inside 45 yd ln 4.0 steps behind Home Hash (HS)
-66 4-Trans 69 - 74 Left: 3.0 steps outside 45 yd ln 2.5 steps behind Home Hash (HS)
-67 4-Trans 75 - 78 Left: 1.5 steps inside 45 yd ln 2.5 steps behind Home Hash (HS)
+68 5-Trans 2 - 4 Left: 1.5 steps inside 45 yd ln 2.5 steps in front of Visitor Hash (HS)
+69 5-Trans 5 - 7 Right: 1.5 steps inside 45 yd ln 11.0 steps in front of Visitor side line
+70 5-Trans 8 - 9 On 50 yd ln 8.0 steps in front of Visitor side line
+71 5-Trans 10 - 11 On 50 yd ln 8.0 steps in front of Visitor side line
+72 5-Trans 12 - 15 On 50 yd ln 8.0 steps in front of Visitor side line
+73 5-Trans 16 - 19 On 50 yd ln 8.0 steps in front of Visitor side line
+74 5-Trans 20 - End On 50 yd ln 8.0 steps in front of Visitor side line
 
-Performer: Symbol: SD3 Label: 65 4-Transient
+Performer: Symbol: SD3 Label: 65 5-Transient
 
 Set Title Measure Left-Right Home-Visitor
-52 4-Trans 2 - 5 Right: 1.75 steps outside 40 yd ln 9.5 steps in front of Home Hash (HS)
-53 4-Trans 6 - 9 Right: 1.75 steps inside 40 yd ln 1.0 steps behind Home Hash (HS)
-54 4-Trans 10 - 13 Right: 2.25 steps outside 45 yd ln 1.75 steps behind Home Hash (HS)
-55 4-Trans 14 - 17 Right: 2.25 steps outside 45 yd ln 0.75 steps in front of Home Hash (HS)
-56 4-Trans 18 - 21 Right: 2.25 steps outside 45 yd ln 0.75 steps in front of Home Hash (HS)
-57 4-Trans 22 - 32 Right: 1.0 steps inside 45 yd ln 9.5 steps behind Home Hash (HS)
-58 4-Trans 33 - 36 Right: On 45 yd ln 8.0 steps behind Home Hash (HS)
-59 4-Trans 37 - 40 Right: On 45 yd ln 2.0 steps behind Home Hash (HS)
-60 4-Trans 41 - 44 Right: 3.0 steps inside 40 yd ln 6.5 steps behind Home Hash (HS)
-61 4-Trans 45 - 48 Right: 1.0 steps outside 40 yd ln 2.0 steps behind Home Hash (HS)
-62 4-Trans 49 - 60 Right: 4.0 steps outside 40 yd ln 1.5 steps in front of Home Hash (HS)
-63 4-Trans 61 - 64 Right: 1.0 steps outside 45 yd ln 9.5 steps behind Home Hash (HS)
-64 4-Trans sub 8 Right: 4.0 steps outside 50 yd ln 4.0 steps behind Home Hash (HS)
-65 4-Trans 65 - 68 Left: 4.0 steps inside 45 yd ln 4.0 steps behind Home Hash (HS)
-66 4-Trans 69 - 74 Left: 1.0 steps outside 45 yd ln 2.5 steps behind Home Hash (HS)
-67 4-Trans 75 - 78 Left: 3.0 steps inside 45 yd ln On Home Hash (HS)
+68 5-Trans 2 - 4 Left: 3.0 steps inside 45 yd ln 5.0 steps in front of Visitor Hash (HS)
+69 5-Trans 5 - 7 Right: 0.5 steps inside 45 yd ln 11.5 steps behind Visitor Hash (HS)
+70 5-Trans 8 - 9 Right: 1.0 steps outside 50 yd ln 12.0 steps in front of Visitor side line
+71 5-Trans 10 - 11 Right: 1.0 steps outside 50 yd ln 12.0 steps in front of Visitor side line
+72 5-Trans 12 - 15 Right: 1.0 steps outside 50 yd ln 12.0 steps in front of Visitor side line
+73 5-Trans 16 - 19 Right: 1.0 steps outside 50 yd ln 12.0 steps in front of Visitor side line
+74 5-Trans 20 - End Right: 1.0 steps outside 50 yd ln 12.0 steps in front of Visitor side line
 
-Performer: Symbol: BD1 Label: 66 4-Transient
+Performer: Symbol: BD1 Label: 66 5-Transient
 
 Set Title Measure Left-Right Home-Visitor
-52 4-Trans 2 - 5 Right: 3.25 steps outside 40 yd ln 7.0 steps in front of Home Hash (HS)
-53 4-Trans 6 - 9 Right: 1.25 steps outside 40 yd ln 1.0 steps behind Home Hash (HS)
-54 4-Trans 10 - 13 Right: 3.5 steps inside 40 yd ln 1.0 steps behind Home Hash (HS)
-55 4-Trans 14 - 17 Right: 3.5 steps inside 40 yd ln 1.5 steps in front of Home Hash (HS)
-56 4-Trans 18 - 21 Right: 3.5 steps inside 40 yd ln 1.5 steps in front of Home Hash (HS)
-57 4-Trans 22 - 32 Right: 2.0 steps outside 45 yd ln 9.0 steps behind Home Hash (HS)
-58 4-Trans 33 - 36 Right: 1.5 steps outside 45 yd ln 5.5 steps behind Home Hash (HS)
-59 4-Trans 37 - 40 Right: 3.0 steps outside 45 yd ln 2.0 steps behind Home Hash (HS)
-60 4-Trans 41 - 44 Right: 2.5 steps outside 50 yd ln 9.0 steps behind Home Hash (HS)
-61 4-Trans 45 - 48 Right: 1.5 steps inside 45 yd ln 4.5 steps behind Home Hash (HS)
-62 4-Trans 49 - 60 Right: 1.5 steps outside 45 yd ln 1.0 steps behind Home Hash (HS)
-63 4-Trans 61 - 64 Right: 4.0 steps inside 40 yd ln 9.25 steps behind Home Hash (HS)
-64 4-Trans sub 8 Right: 1.0 steps inside 45 yd ln 4.0 steps behind Home Hash (HS)
-65 4-Trans 65 - 68 Left: 1.0 steps outside 50 yd ln 4.0 steps behind Home Hash (HS)
-66 4-Trans 69 - 74 Left: 2.0 steps inside 45 yd ln 2.5 steps behind Home Hash (HS)
-67 4-Trans 75 - 78 Left: 3.5 steps outside 50 yd ln 2.5 steps behind Home Hash (HS)
+68 5-Trans 2 - 4 Left: 3.5 steps outside 50 yd ln 2.5 steps in front of Visitor Hash (HS)
+69 5-Trans 5 - 7 Right: 4.0 steps outside 45 yd ln 12.0 steps behind Visitor Hash (HS)
+70 5-Trans 8 - 9 Right: 1.0 steps inside 40 yd ln 11.0 steps behind Visitor Hash (HS)
+71 5-Trans 10 - 11 Right: 1.0 steps inside 40 yd ln 11.0 steps behind Visitor Hash (HS)
+72 5-Trans 12 - 15 Right: 1.0 steps inside 40 yd ln 11.0 steps behind Visitor Hash (HS)
+73 5-Trans 16 - 19 Right: 1.0 steps inside 40 yd ln 11.0 steps behind Visitor Hash (HS)
+74 5-Trans 20 - End Right: 1.0 steps inside 40 yd ln 11.0 steps behind Visitor Hash (HS)
 
-Performer: Symbol: BD2 Label: 67 4-Transient
+Performer: Symbol: BD2 Label: 67 5-Transient
 
 Set Title Measure Left-Right Home-Visitor
-52 4-Trans 2 - 5 Right: 3.5 steps inside 35 yd ln 9.5 steps in front of Home Hash (HS)
-53 4-Trans 6 - 9 Right: 4.0 steps inside 35 yd ln 0.25 steps behind Home Hash (HS)
-54 4-Trans 10 - 13 Right: 1.0 steps inside 40 yd ln On Home Hash (HS)
-55 4-Trans 14 - 17 Right: 1.0 steps inside 40 yd ln 2.5 steps in front of Home Hash (HS)
-56 4-Trans 18 - 21 Right: 1.0 steps inside 40 yd ln 2.5 steps in front of Home Hash (HS)
-57 4-Trans 22 - 32 Right: 3.25 steps inside 40 yd ln 8.0 steps behind Home Hash (HS)
-58 4-Trans 33 - 36 Right: 3.0 steps outside 45 yd ln 8.0 steps behind Home Hash (HS)
-59 4-Trans 37 - 40 Right: 2.0 steps inside 40 yd ln 2.0 steps behind Home Hash (HS)
-60 4-Trans 41 - 44 Right: 2.5 steps inside 45 yd ln 9.0 steps behind Home Hash (HS)
-61 4-Trans 45 - 48 Right: 1.5 steps outside 45 yd ln 4.5 steps behind Home Hash (HS)
-62 4-Trans 49 - 60 Right: 3.5 steps inside 40 yd ln 1.0 steps behind Home Hash (HS)
-63 4-Trans 61 - 64 Right: 1.0 steps inside 40 yd ln 8.5 steps behind Home Hash (HS)
-64 4-Trans sub 8 Right: 2.0 steps outside 45 yd ln 4.0 steps behind Home Hash (HS)
-65 4-Trans 65 - 68 Right: 2.0 steps outside 50 yd ln 4.0 steps behind Home Hash (HS)
-66 4-Trans 69 - 74 Left: 3.0 steps outside 50 yd ln 2.5 steps behind Home Hash (HS)
-67 4-Trans 75 - 78 Left: 2.0 steps outside 50 yd ln On Home Hash (HS)
+68 5-Trans 2 - 4 Left: 2.0 steps outside 50 yd ln 5.0 steps in front of Visitor Hash (HS)
+69 5-Trans 5 - 7 Right: 2.5 steps inside 40 yd ln 6.0 steps behind Visitor Hash (HS)
+70 5-Trans 8 - 9 Right: 1.0 steps inside 40 yd ln 9.0 steps behind Visitor Hash (HS)
+71 5-Trans 10 - 11 Right: 1.0 steps inside 40 yd ln 9.0 steps behind Visitor Hash (HS)
+72 5-Trans 12 - 15 Right: 1.0 steps inside 40 yd ln 9.0 steps behind Visitor Hash (HS)
+73 5-Trans 16 - 19 Right: 1.0 steps inside 40 yd ln 9.0 steps behind Visitor Hash (HS)
+74 5-Trans 20 - End Right: 1.0 steps inside 40 yd ln 9.0 steps behind Visitor Hash (HS)
 
-Performer: Symbol: BD3 Label: 68 4-Transient
+Performer: Symbol: BD3 Label: 68 5-Transient
 
 Set Title Measure Left-Right Home-Visitor
-52 4-Trans 2 - 5 Right: 2.0 steps inside 35 yd ln 7.0 steps in front of Home Hash (HS)
-53 4-Trans 6 - 9 Right: 1.25 steps inside 35 yd ln 1.0 steps in front of Home Hash (HS)
-54 4-Trans 10 - 13 Right: 1.5 steps outside 40 yd ln 1.75 steps in front of Home Hash (HS)
-55 4-Trans 14 - 17 Right: 1.5 steps outside 40 yd ln 4.25 steps in front of Home Hash (HS)
-56 4-Trans 18 - 21 Right: 1.5 steps outside 40 yd ln 4.25 steps in front of Home Hash (HS)
-57 4-Trans 22 - 32 Right: 0.75 steps inside 40 yd ln 6.5 steps behind Home Hash (HS)
-58 4-Trans 33 - 36 Right: 3.5 steps inside 40 yd ln 5.5 steps behind Home Hash (HS)
-59 4-Trans 37 - 40 Right: 1.0 steps outside 40 yd ln 2.0 steps behind Home Hash (HS)
-60 4-Trans 41 - 44 Right: 0.5 steps outside 45 yd ln 9.0 steps behind Home Hash (HS)
-61 4-Trans 45 - 48 Right: 3.5 steps inside 40 yd ln 4.5 steps behind Home Hash (HS)
-62 4-Trans 49 - 60 Right: 0.5 steps inside 40 yd ln 1.0 steps behind Home Hash (HS)
-63 4-Trans 61 - 64 Right: 2.0 steps outside 40 yd ln 7.5 steps behind Home Hash (HS)
-64 4-Trans sub 8 Right: 3.0 steps inside 40 yd ln 4.0 steps behind Home Hash (HS)
-65 4-Trans 65 - 68 Right: 3.0 steps inside 45 yd ln 4.0 steps behind Home Hash (HS)
-66 4-Trans 69 - 74 On 50 yd ln 2.5 steps behind Home Hash (HS)
-67 4-Trans 75 - 78 Left: 0.5 steps outside 50 yd ln 2.5 steps behind Home Hash (HS)
+68 5-Trans 2 - 4 Left: 0.5 steps outside 50 yd ln 2.5 steps in front of Visitor Hash (HS)
+69 5-Trans 5 - 7 Right: 2.0 steps outside 40 yd ln 12.0 steps behind Visitor Hash (HS)
+70 5-Trans 8 - 9 Right: 1.0 steps inside 40 yd ln 13.0 steps behind Visitor Hash (HS)
+71 5-Trans 10 - 11 Right: 1.0 steps inside 40 yd ln 13.0 steps behind Visitor Hash (HS)
+72 5-Trans 12 - 15 Right: 1.0 steps inside 40 yd ln 13.0 steps behind Visitor Hash (HS)
+73 5-Trans 16 - 19 Right: 1.0 steps inside 40 yd ln 13.0 steps behind Visitor Hash (HS)
+74 5-Trans 20 - End Right: 1.0 steps inside 40 yd ln 13.0 steps behind Visitor Hash (HS)
 
-Performer: Symbol: BD4 Label: 69 4-Transient
+Performer: Symbol: BD4 Label: 69 5-Transient
 
 Set Title Measure Left-Right Home-Visitor
-52 4-Trans 2 - 5 Right: 0.5 steps inside 35 yd ln 9.5 steps in front of Home Hash (HS)
-53 4-Trans 6 - 9 Right: 1.0 steps outside 35 yd ln 2.75 steps in front of Home Hash (HS)
-54 4-Trans 10 - 13 Right: 3.25 steps outside 40 yd ln 3.75 steps in front of Home Hash (HS)
-55 4-Trans 14 - 17 Right: 3.25 steps outside 40 yd ln 6.25 steps in front of Home Hash (HS)
-56 4-Trans 18 - 21 Right: 3.25 steps outside 40 yd ln 6.25 steps in front of Home Hash (HS)
-57 4-Trans 22 - 32 Right: 1.5 steps outside 40 yd ln 4.5 steps behind Home Hash (HS)
-58 4-Trans 33 - 36 Right: 2.0 steps inside 40 yd ln 8.0 steps behind Home Hash (HS)
-59 4-Trans 37 - 40 Right: 4.0 steps outside 40 yd ln 2.0 steps behind Home Hash (HS)
-60 4-Trans 41 - 44 Right: 3.5 steps outside 45 yd ln 9.0 steps behind Home Hash (HS)
-61 4-Trans 45 - 48 Right: 0.5 steps inside 40 yd ln 4.5 steps behind Home Hash (HS)
-62 4-Trans 49 - 60 Right: 2.5 steps outside 40 yd ln 1.0 steps behind Home Hash (HS)
-63 4-Trans 61 - 64 Right: 3.5 steps inside 35 yd ln 6.0 steps behind Home Hash (HS)
-64 4-Trans sub 8 Right: On 40 yd ln 4.0 steps behind Home Hash (HS)
-65 4-Trans 65 - 68 Right: On 45 yd ln 4.0 steps behind Home Hash (HS)
-66 4-Trans 69 - 74 Right: 3.0 steps outside 50 yd ln 2.5 steps behind Home Hash (HS)
-67 4-Trans 75 - 78 Right: 1.0 steps outside 50 yd ln On Home Hash (HS)
+68 5-Trans 2 - 4 Right: 1.0 steps outside 50 yd ln 5.0 steps in front of Visitor Hash (HS)
+69 5-Trans 5 - 7 Right: 2.5 steps outside 40 yd ln 4.5 steps behind Visitor Hash (HS)
+70 5-Trans 8 - 9 Right: 1.0 steps outside 40 yd ln 11.0 steps behind Visitor Hash (HS)
+71 5-Trans 10 - 11 Right: 1.0 steps outside 40 yd ln 11.0 steps behind Visitor Hash (HS)
+72 5-Trans 12 - 15 Right: 1.0 steps outside 40 yd ln 11.0 steps behind Visitor Hash (HS)
+73 5-Trans 16 - 19 Right: 1.0 steps outside 40 yd ln 11.0 steps behind Visitor Hash (HS)
+74 5-Trans 20 - End Right: 1.0 steps outside 40 yd ln 11.0 steps behind Visitor Hash (HS)
 
-Performer: Symbol: BD5 Label: 70 4-Transient
+Performer: Symbol: BD5 Label: 70 5-Transient
 
 Set Title Measure Left-Right Home-Visitor
-52 4-Trans 2 - 5 Right: 1.25 steps outside 35 yd ln 7.0 steps in front of Home Hash (HS)
-53 4-Trans 6 - 9 Right: 2.5 steps outside 35 yd ln 5.5 steps in front of Home Hash (HS)
-54 4-Trans 10 - 13 Right: 3.5 steps inside 35 yd ln 6.25 steps in front of Home Hash (HS)
-55 4-Trans 14 - 17 Right: 3.5 steps inside 35 yd ln 8.75 steps in front of Home Hash (HS)
-56 4-Trans 18 - 21 Right: 3.5 steps inside 35 yd ln 8.75 steps in front of Home Hash (HS)
-57 4-Trans 22 - 32 Right: 3.25 steps outside 40 yd ln 2.25 steps behind Home Hash (HS)
-58 4-Trans 33 - 36 Right: 0.5 steps inside 40 yd ln 5.5 steps behind Home Hash (HS)
-59 4-Trans 37 - 40 Right: 1.0 steps inside 35 yd ln 2.0 steps behind Home Hash (HS)
-60 4-Trans 41 - 44 Right: 1.5 steps inside 40 yd ln 9.0 steps behind Home Hash (HS)
-61 4-Trans 45 - 48 Right: 2.5 steps outside 40 yd ln 4.5 steps behind Home Hash (HS)
-62 4-Trans 49 - 60 Right: 2.5 steps inside 35 yd ln 1.0 steps behind Home Hash (HS)
-63 4-Trans 61 - 64 Right: 1.0 steps inside 35 yd ln 4.0 steps behind Home Hash (HS)
-64 4-Trans sub 8 Right: 3.0 steps outside 40 yd ln 4.0 steps behind Home Hash (HS)
-65 4-Trans 65 - 68 Right: 3.0 steps outside 45 yd ln 4.0 steps behind Home Hash (HS)
-66 4-Trans 69 - 74 Right: 2.0 steps inside 45 yd ln 2.5 steps behind Home Hash (HS)
-67 4-Trans 75 - 78 Right: 2.5 steps outside 50 yd ln 2.5 steps behind Home Hash (HS)
+68 5-Trans 2 - 4 Right: 2.5 steps outside 50 yd ln 2.5 steps in front of Visitor Hash (HS)
+69 5-Trans 5 - 7 Right: 2.5 steps inside 35 yd ln 8.5 steps behind Visitor Hash (HS)
+70 5-Trans 8 - 9 Right: 1.0 steps outside 40 yd ln 13.0 steps behind Visitor Hash (HS)
+71 5-Trans 10 - 11 Right: 1.0 steps outside 40 yd ln 13.0 steps behind Visitor Hash (HS)
+72 5-Trans 12 - 15 Right: 1.0 steps outside 40 yd ln 13.0 steps behind Visitor Hash (HS)
+73 5-Trans 16 - 19 Right: 1.0 steps outside 40 yd ln 13.0 steps behind Visitor Hash (HS)
+74 5-Trans 20 - End Right: 1.0 steps outside 40 yd ln 13.0 steps behind Visitor Hash (HS)
 
-Performer: Symbol: TD1 Label: 61 4-Transient
+Performer: Symbol: TD1 Label: 61 5-Transient
 
 Set Title Measure Left-Right Home-Visitor
-52 4-Trans 2 - 5 Right: 3.75 steps outside 45 yd ln 9.5 steps in front of Home Hash (HS)
-53 4-Trans 6 - 9 Right: 4.0 steps outside 50 yd ln 4.0 steps in front of Home Hash (HS)
-54 4-Trans 10 - 13 On 50 yd ln On Home Hash (HS)
-55 4-Trans 14 - 17 On 50 yd ln 2.5 steps in front of Home Hash (HS)
-56 4-Trans 18 - 21 On 50 yd ln 2.5 steps in front of Home Hash (HS)
-57 4-Trans 22 - 32 Left: 4.0 steps inside 45 yd ln 8.0 steps behind Home Hash (HS)
-58 4-Trans 33 - 36 Right: 2.0 steps outside 50 yd ln 8.0 steps behind Home Hash (HS)
-59 4-Trans 37 - 40 Left: 4.0 steps inside 45 yd ln 2.0 steps behind Home Hash (HS)
-60 4-Trans 41 - 44 Right: 1.0 steps outside 50 yd ln 6.5 steps behind Home Hash (HS)
-61 4-Trans 45 - 48 Right: 3.0 steps inside 45 yd ln 2.0 steps behind Home Hash (HS)
-62 4-Trans 49 - 60 Right: On 45 yd ln 1.5 steps in front of Home Hash (HS)
-63 4-Trans 61 - 64 Left: 3.0 steps outside 50 yd ln 8.0 steps behind Home Hash (HS)
-64 4-Trans sub 8 Left: 2.0 steps inside 45 yd ln 4.0 steps behind Home Hash (HS)
-65 4-Trans 65 - 68 Left: 2.0 steps inside 40 yd ln 4.0 steps behind Home Hash (HS)
-66 4-Trans 69 - 74 Left: 3.0 steps outside 40 yd ln 2.5 steps behind Home Hash (HS)
-67 4-Trans 75 - 78 Left: 3.0 steps outside 45 yd ln On Home Hash (HS)
+68 5-Trans 2 - 4 Left: 3.0 steps outside 45 yd ln 5.0 steps in front of Visitor Hash (HS)
+69 5-Trans 5 - 7 Left: 3.0 steps inside 45 yd ln 11.5 steps in front of Visitor side line
+70 5-Trans 8 - 9 Left: 1.0 steps outside 50 yd ln 12.0 steps in front of Visitor side line
+71 5-Trans 10 - 11 Left: 1.0 steps outside 50 yd ln 12.0 steps in front of Visitor side line
+72 5-Trans 12 - 15 Left: 1.0 steps outside 50 yd ln 12.0 steps in front of Visitor side line
+73 5-Trans 16 - 19 Left: 1.0 steps outside 50 yd ln 12.0 steps in front of Visitor side line
+74 5-Trans 20 - End Left: 1.0 steps outside 50 yd ln 12.0 steps in front of Visitor side line
 
-Performer: Symbol: TD2 Label: 62 4-Transient
+Performer: Symbol: TD2 Label: 62 5-Transient
 
 Set Title Measure Left-Right Home-Visitor
-52 4-Trans 2 - 5 Right: 3.0 steps inside 40 yd ln 7.0 steps in front of Home Hash (HS)
-53 4-Trans 6 - 9 Right: 2.0 steps inside 45 yd ln 2.0 steps in front of Home Hash (HS)
-54 4-Trans 10 - 13 Right: 2.75 steps outside 50 yd ln 1.0 steps behind Home Hash (HS)
-55 4-Trans 14 - 17 Right: 2.75 steps outside 50 yd ln 1.5 steps in front of Home Hash (HS)
-56 4-Trans 18 - 21 Right: 2.75 steps outside 50 yd ln 1.5 steps in front of Home Hash (HS)
-57 4-Trans 22 - 32 Left: 0.75 steps outside 50 yd ln 8.75 steps behind Home Hash (HS)
-58 4-Trans 33 - 36 Right: 3.5 steps outside 50 yd ln 5.5 steps behind Home Hash (HS)
-59 4-Trans 37 - 40 Left: 1.0 steps outside 50 yd ln 2.0 steps behind Home Hash (HS)
-60 4-Trans 41 - 44 Right: 4.0 steps outside 50 yd ln 6.5 steps behind Home Hash (HS)
-61 4-Trans 45 - 48 Right: On 45 yd ln 2.0 steps behind Home Hash (HS)
-62 4-Trans 49 - 60 Right: 3.0 steps outside 45 yd ln 1.5 steps in front of Home Hash (HS)
-63 4-Trans 61 - 64 Left: On 50 yd ln 8.75 steps behind Home Hash (HS)
-64 4-Trans sub 8 Left: 3.0 steps outside 50 yd ln 4.0 steps behind Home Hash (HS)
-65 4-Trans 65 - 68 Left: 3.0 steps outside 45 yd ln 4.0 steps behind Home Hash (HS)
-66 4-Trans 69 - 74 Left: On 40 yd ln 2.5 steps behind Home Hash (HS)
-67 4-Trans 75 - 78 Left: 1.5 steps outside 45 yd ln 2.5 steps behind Home Hash (HS)
+68 5-Trans 2 - 4 Left: 1.5 steps outside 45 yd ln 2.5 steps in front of Visitor Hash (HS)
+69 5-Trans 5 - 7 Left: 1.0 steps outside 50 yd ln 9.0 steps in front of Visitor side line
+70 5-Trans 8 - 9 Left: 1.0 steps outside 50 yd ln 10.0 steps in front of Visitor side line
+71 5-Trans 10 - 11 Left: 1.0 steps outside 50 yd ln 10.0 steps in front of Visitor side line
+72 5-Trans 12 - 15 Left: 1.0 steps outside 50 yd ln 10.0 steps in front of Visitor side line
+73 5-Trans 16 - 19 Left: 1.0 steps outside 50 yd ln 10.0 steps in front of Visitor side line
+74 5-Trans 20 - End Left: 1.0 steps outside 50 yd ln 10.0 steps in front of Visitor side line
 
 Form Snare
-4-Transient
-52 _
-53 _
-54 _
-55 _
-56 _
-57 _
-58 _
-59 _
-60 _
-61 _
-62 _
-63 _
-64 _
-65 _
-66 _
-67 _
+5-Transient
+68 _
+69 _
+70 _
+71 _
+72 _
+73 _
+74 _
 
 Form Tenor
-4-Transient
-52 _
-53 _
-54 _
-55 _
-56 _
-57 _
-58 _
-59 _
-60 _
-61 _
-62 _
-63 _
-64 _
-65 _
-66 _
-67 _
+5-Transient
+68 _
+69 _
+70 _
+71 _
+72 _
+73 _
+74 _
 
 Form Bass Drum
-4-Transient
-52 _
-53 _
-54 _
-55 _
-56 _
-57 _
-58 _
-59 _
-60 _
-61 _
-62 _
-63 _
-64 _
-65 _
-66 _
-67 _
+5-Transient
+68 _
+69 _
+70 _
+71 _
+72 _
+73 _
+74 _
 
 Counts Snare
-4-Transient
-52 Move 12
-53 Move 12
-54 Move 12
-55 Hold 8, Move 4, Hold 4
-56 Hold 16
-57 Move 12, Hold 16
-58 Move 12
-59 Move 12
-60 Move 10
-61 Move 6, Hold 6
-62 Hold 3, Move 7, Hold 24
-63 Move 16
-64 Move 8
-65 Move 8
-66 Move 8, Hold 8
-67 Move 8, Hold 8
+5-Transient
+68 Move 8, Hold 4
+69 Move 8, Hold 4
+70 Move 8
+71 Hold 8
+72 Hold 16
+73 Hold 16
+74 Hold 15
 
 Counts Tenor
-4-Transient
-52 Move 12
-53 Move 12
-54 Move 12
-55 Hold 8, Move 4, Hold 4
-56 Hold 16
-57 Move 12, Hold 16
-58 Move 12
-59 Move 12
-60 Move 10
-61 Move 6, Hold 6
-62 Hold 3, Move 7, Hold 24
-63 Move 16
-64 Move 8
-65 Move 8
-66 Move 8, Hold 8
-67 Move 8, Hold 8
+5-Transient
+68 Move 8, Hold 4
+69 Move 8, Hold 4
+70 Move 8
+71 Hold 8
+72 Hold 16
+73 Hold 16
+74 Hold 15
 
 Counts Bass Drum
-4-Transient
-52 Move 12
-53 Move 12
-54 Move 12
-55 Hold 8, Move 4, Hold 4
-56 Hold 16
-57 Move 12, Hold 16
-58 Move 12
-59 Move 12
-60 Move 10
-61 Move 6, Hold 6
-62 Hold 3, Move 7, Hold 24
-63 Move 16
-64 Move 8
-65 Move 8
-66 Move 8, Hold 8
-67 Move 8, Hold 8
+5-Transient
+68 Move 8, Hold 4
+69 Move 8, Hold 4
+70 Move 8
+71 Hold 8
+72 Hold 16
+73 Hold 16
+74 Hold 15
 
 Orientation Snare
-4-Transient
+5-Transient
+68 Back
+69 Back
+70 Back
+71 Back
+72 Back
+73 Back
+74 Back
 
 Orientation Tenor
-4-Transient
+5-Transient
+68 Back
+69 Back
+70 Back
+71 Back
+72 Back
+73 Back
+74 Back
 
 Orientation Bass Drum
-4-Transient
-52 Left End Zone
-53 Left End Zone
-54 Left End Zone
-55 Left End Zone
-56 Left End Zone
-57 Left End Zone
-58 Left End Zone
-59 Left End Zone
-60 Left End Zone
-61 Left End Zone
-62 Left End Zone
-63 Left End Zone
-64 Left End Zone
-65 Left End Zone
-66 Left End Zone
-67 Left End Zone
+5-Transient
+68 Back
+69 Back
+70 Back
+71 Back
+72 Back
+73 Back
+74 Back
