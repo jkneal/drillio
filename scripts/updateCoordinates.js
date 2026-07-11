@@ -740,9 +740,10 @@ module.exports = {
 };
 
 // Run if called directly
+// Usage: node updateCoordinates.js [coordinatesPath] [outputPath]
 if (require.main === module) {
-  const coordinatesPath = path.join(__dirname, '..', 'coordinates.txt');
-  const outputPath = path.join(__dirname, '..', 'app', 'src', 'data', 'performerData.js');
+  const coordinatesPath = process.argv[2] || path.join(__dirname, '..', 'coordinates.txt');
+  const outputPath = process.argv[3] || path.join(__dirname, '..', 'app', 'src', 'data', 'performerData.js');
   
   try {
     // Load existing data
