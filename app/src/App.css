@@ -847,7 +847,7 @@
 
 .rehearsal-range-timeline {
   display: grid;
-  grid-template-columns: 1fr auto 1fr auto 1fr;
+  grid-template-columns: 1.25fr auto 0.8fr auto 0.8fr auto 1.25fr;
   align-items: center;
   gap: 0.5rem;
   margin: 1rem 0;

@@ -501,15 +501,15 @@ const LearningDrillPage = () => {
           </div>
           <p>
             During rehearsal, the drum major or director may call a range relative to the set being
-            worked. A minus sign means sets before the target; a plus sign means sets after it. These
-            are <b>set numbers</b>, not counts.
+            worked. A minus or plus indicates a marching count and step relative to the named set.
+            <b> −1</b> is one step before the set, and <b>+1</b> is one step past it.
           </p>
 
           <div className="tutorial-callout">
             <ClipboardList />
             <p>
-              <strong>We typically start at −1</strong> so the rep includes the transition into the
-              set being rehearsed.
+              <strong>We typically start at −1</strong>—one step before the set—so the rep includes
+              the arrival into the coordinate being rehearsed.
             </p>
           </div>
 
@@ -521,23 +521,29 @@ const LearningDrillPage = () => {
             <div className="rehearsal-range-timeline">
               <div>
                 <span>−1</span>
-                <strong>Set 19</strong>
+                <strong>Before Set 20</strong>
                 <small>Start here</small>
               </div>
               <b>→</b>
               <div className="rehearsal-range-target">
-                <span>0</span>
+                <span>SET</span>
                 <strong>Set 20</strong>
+              </div>
+              <b>→</b>
+              <div className="rehearsal-range-target">
+                <span>SET</span>
+                <strong>Set 21</strong>
               </div>
               <b>→</b>
               <div>
                 <span>+1</span>
-                <strong>Set 21</strong>
+                <strong>Past Set 21</strong>
                 <small>Finish here</small>
               </div>
             </div>
             <p>
-              You begin in Set 19, rehearse the move into Set 20, then continue through the move into Set 21.
+              Start one count and step before Set 20, arrive at Set 20, continue through Set 21, then
+              take one count and step past Set 21.
             </p>
           </div>
 
