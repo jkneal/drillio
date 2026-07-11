@@ -182,7 +182,7 @@ def mark_entry(lo, hi, marks, total):
 
 
 def is_tacet(map_, staff_index, lo, hi):
-    rests = set(map_['rests'].get(str(staff_index if staff_index >= 0 else 0), []))
+    rests = set(map_['rests'].get(str(staff_index), []))
     return all(m in rests for m in range(lo, hi + 1))
 
 
@@ -263,7 +263,8 @@ def main():
             staff_index = -1 if name == 'Staff' else staff_rows.get(name, 0)
             if name == 'Staff':
                 # Staff view is tacet only if every staff rests
-                if all(is_tacet(maps[name], s, lo, hi) for s in range(3)):
+                n_staves = max(len(sy['staves']) for sy in maps[name]['systems'])
+                if all(is_tacet(maps[name], s, lo, hi) for s in range(n_staves)):
                     entry['tacet'].append(name)
                     continue
             elif is_tacet(maps[name], staff_index, lo, hi):

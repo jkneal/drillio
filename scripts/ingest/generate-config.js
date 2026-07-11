@@ -29,7 +29,11 @@ function main() {
 
   const content = fs.readFileSync(args.performerData, 'utf-8');
   const match = content.match(/export const performerData = ({[\s\S]*});/);
-  const performerData = JSON.parse(match[1]);
+  const performerData = match ? JSON.parse(match[1]) : {};
+  if (!performerData.Staff) {
+    console.error(`No Staff performer in ${args.performerData} — ingest drill data first (the config's movement/set lists come from performerData.js)`);
+    process.exit(1);
+  }
   const movements = performerData.Staff.movements;
 
   const files = new Set(fs.readdirSync(args.musicDir));
@@ -43,14 +47,23 @@ function main() {
         // Set 1 of a movement is the starting position; no music is shown for
         // it, matching the existing config which starts at the second set
         if (set === sets[0].set && movement === '1') continue;
-        const exists = files.has(`${part}${movement}-${set}.png`);
-        // Only emit sets up to the last true to mirror sparse hand-kept config
-        config[movement][part][set] = exists;
+        config[movement][part][set] = files.has(`${part}${movement}-${set}.png`);
       }
-      // Drop trailing false-only parts to keep the file readable
+      // Drop all-false parts to keep the file readable
       if (Object.values(config[movement][part]).every(v => v === false)) {
         config[movement][part] = {};
       }
+    }
+  }
+
+  // Images on disk for a movement not in performerData would silently get no
+  // config (this happened when a movement's coordinates PDF was missing)
+  const imageMovements = new Set(
+    [...files].map(f => (f.match(/^(?:Staff|SD|TD|BD)(\d+)-\d+\.png$/) || [])[1]).filter(Boolean)
+  );
+  for (const m of [...imageMovements].sort()) {
+    if (!config[m]) {
+      console.warn(`  WARNING: music images exist for movement ${m} but performerData.js has no movement ${m} — no config emitted for it`);
     }
   }
 

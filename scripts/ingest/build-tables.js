@@ -83,6 +83,13 @@ function main() {
   const analysis = { movement, title: setsInfo.title, sections: {}, flags: [] };
   const countsTables = {};
 
+  // Chart notes reference battery members by drill label with a letter prefix
+  // that varies by writer ("S63", "Q61", "BD67"), so match on the labels the
+  // battery actually has this season rather than hardcoded prefixes.
+  const batteryNoteRe = new RegExp(
+    `\\bDL\\b|drum|batter|\\b[A-Z]{0,2}(?:${coords.battery.map(p => p.label).join('|')})\\b`, 'i'
+  );
+
   for (const section of SECTIONS) {
     const members = coords.battery.filter(p => p.symbol.startsWith(section.prefix));
     const sectionAnalysis = {};
@@ -147,7 +154,7 @@ function main() {
       }
 
       // Notes that mention the drumline usually override the default split
-      const dlNotes = (setInfo.notes || []).filter(n => /\bDL\b|\bB\d|drum|batter/i.test(n));
+      const dlNotes = (setInfo.notes || []).filter(n => batteryNoteRe.test(n));
       if (dlNotes.length > 0) {
         flags.push(`notes mention battery: ${dlNotes.join(' | ')}`);
       }
@@ -156,7 +163,10 @@ function main() {
       const ensembleNotes = (setInfo.notes || []).filter(
         n => !/^[A-Z]{1,3}\d+/.test(n.trim()) && !dlNotes.includes(n)
       );
-      if (ensembleNotes.length > 0 && moved) {
+      // Flag on held sets too when the note itself describes a move+hold split
+      // (an out-and-back float can leave net displacement at zero)
+      const splitNote = n => /hold/i.test(n) && /move|float|enter|follow|flutter/i.test(n);
+      if (ensembleNotes.length > 0 && (moved || ensembleNotes.some(splitNote))) {
         flags.push(`ensemble note may change split: ${ensembleNotes.join(' | ')}`);
       }
 

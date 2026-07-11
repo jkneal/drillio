@@ -174,10 +174,14 @@ def main():
                     gy = (g[0]['top'] + g[0]['bottom']) / 2
                     if sy['top'] - 25 < gy < sy['top'] + 10 and g[0]['x0'] < (barlines[0] if barlines else 999):
                         printed = int(''.join(c['text'] for c in g))
+                        break
                 if printed is not None:
                     checks.append({'page': pageno, 'printed': printed, 'computed': measure_no + 1,
                                    'ok': printed == measure_no + 1})
-                    measure_no = printed - 1  # trust the engraver
+                    # Trust the engraver over our count — but a wildly-off value
+                    # is a misread stray digit, not a correction; keep computed
+                    if abs(printed - (measure_no + 1)) <= 10:
+                        measure_no = printed - 1
 
                 for x0, x1 in zip(barlines, barlines[1:]):
                     if x1 - x0 < 6:

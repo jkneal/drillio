@@ -56,6 +56,10 @@ function parseTable(lines) {
         leftRight: cells[3].replace(/^(?:Left|Right): (On 50 yd ln)$/, '$1'),
         homeVisitor: cells[4]
       });
+    } else if (/^\d+\s/.test(line.trim()) && cells.length > 1) {
+      // Looks like a coordinate row but doesn't split into the 5 expected
+      // columns — dropping it silently would lose a set for this performer
+      console.warn(`  WARNING: label ${performer.label}: skipped malformed row "${line.trim()}"`);
     }
   }
   return performer.rows.length > 0 ? performer : null;
@@ -125,6 +129,14 @@ function main() {
       continue;
     }
     battery.push({ ...performer, symbol });
+  }
+
+  // Every battery member must cover the same sets — a mismatch means a row
+  // was dropped (malformed) or the PDF is inconsistent
+  const setLists = new Map(battery.map(p => [p.symbol, p.rows.map(r => r.set).join(',')]));
+  if (new Set(setLists.values()).size > 1) {
+    console.warn('  WARNING: battery members have differing set lists — check for dropped rows:');
+    for (const [symbol, sets] of setLists) console.warn(`    ${symbol}: ${sets}`);
   }
 
   // Generate Performer sections in the coordinates.txt format
