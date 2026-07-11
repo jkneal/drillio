@@ -133,6 +133,27 @@ const drawField = (canvas, problem, selectedPoint, result) => {
     }
   }
 
+  // Four standard steps equal 2.5 yards. Mirror the pathway visualizer's
+  // always-on reference dashes along every major yard line.
+  context.strokeStyle = 'rgba(250,204,21,0.78)';
+  context.lineWidth = 2;
+  for (let yard = 5; yard < 100; yard += 5) {
+    const x = yardToCanvasX(yard);
+    [HOME_HASH_STEPS, VISITOR_HASH_STEPS].forEach((hashDepthSteps) => {
+      [-1, 1].forEach((direction) => {
+        for (let interval = 1; interval <= 4; interval += 1) {
+          const depthSteps = hashDepthSteps + direction * 4 * interval;
+          if (depthSteps <= 0 || depthSteps >= FIELD_DEPTH_STEPS) continue;
+          const y = depthToCanvasY(depthSteps);
+          context.beginPath();
+          context.moveTo(x - 5, y);
+          context.lineTo(x + 5, y);
+          context.stroke();
+        }
+      });
+    });
+  }
+
   context.strokeStyle = 'rgba(255,255,255,0.74)';
   context.lineWidth = 3;
   for (let yard = 0; yard <= 100; yard += 1) {
@@ -322,6 +343,7 @@ const CoordinatePracticePage = () => {
           <div className="coordinate-legend">
             <span><i className="coordinate-legend-user" />Your selection</span>
             <span><i className="coordinate-legend-answer" />Correct coordinate</span>
+            <span><i className="coordinate-legend-four-step" />4-step guide</span>
           </div>
 
           {result && (

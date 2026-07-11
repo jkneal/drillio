@@ -1207,6 +1207,13 @@
   background: #4ade80;
 }
 
+.coordinate-legend-four-step {
+  width: 0.9rem !important;
+  height: 2px !important;
+  border-radius: 0 !important;
+  background: #facc15;
+}
+
 .coordinate-feedback {
   display: flex;
   align-items: flex-start;
