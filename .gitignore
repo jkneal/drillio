@@ -1,4 +1,7 @@
-.claude
+.claude/*
+!.claude/skills
 .idea
 app/node_modules
 package-lock.json
+ingest-output
+reference
