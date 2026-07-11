@@ -1176,6 +1176,10 @@
   touch-action: none;
 }
 
+.coordinate-canvas-wrap canvas.coordinate-canvas--magnifying {
+  cursor: none;
+}
+
 .coordinate-legend {
   display: flex;
   justify-content: center;

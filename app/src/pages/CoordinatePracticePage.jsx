@@ -17,6 +17,9 @@ const FIELD_DEPTH_STEPS = FIELD_DEPTH_YARDS / STANDARD_STEP_YARDS;
 const HOME_HASH_STEPS = (160 / 9) / STANDARD_STEP_YARDS;
 const VISITOR_HASH_STEPS = FIELD_DEPTH_STEPS - HOME_HASH_STEPS;
 const CORRECT_TOLERANCE_STEPS = 2;
+const MAGNIFIER_RADIUS = 90;
+const MAGNIFIER_ZOOM = 3;
+const magnifierBuffers = new WeakMap();
 
 const LEVELS = {
   rookie: {
@@ -94,7 +97,78 @@ const canvasToField = (x, y) => {
   };
 };
 
-const drawField = (canvas, problem, selectedPoint, result) => {
+const drawMagnifier = (canvas, context, point) => {
+  let buffer = magnifierBuffers.get(canvas);
+  if (!buffer) {
+    buffer = canvas.ownerDocument.createElement('canvas');
+    buffer.width = CANVAS.width;
+    buffer.height = CANVAS.height;
+    magnifierBuffers.set(canvas, buffer);
+  }
+  const bufferContext = buffer.getContext('2d');
+  bufferContext.clearRect(0, 0, CANVAS.width, CANVAS.height);
+  bufferContext.drawImage(canvas, 0, 0);
+
+  const sourceRadius = MAGNIFIER_RADIUS / MAGNIFIER_ZOOM;
+  const isTouch = point.pointerType === 'touch';
+  let lensX = point.x;
+  let lensY = isTouch ? point.y - MAGNIFIER_RADIUS - 34 : point.y;
+
+  if (isTouch && lensY - MAGNIFIER_RADIUS < 8) {
+    lensY = point.y + MAGNIFIER_RADIUS + 34;
+  }
+
+  lensX = Math.max(MAGNIFIER_RADIUS + 8, Math.min(CANVAS.width - MAGNIFIER_RADIUS - 8, lensX));
+  lensY = Math.max(MAGNIFIER_RADIUS + 8, Math.min(CANVAS.height - MAGNIFIER_RADIUS - 8, lensY));
+
+  context.save();
+  context.beginPath();
+  context.arc(lensX, lensY, MAGNIFIER_RADIUS, 0, Math.PI * 2);
+  context.clip();
+  context.fillStyle = '#07080d';
+  context.fillRect(
+    lensX - MAGNIFIER_RADIUS,
+    lensY - MAGNIFIER_RADIUS,
+    MAGNIFIER_RADIUS * 2,
+    MAGNIFIER_RADIUS * 2
+  );
+  context.drawImage(
+    buffer,
+    point.x - sourceRadius,
+    point.y - sourceRadius,
+    sourceRadius * 2,
+    sourceRadius * 2,
+    lensX - MAGNIFIER_RADIUS,
+    lensY - MAGNIFIER_RADIUS,
+    MAGNIFIER_RADIUS * 2,
+    MAGNIFIER_RADIUS * 2
+  );
+  context.restore();
+
+  context.save();
+  context.strokeStyle = '#facc15';
+  context.lineWidth = 5;
+  context.beginPath();
+  context.arc(lensX, lensY, MAGNIFIER_RADIUS, 0, Math.PI * 2);
+  context.stroke();
+
+  context.strokeStyle = 'rgba(255,255,255,0.96)';
+  context.lineWidth = 2;
+  context.beginPath();
+  context.moveTo(lensX - 16, lensY);
+  context.lineTo(lensX + 16, lensY);
+  context.moveTo(lensX, lensY - 16);
+  context.lineTo(lensX, lensY + 16);
+  context.stroke();
+
+  context.fillStyle = '#facc15';
+  context.font = '900 14px system-ui, sans-serif';
+  context.textAlign = 'center';
+  context.fillText(`${MAGNIFIER_ZOOM}×`, lensX, lensY - MAGNIFIER_RADIUS + 20);
+  context.restore();
+};
+
+const drawField = (canvas, problem, selectedPoint, result, magnifierPoint) => {
   if (!canvas) return;
   const context = canvas.getContext('2d');
   const fieldWidth = CANVAS.fieldRight - CANVAS.fieldLeft;
@@ -154,9 +228,21 @@ const drawField = (canvas, problem, selectedPoint, result) => {
     });
   }
 
+  context.strokeStyle = 'rgba(255,255,255,0.46)';
+  context.lineWidth = 1.5;
+  context.setLineDash([8, 8]);
+  [homeHashY, visitorHashY].forEach((hashY) => {
+    context.beginPath();
+    context.moveTo(CANVAS.fieldLeft, hashY);
+    context.lineTo(CANVAS.fieldRight, hashY);
+    context.stroke();
+  });
+  context.setLineDash([]);
+
   context.strokeStyle = 'rgba(255,255,255,0.74)';
-  context.lineWidth = 3;
+  context.lineWidth = 2;
   for (let yard = 0; yard <= 100; yard += 1) {
+    if (yard % 5 === 0) continue;
     const x = yardToCanvasX(yard);
     [homeHashY, visitorHashY].forEach((hashY) => {
       context.beginPath();
@@ -228,25 +314,32 @@ const drawField = (canvas, problem, selectedPoint, result) => {
     context.fill();
     context.stroke();
   }
+
+  if (magnifierPoint && !result) {
+    drawMagnifier(canvas, context, magnifierPoint);
+  }
 };
 
 const CoordinatePracticePage = () => {
   const navigate = useNavigate();
   const canvasRef = useRef(null);
+  const activePointerRef = useRef(null);
   const [level, setLevel] = useState('rookie');
   const [problem, setProblem] = useState(() => createProblem('rookie'));
   const [selectedPoint, setSelectedPoint] = useState(null);
   const [result, setResult] = useState(null);
   const [score, setScore] = useState({ correct: 0, attempts: 0 });
+  const [magnifierPoint, setMagnifierPoint] = useState(null);
 
   useEffect(() => {
-    drawField(canvasRef.current, problem, selectedPoint, result);
-  }, [problem, selectedPoint, result]);
+    drawField(canvasRef.current, problem, selectedPoint, result, magnifierPoint);
+  }, [problem, selectedPoint, result, magnifierPoint]);
 
   const startNewProblem = (levelKey = level) => {
     setProblem(createProblem(levelKey));
     setSelectedPoint(null);
     setResult(null);
+    setMagnifierPoint(null);
   };
 
   const changeLevel = (nextLevel) => {
@@ -260,15 +353,55 @@ const CoordinatePracticePage = () => {
     startNewProblem();
   };
 
-  const handleFieldPointer = (event) => {
-    if (result) return;
+  const getCanvasPoint = (event, clampToField = false) => {
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
     const canvasX = ((event.clientX - rect.left) / rect.width) * CANVAS.width;
     const canvasY = ((event.clientY - rect.top) / rect.height) * CANVAS.height;
+
+    const isInsideField = canvasX >= CANVAS.fieldLeft
+      && canvasX <= CANVAS.fieldRight
+      && canvasY >= CANVAS.fieldTop
+      && canvasY <= CANVAS.fieldBottom;
+    if (!isInsideField && !clampToField) return null;
+
     const clampedX = Math.max(CANVAS.fieldLeft, Math.min(CANVAS.fieldRight, canvasX));
     const clampedY = Math.max(CANVAS.fieldTop, Math.min(CANVAS.fieldBottom, canvasY));
-    setSelectedPoint(canvasToField(clampedX, clampedY));
+    return { x: clampedX, y: clampedY, pointerType: event.pointerType };
+  };
+
+  const handlePointerMove = (event) => {
+    if (result) return;
+    const point = getCanvasPoint(event, activePointerRef.current === event.pointerId);
+    setMagnifierPoint(point);
+  };
+
+  const handlePointerDown = (event) => {
+    if (result) return;
+    event.preventDefault();
+    activePointerRef.current = event.pointerId;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    setMagnifierPoint(getCanvasPoint(event, true));
+  };
+
+  const handlePointerUp = (event) => {
+    if (result || activePointerRef.current !== event.pointerId) return;
+    const point = getCanvasPoint(event, true);
+    setSelectedPoint(canvasToField(point.x, point.y));
+    activePointerRef.current = null;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    setMagnifierPoint(event.pointerType === 'touch' ? null : point);
+  };
+
+  const handlePointerLeave = () => {
+    if (activePointerRef.current === null) setMagnifierPoint(null);
+  };
+
+  const handlePointerCancel = (event) => {
+    if (activePointerRef.current === event.pointerId) activePointerRef.current = null;
+    setMagnifierPoint(null);
   };
 
   const checkAnswer = () => {
@@ -319,7 +452,7 @@ const CoordinatePracticePage = () => {
           </div>
 
           <div className="coordinate-prompt">
-            <p>Tap where this performer belongs</p>
+            <p>Hover to magnify, then click to place · On touch, press, drag, and release</p>
             <div>
               <span>LEFT–RIGHT</span>
               <strong>{problem.leftRight}</strong>
@@ -335,8 +468,13 @@ const CoordinatePracticePage = () => {
               ref={canvasRef}
               width={CANVAS.width}
               height={CANVAS.height}
-              onPointerDown={handleFieldPointer}
-              aria-label="Football field coordinate practice area. Tap the requested coordinate."
+              className={magnifierPoint && !result ? 'coordinate-canvas--magnifying' : ''}
+              onPointerMove={handlePointerMove}
+              onPointerDown={handlePointerDown}
+              onPointerUp={handlePointerUp}
+              onPointerLeave={handlePointerLeave}
+              onPointerCancel={handlePointerCancel}
+              aria-label="Football field coordinate practice area. Hover to magnify and click to place the requested coordinate."
             />
           </div>
 
