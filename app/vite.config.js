@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 // Version-based naming - increment this for each release
-const BUILD_VERSION = '1.2.1';
+const BUILD_VERSION = '2.0.0';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -32,7 +32,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['HSlogo.png', 'logo.png', 'music/**/*', 'video/**/*', 'audio/**/*', 'drill/**/*'],
+      includeAssets: ['HSlogo.png', 'logo.png', 'ties-that-bind.jpg', 'music/**/*', 'video/**/*', 'audio/**/*', 'drill/**/*'],
       strategies: 'injectManifest',
       srcDir: 'src',
       filename: 'sw.js',
@@ -46,7 +46,6 @@ export default defineConfig({
         orientation: 'portrait',
         start_url: '/',
         scope: '/',
-        permissions: ['notifications'],
         icons: [
           {
             src: 'logo.png',

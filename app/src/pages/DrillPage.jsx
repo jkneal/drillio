@@ -223,7 +223,7 @@ const DrillPage = () => {
       });
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-900 via-black to-red-800 p-4">
+      <div className="min-h-screen show-theme p-4">
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center justify-between mb-6 pt-4">
             <button
@@ -350,7 +350,7 @@ const DrillPage = () => {
 
   // Regular performer view
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-900 via-black to-red-800 p-4">
+    <div className="min-h-screen show-theme p-4">
       <div className="max-w-md mx-auto">
         <div className="flex items-center justify-between mb-6 pt-4">
           <button

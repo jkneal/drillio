@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trophy, Camera } from 'lucide-react';
+import { Trophy, BookOpen } from 'lucide-react';
 import { performerData } from '../data/performerData';
+import ShowBrand from '../components/ShowBrand';
 
 const HomePage = () => {
   const [selectedPerformer, setSelectedPerformer] = useState(null);
@@ -21,10 +22,10 @@ const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-900 via-black to-red-800 p-4">
+    <div className="min-h-screen show-theme p-4">
       <div className="max-w-md mx-auto">
-        <div className="text-center mb-8 pt-8">
-          <div className="flex items-center justify-center mb-4">
+        <div className="text-center mb-6 pt-8">
+          <div className="flex items-center justify-center mb-1">
             <img
               src="/logo.png"
               alt="Drill Book Logo"
@@ -35,37 +36,18 @@ const HomePage = () => {
             />
             <h1 className="text-2xl font-bold text-white tracking-wider uppercase font-sans">Drillio</h1>
           </div>
+          <div className="show-kicker">Digital drill book</div>
         </div>
 
-          <div className="bg-black/40 border-2 border-white/40 rounded-lg p-3 backdrop-blur-sm mb-4 shadow-lg">
-            <div className="flex flex-col items-center">
-              <img
-                  src="/HSlogo.png"
-                  alt="E Logo"
-                  className="w-10 h-6"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                  }}
-              />
-              <h2 className="text-2xl font-bold text-white text-center" style={{"marginTop": "0.2rem", "marginBottom": "0"}}>
-                <div>Edgewood 2025</div>
-                <img 
-                  src="/transient.png" 
-                  alt="Transient" 
-                  className="h-16 mx-auto"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                  }}
-                />
-              </h2>
-            </div>
-            <p className="text-white text-lg mb-4" style={{"marginTop": "0.2rem"}}>
+          <div className="show-card rounded-lg p-4 backdrop-blur-sm mb-4 shadow-lg">
+            <ShowBrand />
+            <p className="text-white text-lg mb-4 mt-4">
               Select your performer:
             </p>
             <select
               value={selectedPerformer || ''}
               onChange={(e) => savePerformerSelection(e.target.value)}
-              className="w-full bg-red-600/20 border border-red-500/30 rounded-lg p-3 text-white text-lg backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+              className="show-select w-full rounded-lg p-3 text-white text-lg focus:outline-none focus:ring-2 focus:ring-red-400"
             >
               <option value="" disabled className="bg-gray-800">Choose your position...</option>
               <option value="Staff" className="bg-gray-800">
@@ -96,7 +78,7 @@ const HomePage = () => {
             {selectedPerformer && (
               <button
                 onClick={() => navigate('/movements')}
-                className="w-full mt-4 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200"
+                className="show-primary-button w-full mt-4 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200"
               >
                 Continue as {performerData[selectedPerformer].name}
               </button>
@@ -108,19 +90,19 @@ const HomePage = () => {
                 <span className="text-yellow-200 font-semibold text-sm">State Champions</span>
                 <Trophy className="w-5 h-5 text-yellow-400 ml-2" />
               </div>
-              <div className="text-xs text-red-200 text-center">2018 • 2022 • 2023 • 2024</div>
+              <div className="text-xs text-red-200 text-center">2018 • 2022 • 2023 • 2024 • 2025</div>
               <div className="text-xs text-red-300 mt-0.5 text-center">ISSMA Open Class C</div>
             </div>
           </div>
           
           <div className="text-center mt-8 space-y-2">
-            {/*<button*/}
-            {/*  onClick={() => navigate('/slide-tracker')}*/}
-            {/*  className="flex items-center justify-center text-white/60 hover:text-white text-sm transition-colors mx-auto"*/}
-            {/*>*/}
-            {/*  <Camera className="w-4 h-4 mr-1" />*/}
-            {/*  Slide Tracker*/}
-            {/*</button>*/}
+            <button
+              onClick={() => navigate('/learning-drill')}
+              className="home-learning-link"
+            >
+              <BookOpen className="w-4 h-4" />
+              <span>Learning Drill</span>
+            </button>
             <button
               onClick={() => navigate('/about')}
               className="text-white/60 hover:text-white text-sm transition-colors"

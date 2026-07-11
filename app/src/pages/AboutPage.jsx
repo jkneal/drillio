@@ -2,12 +2,14 @@ import { useNavigate } from 'react-router-dom';
 import { Home, ChevronRight, Users, Music, Play, SkipForward, ChevronLeft, Lightbulb, Map, Wifi, WifiOff, ArrowRight, Sparkles, StickyNote, Route, Brain, Trophy, Repeat } from 'lucide-react';
 import { movementsConfig } from '../data/movementsConfig';
 import { APP_VERSION } from '../version';
+import { showConfig } from '../data/showConfig';
+import ShowBrand from '../components/ShowBrand';
 
 const AboutPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-900 via-black to-red-800 p-4">
+    <div className="min-h-screen show-theme p-4">
       <div className="max-w-2xl mx-auto">
         <div className="mb-6 pt-4">
           <div className="flex items-center justify-between">
@@ -18,36 +20,16 @@ const AboutPage = () => {
               <Home className="w-6 h-6 mr-2" />
               <span>Home</span>
             </button>
-            <div className="flex flex-col items-center">
-              <img
-                src="/HSlogo.png"
-                alt="E Logo"
-                className="w-8 h-5 mb-1"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                }}
-              />
-              <div className="text-white text-center text-sm">
-                <div>Edgewood 2025</div>
-                <img 
-                  src="/transient.png" 
-                  alt="Transient" 
-                  className="h-10 mx-auto"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                  }}
-                />
-              </div>
-            </div>
+            <ShowBrand compact />
           </div>
         </div>
 
-        <div className="bg-black/40 border-2 border-white/40 rounded-lg p-6 backdrop-blur-sm shadow-lg mb-4">
+        <div className="show-card rounded-lg p-6 backdrop-blur-sm shadow-lg mb-4">
           <h1 className="text-2xl font-bold text-white mb-4 text-center">About Drillio</h1>
           
           <p className="text-white/90 mb-6">
             Drillio is your personal drill book companion for the Edgewood High School Marching Band's 
-            2025 show "Transient". Access your drill positions, movements, and performance tips 
+            {showConfig.year} show "{showConfig.title}". Access your drill positions, movements, and performance tips
             right from your phone!
           </p>
 

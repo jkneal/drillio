@@ -138,7 +138,7 @@ const MusicReviewPage = () => {
   const currentPerformer = performerData[selectedPerformerId];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-900 via-black to-red-800 p-4">
+    <div className="min-h-screen show-theme p-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-6">
@@ -150,12 +150,12 @@ const MusicReviewPage = () => {
             Back to Movements
           </button>
           
-          <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 backdrop-blur-sm rounded-lg p-4 mb-4">
+          <div className="show-card backdrop-blur-sm rounded-lg p-4 mb-4">
             <h1 className="text-2xl font-bold text-white flex items-center justify-center mb-2">
               <Music className="w-6 h-6 mr-2" />
               Music Review
             </h1>
-            <h2 className="text-lg text-purple-300 text-center">
+            <h2 className="text-lg text-yellow-200 text-center">
               {movementsConfig[movement]?.displayName || `Movement ${movement}`}
             </h2>
           </div>

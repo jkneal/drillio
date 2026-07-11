@@ -4,6 +4,9 @@ import {Trophy, Play, X, Route, Music} from 'lucide-react';
 import { performerData } from '../data/performerData';
 import { movementsConfig } from '../data/movementsConfig';
 import PathVisualizerModal from '../components/PathVisualizerModal';
+import ShowBrand from '../components/ShowBrand';
+
+const movementAccentColors = ['#ef2b2d', '#f4ed00', '#244cff'];
 
 const MovementSelectionPage = () => {
   const [selectedPerformer, setSelectedPerformer] = useState(null);
@@ -58,39 +61,23 @@ const MovementSelectionPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-900 via-black to-red-800 p-4">
+    <div className="min-h-screen show-theme p-4">
       <div className="max-w-md mx-auto">
         <div className="mb-6 pt-4">
-          <div className="flex flex-col items-center">
-            <img
-                src="/HSlogo.png"
-                alt="E Logo"
-                className="w-8 h-5 mb-1"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                }}
-            />
-            <div className="text-white text-center">
-              <div>Edgewood 2025</div>
-              <img 
-                src="/transient.png" 
-                alt="Transient" 
-                className="h-10 mx-auto"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                }}
-              />
-            </div>
-          </div>
+          <ShowBrand compact />
         </div>
 
         <div className="space-y-4">
           <h2 className="text-xl font-semibold text-white">Select Movement:</h2>
           <p className="text-white/60 text-sm mb-4">Tap a movement to view your drill sets</p>
-          {Object.keys(currentPerformer.movements).map((movement) => {
+          {Object.keys(currentPerformer.movements).map((movement, index) => {
             const hasSets = currentPerformer.movements[movement].length > 0;
             return (
-              <div key={movement} className={`${hasSets ? 'bg-red-600/20 hover:bg-red-600/30' : 'bg-gray-600/20'} rounded-lg backdrop-blur-sm transition-all duration-200 border ${hasSets ? 'border-red-500/30' : 'border-gray-500/30'} overflow-hidden`}>
+              <div
+                key={movement}
+                className={`${hasSets ? 'show-movement-card' : 'bg-gray-600/20 border-gray-500/30'} rounded-lg backdrop-blur-sm transition-all duration-200 border overflow-hidden`}
+                style={hasSets ? { '--movement-accent': movementAccentColors[index % movementAccentColors.length] } : undefined}
+              >
                 <button
                   onClick={() => hasSets && handleMovementSelect(movement)}
                   className={`w-full text-white px-4 pt-4 ${hasSets ? 'pb-2' : 'pb-4'} text-left ${!hasSets && 'cursor-not-allowed opacity-50'}`}
@@ -105,7 +92,7 @@ const MovementSelectionPage = () => {
                   <div className="flex items-center justify-end space-x-2 px-4 pb-4">
                     <button
                       onClick={() => handleMovementVideoClick(movement)}
-                      className="flex items-center text-green-300 hover:text-green-200 text-sm transition-colors"
+                      className="flex items-center text-red-200 hover:text-white text-sm transition-colors"
                       title="View movement animation"
                     >
                       <Play className="w-4 h-4 mr-1" />
@@ -123,7 +110,7 @@ const MovementSelectionPage = () => {
                     <span className="text-white/30">|</span>
                     <button
                       onClick={() => navigate(`/music-review/${movement}`)}
-                      className="flex items-center text-purple-300 hover:text-purple-200 text-sm transition-colors"
+                      className="flex items-center text-yellow-200 hover:text-white text-sm transition-colors"
                       title="Review music for sets"
                     >
                       <Music className="w-4 h-4 mr-1" />
@@ -162,7 +149,7 @@ const MovementSelectionPage = () => {
                   <span className="text-yellow-200 font-semibold">State Champions</span>
                   <Trophy className="w-6 h-6 text-yellow-400 ml-2" />
                 </div>
-                <div className="text-sm text-red-200 text-center">2018 • 2022 • 2023 • 2024</div>
+                <div className="text-sm text-red-200 text-center">2018 • 2022 • 2023 • 2024 • 2025</div>
                 <div className="text-xs text-red-300 mt-1 text-center">ISSMA Open Class C</div>
               </div>
             </div>

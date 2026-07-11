@@ -1,21 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import MovementSelectionPage from './pages/MovementSelectionPage';
 import DrillPage from './pages/DrillPage';
 import AboutPage from './pages/AboutPage';
-import SlidePracticePage from './pages/SlidePracticePage';
-import SlideTrackerCameraPage from './pages/SlideTrackerCameraPage';
+import LearningDrillPage from './pages/LearningDrillPage';
+import CoordinatePracticePage from './pages/CoordinatePracticePage';
 import MusicReviewPage from './pages/MusicReviewPage';
 import PWAPrompt from './components/PWAPrompt';
-import NotificationManager from './components/NotificationManager';
-import { notificationScheduler } from './utils/notificationScheduler';
 import { APP_VERSION } from './version';
 import './App.css';
 
 function App() {
-  const [updateAvailable, setUpdateAvailable] = useState(false);
-
   useEffect(() => {
     // Check for version update
     const lastVersion = localStorage.getItem('drillioAppVersion');
@@ -31,11 +27,6 @@ function App() {
     }
     localStorage.setItem('drillioAppVersion', APP_VERSION);
     
-    // Start the notification scheduler when app loads
-    if ('Notification' in window && Notification.permission === 'granted') {
-      notificationScheduler.start();
-    }
-
     // Handle service worker updates
     if ('serviceWorker' in navigator) {
       // Use a timeout to prevent blocking if service worker isn't ready
@@ -62,18 +53,6 @@ function App() {
           });
         }, 60000);
 
-        // Listen for new service worker
-        registration.addEventListener('updatefound', () => {
-          const newWorker = registration.installing;
-          if (newWorker) {
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                // New content is available
-                setUpdateAvailable(true);
-              }
-            });
-          }
-        });
       }).catch(err => {
         console.error('Service worker initialization failed:', err);
       });
@@ -88,10 +67,6 @@ function App() {
       });
     }
 
-    // Cleanup on unmount
-    return () => {
-      notificationScheduler.stop();
-    };
   }, []);
 
   return (
@@ -101,13 +76,12 @@ function App() {
         <Route path="/movements" element={<MovementSelectionPage />} />
         <Route path="/drill/:movement" element={<DrillPage />} />
         <Route path="/music-review/:movement" element={<MusicReviewPage />} />
+        <Route path="/learning-drill" element={<LearningDrillPage />} />
+        <Route path="/coordinate-practice" element={<CoordinatePracticePage />} />
         <Route path="/about" element={<AboutPage />} />
-        <Route path="/slide-practice" element={<SlidePracticePage />} />
-        <Route path="/slide-tracker" element={<SlideTrackerCameraPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <PWAPrompt />
-      <NotificationManager />
     </Router>
   );
 }
