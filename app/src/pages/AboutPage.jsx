@@ -28,7 +28,7 @@ const AboutPage = () => {
           <h1 className="text-2xl font-bold text-white mb-4 text-center">About Drillio</h1>
           
           <p className="text-white/90 mb-6">
-            Drillio is your personal drill book companion for the Edgewood High School Marching Band's 
+            Drillio is your personal drill book companion for the Edgewood High School Marching Band's{' '}
             {showConfig.year} show "{showConfig.title}". Access your drill positions, movements, and performance tips
             right from your phone!
           </p>
