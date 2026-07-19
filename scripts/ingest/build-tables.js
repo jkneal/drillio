@@ -158,6 +158,13 @@ function main() {
       if (dlNotes.length > 0) {
         flags.push(`notes mention battery: ${dlNotes.join(' | ')}`);
       }
+      // The chart's right-column reminders often carry the DL's own move/hold
+      // split (e.g. "Other DL Hold 10, Float 10"), which is authoritative over
+      // the position-delta guess — surface it so the count entry gets corrected.
+      const dlReminders = (setInfo.reminders || []).filter(r => batteryNoteRe.test(r));
+      if (dlReminders.length > 0) {
+        flags.push(`right-column DL counts (authoritative — verify entry): ${dlReminders.join(' | ')}`);
+      }
       // Notes without a performer-label prefix (e.g. "Float 16 doubletime,
       // Hold 4") apply to the whole ensemble and can change the move/hold split
       const ensembleNotes = (setInfo.notes || []).filter(

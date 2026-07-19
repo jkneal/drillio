@@ -6,7 +6,8 @@ These PDFs (Sibelius/Opus engraving) expose everything as vectors and fonts:
   - barlines: vertical line objects spanning a staff's height
   - multirest counts: OpusStd size-16 digits above a bar
   - whole-bar rests: '∑' glyphs (OpusStd size-14)
-  - rehearsal marks: Arial-BoldMT size-12 single uppercase letters
+  - rehearsal marks: Arial-BoldMT single uppercase letters (size ~9-14;
+    2026 boxed marks are 13.7, 2025 were 9/12)
   - system-start measure numbers: Arial-ItalicMT size-7 digits (verification)
 
 Output JSON (coordinates in PDF points, top-left origin; multiply by dpi/72
@@ -106,7 +107,7 @@ def chars_by_kind(page):
     for c in chars:
         font = c['fontname'].split('+')[-1]
         size = round(c['size'])
-        if font == 'Arial-BoldMT' and 8 <= size <= 12 and c['text'].isupper() and len(c['text']) == 1:
+        if font == 'Arial-BoldMT' and 8 <= size <= 16 and c['text'].isupper() and len(c['text']) == 1:
             # rehearsal marks are isolated single letters (not words like titles)
             def adjacent(o):
                 return (o is not c and o['fontname'] == c['fontname']

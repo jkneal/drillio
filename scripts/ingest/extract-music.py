@@ -15,6 +15,7 @@ Usage:
 Outputs to <dir>/music/ plus music-report-{n}.json (per set: images made,
 tacet parts, derived rehearsal-mark entry, flags).
 """
+import glob
 import json
 import math
 import os
@@ -217,6 +218,13 @@ def main():
     score_dir = os.path.join(out_dir, 'score')
     os.makedirs(music_dir, exist_ok=True)
     os.makedirs(score_dir, exist_ok=True)
+
+    # Clear this movement's crops from any prior run so stale images aren't left
+    # behind — a set that was non-tacet before but is tacet now (or a previous
+    # season's extra sets) would otherwise linger and get copied downstream.
+    for part in ('Staff', 'SD', 'TD', 'BD'):
+        for f in glob.glob(os.path.join(music_dir, f'{part}{movement}-*.png')):
+            os.remove(f)
 
     sources = dict(parts)
     if score_pdf:

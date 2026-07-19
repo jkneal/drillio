@@ -127,6 +127,13 @@ function main() {
   const drillDir = path.join(args.out, 'drill');
   fs.mkdirSync(drillDir, { recursive: true });
 
+  // Clear this movement's charts from any prior run so stale sets (e.g. a
+  // previous season with more pages) aren't left behind to be copied downstream
+  const stalePng = new RegExp(`^${movement}-\\d+\\.png$`);
+  for (const f of fs.readdirSync(drillDir)) {
+    if (stalePng.test(f)) fs.unlinkSync(path.join(drillDir, f));
+  }
+
   const pageCount = getPageCount(args.pdf);
   console.log(`Movement ${movement}: ${pageCount} pages`);
 
