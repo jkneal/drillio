@@ -587,7 +587,7 @@ export const performerData = {
           "leftRight": "On 50 yd ln",
           "homeVisitor": "12.0 steps Behind Visitor Hash",
           "form": "Battery Column",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Starting position"
         },
         {
@@ -597,9 +597,9 @@ export const performerData = {
           "leftRight": "On 50 yd ln",
           "homeVisitor": "8.0 steps Behind Visitor Hash",
           "form": "Battery Column",
-          "orientation": "Front",
-          "tip": "Hold for 16 counts, then Move Forward (8-to-5) for 4 counts",
-          "movementVector": 0
+          "orientation": "Right End Zone",
+          "tip": "Hold for 16 counts, then Move Left (8-to-5) for 4 counts",
+          "movementVector": 270
         },
         {
           "set": 3,
@@ -608,9 +608,9 @@ export const performerData = {
           "leftRight": "Left: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "On Visitor Hash",
           "form": "Block",
-          "orientation": "Front",
-          "tip": "Hold for 10 counts, then Move Right Forward (9-to-5) for 10 counts",
-          "movementVector": 29
+          "orientation": "Right End Zone",
+          "tip": "Hold for 10 counts, then Move Left Forward (9-to-5) for 10 counts",
+          "movementVector": 299
         },
         {
           "set": 4,
@@ -619,7 +619,7 @@ export const performerData = {
           "leftRight": "Left: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "On Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Hold for 10 counts"
         },
         {
@@ -629,7 +629,7 @@ export const performerData = {
           "leftRight": "Left: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "On Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Hold for 10 counts"
         },
         {
@@ -639,7 +639,7 @@ export const performerData = {
           "leftRight": "Left: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "On Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Hold for 10 counts"
         },
         {
@@ -649,7 +649,7 @@ export const performerData = {
           "leftRight": "Left: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "On Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Hold for 8 counts"
         },
         {
@@ -659,9 +659,9 @@ export const performerData = {
           "leftRight": "Left: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "6.5 steps In Front Of Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
-          "tip": "Move Forward (10-to-5) for 8 counts, then hold for 32 counts",
-          "movementVector": 0
+          "orientation": "Right End Zone",
+          "tip": "Move Left (10-to-5) for 8 counts, then hold for 32 counts",
+          "movementVector": 270
         },
         {
           "set": 9,
@@ -670,9 +670,9 @@ export const performerData = {
           "leftRight": "Left: On 45 yd ln",
           "homeVisitor": "1.5 steps In Front Of Visitor Hash",
           "form": "2 Battery Lines",
-          "orientation": "Front",
-          "tip": "Move Right Backward (10-to-5) for 8 counts",
-          "movementVector": 145
+          "orientation": "Right End Zone",
+          "tip": "Move Right Forward (10-to-5) for 8 counts",
+          "movementVector": 55
         },
         {
           "set": 10,
@@ -681,9 +681,9 @@ export const performerData = {
           "leftRight": "Left: 3.0 steps Inside 40 yd ln",
           "homeVisitor": "6.0 steps In Front Of Visitor Hash",
           "form": "Battery Arc",
-          "orientation": "Front",
-          "tip": "Move Right Forward (10-to-5) for 8 counts, then hold for 36 counts",
-          "movementVector": 48
+          "orientation": "Right End Zone",
+          "tip": "Move Left Forward (10-to-5) for 8 counts, then hold for 36 counts",
+          "movementVector": 318
         }
       ],
       "2": [],
@@ -703,7 +703,7 @@ export const performerData = {
           "leftRight": "On 50 yd ln",
           "homeVisitor": "12.0 steps In Front Of Visitor side line",
           "form": "Battery Column",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Starting position"
         },
         {
@@ -713,9 +713,9 @@ export const performerData = {
           "leftRight": "On 50 yd ln",
           "homeVisitor": "12.0 steps Behind Visitor Hash",
           "form": "Battery Column",
-          "orientation": "Front",
-          "tip": "Hold for 16 counts, then Move Forward (7-to-5) for 4 counts",
-          "movementVector": 0
+          "orientation": "Right End Zone",
+          "tip": "Hold for 16 counts, then Move Left (7-to-5) for 4 counts",
+          "movementVector": 270
         },
         {
           "set": 3,
@@ -724,9 +724,9 @@ export const performerData = {
           "leftRight": "Left: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
           "form": "Block",
-          "orientation": "Front",
-          "tip": "Hold for 10 counts, then Move Right Forward (8-to-5) for 10 counts",
-          "movementVector": 18
+          "orientation": "Right End Zone",
+          "tip": "Hold for 10 counts, then Move Left Forward (8-to-5) for 10 counts",
+          "movementVector": 288
         },
         {
           "set": 4,
@@ -735,7 +735,7 @@ export const performerData = {
           "leftRight": "Left: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Hold for 10 counts"
         },
         {
@@ -745,7 +745,7 @@ export const performerData = {
           "leftRight": "Left: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Hold for 10 counts"
         },
         {
@@ -755,7 +755,7 @@ export const performerData = {
           "leftRight": "Left: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Hold for 10 counts"
         },
         {
@@ -765,7 +765,7 @@ export const performerData = {
           "leftRight": "Left: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Hold for 8 counts"
         },
         {
@@ -775,9 +775,9 @@ export const performerData = {
           "leftRight": "Left: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "4.0 steps In Front Of Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
-          "tip": "Move Forward (10-to-5) for 8 counts, then hold for 32 counts",
-          "movementVector": 0
+          "orientation": "Right End Zone",
+          "tip": "Move Left (10-to-5) for 8 counts, then hold for 32 counts",
+          "movementVector": 270
         },
         {
           "set": 9,
@@ -786,9 +786,9 @@ export const performerData = {
           "leftRight": "Left: 3.0 steps Inside 45 yd ln",
           "homeVisitor": "1.5 steps In Front Of Visitor Hash",
           "form": "2 Battery Lines",
-          "orientation": "Front",
-          "tip": "Move Right Backward (20-to-5) for 8 counts",
-          "movementVector": 141
+          "orientation": "Right End Zone",
+          "tip": "Move Right Forward (20-to-5) for 8 counts",
+          "movementVector": 51
         },
         {
           "set": 10,
@@ -797,9 +797,9 @@ export const performerData = {
           "leftRight": "Left: 1.75 steps Outside 45 yd ln",
           "homeVisitor": "4.75 steps In Front Of Visitor Hash",
           "form": "Battery Arc",
-          "orientation": "Front",
-          "tip": "Move Right Forward (11-to-5) for 8 counts, then hold for 36 counts",
-          "movementVector": 56
+          "orientation": "Right End Zone",
+          "tip": "Move Left Forward (11-to-5) for 8 counts, then hold for 36 counts",
+          "movementVector": 326
         }
       ],
       "2": [],
@@ -819,7 +819,7 @@ export const performerData = {
           "leftRight": "On 50 yd ln",
           "homeVisitor": "10.0 steps In Front Of Visitor side line",
           "form": "Battery Column",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Starting position"
         },
         {
@@ -829,9 +829,9 @@ export const performerData = {
           "leftRight": "On 50 yd ln",
           "homeVisitor": "14.0 steps In Front Of Visitor side line",
           "form": "Battery Column",
-          "orientation": "Front",
-          "tip": "Hold for 16 counts, then Move Forward (8-to-5) for 4 counts",
-          "movementVector": 0
+          "orientation": "Right End Zone",
+          "tip": "Hold for 16 counts, then Move Left (8-to-5) for 4 counts",
+          "movementVector": 270
         },
         {
           "set": 3,
@@ -840,9 +840,9 @@ export const performerData = {
           "leftRight": "On 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
           "form": "Block",
-          "orientation": "Front",
-          "tip": "Hold for 10 counts, then Move Forward (7-to-5) for 10 counts",
-          "movementVector": 0
+          "orientation": "Right End Zone",
+          "tip": "Hold for 10 counts, then Move Left (7-to-5) for 10 counts",
+          "movementVector": 270
         },
         {
           "set": 4,
@@ -851,7 +851,7 @@ export const performerData = {
           "leftRight": "On 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Hold for 10 counts"
         },
         {
@@ -861,7 +861,7 @@ export const performerData = {
           "leftRight": "On 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Hold for 10 counts"
         },
         {
@@ -871,7 +871,7 @@ export const performerData = {
           "leftRight": "On 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Hold for 10 counts"
         },
         {
@@ -881,7 +881,7 @@ export const performerData = {
           "leftRight": "On 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Hold for 8 counts"
         },
         {
@@ -891,9 +891,9 @@ export const performerData = {
           "leftRight": "On 50 yd ln",
           "homeVisitor": "4.0 steps In Front Of Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
-          "tip": "Move Forward (10-to-5) for 8 counts, then hold for 32 counts",
-          "movementVector": 0
+          "orientation": "Right End Zone",
+          "tip": "Move Left (10-to-5) for 8 counts, then hold for 32 counts",
+          "movementVector": 270
         },
         {
           "set": 9,
@@ -902,9 +902,9 @@ export const performerData = {
           "leftRight": "Left: 2.0 steps Outside 50 yd ln",
           "homeVisitor": "1.5 steps In Front Of Visitor Hash",
           "form": "2 Battery Lines",
-          "orientation": "Front",
-          "tip": "Move Right Backward (20-to-5) for 8 counts",
-          "movementVector": 141
+          "orientation": "Right End Zone",
+          "tip": "Move Right Forward (20-to-5) for 8 counts",
+          "movementVector": 51
         },
         {
           "set": 10,
@@ -913,9 +913,9 @@ export const performerData = {
           "leftRight": "Left: 1.5 steps Inside 45 yd ln",
           "homeVisitor": "4.5 steps In Front Of Visitor Hash",
           "form": "Battery Arc",
-          "orientation": "Front",
-          "tip": "Move Right Forward (12-to-5) for 8 counts, then hold for 36 counts",
-          "movementVector": 56
+          "orientation": "Right End Zone",
+          "tip": "Move Left Forward (12-to-5) for 8 counts, then hold for 36 counts",
+          "movementVector": 326
         }
       ],
       "2": [],
@@ -935,7 +935,7 @@ export const performerData = {
           "leftRight": "On 50 yd ln",
           "homeVisitor": "14.0 steps In Front Of Visitor side line",
           "form": "Battery Column",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Starting position"
         },
         {
@@ -945,9 +945,9 @@ export const performerData = {
           "leftRight": "On 50 yd ln",
           "homeVisitor": "10.0 steps Behind Visitor Hash",
           "form": "Battery Column",
-          "orientation": "Front",
-          "tip": "Hold for 16 counts, then Move Forward (7-to-5) for 4 counts",
-          "movementVector": 0
+          "orientation": "Right End Zone",
+          "tip": "Hold for 16 counts, then Move Left (7-to-5) for 4 counts",
+          "movementVector": 270
         },
         {
           "set": 3,
@@ -956,9 +956,9 @@ export const performerData = {
           "leftRight": "Right: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
           "form": "Block",
-          "orientation": "Front",
-          "tip": "Hold for 10 counts, then Move Left Forward (10-to-5) for 10 counts",
-          "movementVector": 338
+          "orientation": "Right End Zone",
+          "tip": "Hold for 10 counts, then Move Left Backward (10-to-5) for 10 counts",
+          "movementVector": 248
         },
         {
           "set": 4,
@@ -967,7 +967,7 @@ export const performerData = {
           "leftRight": "Right: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Hold for 10 counts"
         },
         {
@@ -977,7 +977,7 @@ export const performerData = {
           "leftRight": "Right: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Hold for 10 counts"
         },
         {
@@ -987,7 +987,7 @@ export const performerData = {
           "leftRight": "Right: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Hold for 10 counts"
         },
         {
@@ -997,7 +997,7 @@ export const performerData = {
           "leftRight": "Right: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Hold for 8 counts"
         },
         {
@@ -1007,9 +1007,9 @@ export const performerData = {
           "leftRight": "Right: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "4.0 steps In Front Of Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
-          "tip": "Move Forward (10-to-5) for 8 counts, then hold for 32 counts",
-          "movementVector": 0
+          "orientation": "Right End Zone",
+          "tip": "Move Left (10-to-5) for 8 counts, then hold for 32 counts",
+          "movementVector": 270
         },
         {
           "set": 9,
@@ -1018,9 +1018,9 @@ export const performerData = {
           "leftRight": "Right: 1.0 steps Outside 50 yd ln",
           "homeVisitor": "1.5 steps In Front Of Visitor Hash",
           "form": "2 Battery Lines",
-          "orientation": "Front",
-          "tip": "Move Right Backward (20-to-5) for 8 counts",
-          "movementVector": 141
+          "orientation": "Right End Zone",
+          "tip": "Move Right Forward (20-to-5) for 8 counts",
+          "movementVector": 51
         },
         {
           "set": 10,
@@ -1029,9 +1029,9 @@ export const performerData = {
           "leftRight": "Left: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "4.75 steps In Front Of Visitor Hash",
           "form": "Battery Arc",
-          "orientation": "Front",
-          "tip": "Move Right Forward (12-to-5) for 8 counts, then hold for 36 counts",
-          "movementVector": 51
+          "orientation": "Right End Zone",
+          "tip": "Move Left Forward (12-to-5) for 8 counts, then hold for 36 counts",
+          "movementVector": 321
         }
       ],
       "2": [],
@@ -1051,7 +1051,7 @@ export const performerData = {
           "leftRight": "On 50 yd ln",
           "homeVisitor": "10.0 steps Behind Visitor Hash",
           "form": "Battery Column",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Starting position"
         },
         {
@@ -1061,9 +1061,9 @@ export const performerData = {
           "leftRight": "On 50 yd ln",
           "homeVisitor": "6.0 steps Behind Visitor Hash",
           "form": "Battery Column",
-          "orientation": "Front",
-          "tip": "Hold for 16 counts, then Move Forward (8-to-5) for 4 counts",
-          "movementVector": 0
+          "orientation": "Right End Zone",
+          "tip": "Hold for 16 counts, then Move Left (8-to-5) for 4 counts",
+          "movementVector": 270
         },
         {
           "set": 3,
@@ -1072,9 +1072,9 @@ export const performerData = {
           "leftRight": "Right: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "On Visitor Hash",
           "form": "Block",
-          "orientation": "Front",
-          "tip": "Hold for 10 counts, then Move Left Forward (11-to-5) for 10 counts",
-          "movementVector": 323
+          "orientation": "Right End Zone",
+          "tip": "Hold for 10 counts, then Move Left Backward (11-to-5) for 10 counts",
+          "movementVector": 233
         },
         {
           "set": 4,
@@ -1083,7 +1083,7 @@ export const performerData = {
           "leftRight": "Right: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "On Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Hold for 10 counts"
         },
         {
@@ -1093,7 +1093,7 @@ export const performerData = {
           "leftRight": "Right: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "On Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Hold for 10 counts"
         },
         {
@@ -1103,7 +1103,7 @@ export const performerData = {
           "leftRight": "Right: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "On Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Hold for 10 counts"
         },
         {
@@ -1113,7 +1113,7 @@ export const performerData = {
           "leftRight": "Right: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "On Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
+          "orientation": "Right End Zone",
           "tip": "Hold for 8 counts"
         },
         {
@@ -1123,9 +1123,9 @@ export const performerData = {
           "leftRight": "Right: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "6.5 steps In Front Of Visitor Hash",
           "form": "Battery Line",
-          "orientation": "Front",
-          "tip": "Move Forward (10-to-5) for 8 counts, then hold for 32 counts",
-          "movementVector": 0
+          "orientation": "Right End Zone",
+          "tip": "Move Left (10-to-5) for 8 counts, then hold for 32 counts",
+          "movementVector": 270
         },
         {
           "set": 9,
@@ -1134,9 +1134,9 @@ export const performerData = {
           "leftRight": "Right: 4.0 steps Outside 50 yd ln",
           "homeVisitor": "1.5 steps In Front Of Visitor Hash",
           "form": "2 Battery Lines",
-          "orientation": "Front",
-          "tip": "Move Right Backward (13-to-5) for 8 counts",
-          "movementVector": 174
+          "orientation": "Right End Zone",
+          "tip": "Move Right Forward (13-to-5) for 8 counts",
+          "movementVector": 84
         },
         {
           "set": 10,
@@ -1145,9 +1145,9 @@ export const performerData = {
           "leftRight": "Right: 0.25 steps Outside 50 yd ln",
           "homeVisitor": "5.75 steps In Front Of Visitor Hash",
           "form": "Battery Arc",
-          "orientation": "Front",
-          "tip": "Move Right Forward (11-to-5) for 8 counts, then hold for 36 counts",
-          "movementVector": 41
+          "orientation": "Right End Zone",
+          "tip": "Move Left Forward (11-to-5) for 8 counts, then hold for 36 counts",
+          "movementVector": 311
         }
       ],
       "2": [],
