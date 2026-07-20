@@ -16,7 +16,7 @@ export const performerData = {
         },
         {
           "set": 2,
-          "measures": "A1 - 7",
+          "measures": "2 - 7",
           "counts": "20",
           "leftRight": "Left: 1.5 steps Outside 50 yd ln",
           "homeVisitor": "On Visitor Hash",
@@ -27,7 +27,7 @@ export const performerData = {
         },
         {
           "set": 3,
-          "measures": "B8 - 10",
+          "measures": "8 - 13",
           "counts": "20",
           "leftRight": "Left: 1.5 steps Outside 50 yd ln",
           "homeVisitor": "On Visitor Hash",
@@ -37,7 +37,7 @@ export const performerData = {
         },
         {
           "set": 4,
-          "measures": "B11 - 13",
+          "measures": "14 - 16",
           "counts": "10",
           "leftRight": "Left: 1.5 steps Outside 50 yd ln",
           "homeVisitor": "On Visitor Hash",
@@ -47,7 +47,7 @@ export const performerData = {
         },
         {
           "set": 5,
-          "measures": "C14 - 16",
+          "measures": "17 - 19",
           "counts": "10",
           "leftRight": "Left: 1.5 steps Outside 50 yd ln",
           "homeVisitor": "On Visitor Hash",
@@ -57,7 +57,7 @@ export const performerData = {
         },
         {
           "set": 6,
-          "measures": "C17 - 19",
+          "measures": "20 - 22",
           "counts": "10",
           "leftRight": "Left: 1.5 steps Outside 50 yd ln",
           "homeVisitor": "On Visitor Hash",
@@ -67,7 +67,7 @@ export const performerData = {
         },
         {
           "set": 7,
-          "measures": "D20 - 24",
+          "measures": "23 - 24",
           "counts": "8",
           "leftRight": "Left: 1.5 steps Outside 50 yd ln",
           "homeVisitor": "On Visitor Hash",
@@ -77,7 +77,7 @@ export const performerData = {
         },
         {
           "set": 8,
-          "measures": "E25 - G34",
+          "measures": "25 - 34",
           "counts": "40",
           "leftRight": "Left: 1.5 steps Outside 50 yd ln",
           "homeVisitor": "6.5 steps In Front Of Visitor Hash",
@@ -88,7 +88,7 @@ export const performerData = {
         },
         {
           "set": 9,
-          "measures": "H35 - 36",
+          "measures": "35 - 36",
           "counts": "8",
           "leftRight": "Left: 1.5 steps Outside 50 yd ln",
           "homeVisitor": "9.5 steps In Front Of Visitor Hash",
@@ -99,7 +99,7 @@ export const performerData = {
         },
         {
           "set": 10,
-          "measures": "H37 - 47",
+          "measures": "37 - 47",
           "counts": "44",
           "leftRight": "Right: 2.75 steps Outside 50 yd ln",
           "homeVisitor": "8.0 steps In Front Of Visitor Hash",
@@ -131,7 +131,7 @@ export const performerData = {
         },
         {
           "set": 2,
-          "measures": "A1 - 7",
+          "measures": "2 - 7",
           "counts": "20",
           "leftRight": "On 50 yd ln",
           "homeVisitor": "4.0 steps Behind Visitor Hash",
@@ -142,7 +142,7 @@ export const performerData = {
         },
         {
           "set": 3,
-          "measures": "B8 - 10",
+          "measures": "8 - 13",
           "counts": "20",
           "leftRight": "Right: 1.5 steps Outside 50 yd ln",
           "homeVisitor": "On Visitor Hash",
@@ -153,7 +153,7 @@ export const performerData = {
         },
         {
           "set": 4,
-          "measures": "B11 - 13",
+          "measures": "14 - 16",
           "counts": "10",
           "leftRight": "Right: 1.5 steps Outside 50 yd ln",
           "homeVisitor": "On Visitor Hash",
@@ -163,7 +163,7 @@ export const performerData = {
         },
         {
           "set": 5,
-          "measures": "C14 - 16",
+          "measures": "17 - 19",
           "counts": "10",
           "leftRight": "Right: 1.5 steps Outside 50 yd ln",
           "homeVisitor": "On Visitor Hash",
@@ -173,7 +173,7 @@ export const performerData = {
         },
         {
           "set": 6,
-          "measures": "C17 - 19",
+          "measures": "20 - 22",
           "counts": "10",
           "leftRight": "Right: 1.5 steps Outside 50 yd ln",
           "homeVisitor": "On Visitor Hash",
@@ -183,7 +183,7 @@ export const performerData = {
         },
         {
           "set": 7,
-          "measures": "D20 - 24",
+          "measures": "23 - 24",
           "counts": "8",
           "leftRight": "Right: 1.5 steps Outside 50 yd ln",
           "homeVisitor": "On Visitor Hash",
@@ -193,7 +193,7 @@ export const performerData = {
         },
         {
           "set": 8,
-          "measures": "E25 - G34",
+          "measures": "25 - 34",
           "counts": "40",
           "leftRight": "Right: 1.5 steps Outside 50 yd ln",
           "homeVisitor": "6.5 steps In Front Of Visitor Hash",
@@ -204,7 +204,7 @@ export const performerData = {
         },
         {
           "set": 9,
-          "measures": "H35 - 36",
+          "measures": "35 - 36",
           "counts": "8",
           "leftRight": "Right: 1.5 steps Outside 50 yd ln",
           "homeVisitor": "9.5 steps In Front Of Visitor Hash",
@@ -215,7 +215,7 @@ export const performerData = {
         },
         {
           "set": 10,
-          "measures": "H37 - 47",
+          "measures": "37 - 47",
           "counts": "44",
           "leftRight": "Right: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "10.75 steps In Front Of Visitor Hash",
@@ -247,7 +247,7 @@ export const performerData = {
         },
         {
           "set": 2,
-          "measures": "A1 - 7",
+          "measures": "2 - 7",
           "counts": "20",
           "leftRight": "On 50 yd ln",
           "homeVisitor": "2.0 steps Behind Visitor Hash",
@@ -258,7 +258,7 @@ export const performerData = {
         },
         {
           "set": 3,
-          "measures": "B8 - 10",
+          "measures": "8 - 13",
           "counts": "20",
           "leftRight": "Right: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps In Front Of Visitor Hash",
@@ -269,7 +269,7 @@ export const performerData = {
         },
         {
           "set": 4,
-          "measures": "B11 - 13",
+          "measures": "14 - 16",
           "counts": "10",
           "leftRight": "Right: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps In Front Of Visitor Hash",
@@ -279,7 +279,7 @@ export const performerData = {
         },
         {
           "set": 5,
-          "measures": "C14 - 16",
+          "measures": "17 - 19",
           "counts": "10",
           "leftRight": "Right: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps In Front Of Visitor Hash",
@@ -289,7 +289,7 @@ export const performerData = {
         },
         {
           "set": 6,
-          "measures": "C17 - 19",
+          "measures": "20 - 22",
           "counts": "10",
           "leftRight": "Right: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps In Front Of Visitor Hash",
@@ -299,7 +299,7 @@ export const performerData = {
         },
         {
           "set": 7,
-          "measures": "D20 - 24",
+          "measures": "23 - 24",
           "counts": "8",
           "leftRight": "Right: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps In Front Of Visitor Hash",
@@ -309,7 +309,7 @@ export const performerData = {
         },
         {
           "set": 8,
-          "measures": "E25 - G34",
+          "measures": "25 - 34",
           "counts": "40",
           "leftRight": "Right: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "9.0 steps In Front Of Visitor Hash",
@@ -320,7 +320,7 @@ export const performerData = {
         },
         {
           "set": 9,
-          "measures": "H35 - 36",
+          "measures": "35 - 36",
           "counts": "8",
           "leftRight": "Right: 2.0 steps Outside 50 yd ln",
           "homeVisitor": "14.0 steps In Front Of Visitor Hash",
@@ -331,7 +331,7 @@ export const performerData = {
         },
         {
           "set": 10,
-          "measures": "H37 - 47",
+          "measures": "37 - 47",
           "counts": "44",
           "leftRight": "Right: 3.25 steps Inside 45 yd ln",
           "homeVisitor": "13.75 steps Behind Home Hash",
@@ -363,7 +363,7 @@ export const performerData = {
         },
         {
           "set": 2,
-          "measures": "A1 - 7",
+          "measures": "2 - 7",
           "counts": "20",
           "leftRight": "On 50 yd ln",
           "homeVisitor": "2.5 steps In Front Of Visitor Hash",
@@ -374,7 +374,7 @@ export const performerData = {
         },
         {
           "set": 3,
-          "measures": "B8 - 10",
+          "measures": "8 - 13",
           "counts": "20",
           "leftRight": "On 50 yd ln",
           "homeVisitor": "2.5 steps In Front Of Visitor Hash",
@@ -384,7 +384,7 @@ export const performerData = {
         },
         {
           "set": 4,
-          "measures": "B11 - 13",
+          "measures": "14 - 16",
           "counts": "10",
           "leftRight": "On 50 yd ln",
           "homeVisitor": "2.5 steps In Front Of Visitor Hash",
@@ -394,7 +394,7 @@ export const performerData = {
         },
         {
           "set": 5,
-          "measures": "C14 - 16",
+          "measures": "17 - 19",
           "counts": "10",
           "leftRight": "On 50 yd ln",
           "homeVisitor": "2.5 steps In Front Of Visitor Hash",
@@ -404,7 +404,7 @@ export const performerData = {
         },
         {
           "set": 6,
-          "measures": "C17 - 19",
+          "measures": "20 - 22",
           "counts": "10",
           "leftRight": "On 50 yd ln",
           "homeVisitor": "2.5 steps In Front Of Visitor Hash",
@@ -414,7 +414,7 @@ export const performerData = {
         },
         {
           "set": 7,
-          "measures": "D20 - 24",
+          "measures": "23 - 24",
           "counts": "8",
           "leftRight": "On 50 yd ln",
           "homeVisitor": "2.5 steps In Front Of Visitor Hash",
@@ -424,7 +424,7 @@ export const performerData = {
         },
         {
           "set": 8,
-          "measures": "E25 - G34",
+          "measures": "25 - 34",
           "counts": "40",
           "leftRight": "On 50 yd ln",
           "homeVisitor": "9.0 steps In Front Of Visitor Hash",
@@ -435,7 +435,7 @@ export const performerData = {
         },
         {
           "set": 9,
-          "measures": "H35 - 36",
+          "measures": "35 - 36",
           "counts": "8",
           "leftRight": "On 50 yd ln",
           "homeVisitor": "14.0 steps In Front Of Visitor Hash",
@@ -446,7 +446,7 @@ export const performerData = {
         },
         {
           "set": 10,
-          "measures": "H37 - 47",
+          "measures": "37 - 47",
           "counts": "44",
           "leftRight": "Right: 3.75 steps Outside 50 yd ln",
           "homeVisitor": "10.5 steps Behind Home Hash",
@@ -478,7 +478,7 @@ export const performerData = {
         },
         {
           "set": 2,
-          "measures": "A1 - 7",
+          "measures": "2 - 7",
           "counts": "20",
           "leftRight": "Left: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps In Front Of Visitor Hash",
@@ -488,7 +488,7 @@ export const performerData = {
         },
         {
           "set": 3,
-          "measures": "B8 - 10",
+          "measures": "8 - 13",
           "counts": "20",
           "leftRight": "Left: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps In Front Of Visitor Hash",
@@ -498,7 +498,7 @@ export const performerData = {
         },
         {
           "set": 4,
-          "measures": "B11 - 13",
+          "measures": "14 - 16",
           "counts": "10",
           "leftRight": "Left: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps In Front Of Visitor Hash",
@@ -508,7 +508,7 @@ export const performerData = {
         },
         {
           "set": 5,
-          "measures": "C14 - 16",
+          "measures": "17 - 19",
           "counts": "10",
           "leftRight": "Left: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps In Front Of Visitor Hash",
@@ -518,7 +518,7 @@ export const performerData = {
         },
         {
           "set": 6,
-          "measures": "C17 - 19",
+          "measures": "20 - 22",
           "counts": "10",
           "leftRight": "Left: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps In Front Of Visitor Hash",
@@ -528,7 +528,7 @@ export const performerData = {
         },
         {
           "set": 7,
-          "measures": "D20 - 24",
+          "measures": "23 - 24",
           "counts": "8",
           "leftRight": "Left: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps In Front Of Visitor Hash",
@@ -538,7 +538,7 @@ export const performerData = {
         },
         {
           "set": 8,
-          "measures": "E25 - G34",
+          "measures": "25 - 34",
           "counts": "40",
           "leftRight": "Left: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "9.0 steps In Front Of Visitor Hash",
@@ -549,7 +549,7 @@ export const performerData = {
         },
         {
           "set": 9,
-          "measures": "H35 - 36",
+          "measures": "35 - 36",
           "counts": "8",
           "leftRight": "Left: 2.0 steps Outside 50 yd ln",
           "homeVisitor": "14.0 steps In Front Of Visitor Hash",
@@ -560,7 +560,7 @@ export const performerData = {
         },
         {
           "set": 10,
-          "measures": "H37 - 47",
+          "measures": "37 - 47",
           "counts": "44",
           "leftRight": "Right: 1.5 steps Outside 50 yd ln",
           "homeVisitor": "8.0 steps Behind Home Hash",
@@ -592,7 +592,7 @@ export const performerData = {
         },
         {
           "set": 2,
-          "measures": "A1 - 7",
+          "measures": "2 - 7",
           "counts": "20",
           "leftRight": "On 50 yd ln",
           "homeVisitor": "8.0 steps Behind Visitor Hash",
@@ -603,7 +603,7 @@ export const performerData = {
         },
         {
           "set": 3,
-          "measures": "B8 - 10",
+          "measures": "8 - 13",
           "counts": "20",
           "leftRight": "Left: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "On Visitor Hash",
@@ -614,7 +614,7 @@ export const performerData = {
         },
         {
           "set": 4,
-          "measures": "B11 - 13",
+          "measures": "14 - 16",
           "counts": "10",
           "leftRight": "Left: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "On Visitor Hash",
@@ -624,7 +624,7 @@ export const performerData = {
         },
         {
           "set": 5,
-          "measures": "C14 - 16",
+          "measures": "17 - 19",
           "counts": "10",
           "leftRight": "Left: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "On Visitor Hash",
@@ -634,7 +634,7 @@ export const performerData = {
         },
         {
           "set": 6,
-          "measures": "C17 - 19",
+          "measures": "20 - 22",
           "counts": "10",
           "leftRight": "Left: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "On Visitor Hash",
@@ -644,7 +644,7 @@ export const performerData = {
         },
         {
           "set": 7,
-          "measures": "D20 - 24",
+          "measures": "23 - 24",
           "counts": "8",
           "leftRight": "Left: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "On Visitor Hash",
@@ -654,7 +654,7 @@ export const performerData = {
         },
         {
           "set": 8,
-          "measures": "E25 - G34",
+          "measures": "25 - 34",
           "counts": "40",
           "leftRight": "Left: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "6.5 steps In Front Of Visitor Hash",
@@ -665,7 +665,7 @@ export const performerData = {
         },
         {
           "set": 9,
-          "measures": "H35 - 36",
+          "measures": "35 - 36",
           "counts": "8",
           "leftRight": "Left: On 45 yd ln",
           "homeVisitor": "1.5 steps In Front Of Visitor Hash",
@@ -676,7 +676,7 @@ export const performerData = {
         },
         {
           "set": 10,
-          "measures": "H37 - 47",
+          "measures": "37 - 47",
           "counts": "44",
           "leftRight": "Left: 3.0 steps Inside 40 yd ln",
           "homeVisitor": "6.0 steps In Front Of Visitor Hash",
@@ -708,7 +708,7 @@ export const performerData = {
         },
         {
           "set": 2,
-          "measures": "A1 - 7",
+          "measures": "2 - 7",
           "counts": "20",
           "leftRight": "On 50 yd ln",
           "homeVisitor": "12.0 steps Behind Visitor Hash",
@@ -719,7 +719,7 @@ export const performerData = {
         },
         {
           "set": 3,
-          "measures": "B8 - 10",
+          "measures": "8 - 13",
           "counts": "20",
           "leftRight": "Left: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
@@ -730,7 +730,7 @@ export const performerData = {
         },
         {
           "set": 4,
-          "measures": "B11 - 13",
+          "measures": "14 - 16",
           "counts": "10",
           "leftRight": "Left: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
@@ -740,7 +740,7 @@ export const performerData = {
         },
         {
           "set": 5,
-          "measures": "C14 - 16",
+          "measures": "17 - 19",
           "counts": "10",
           "leftRight": "Left: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
@@ -750,7 +750,7 @@ export const performerData = {
         },
         {
           "set": 6,
-          "measures": "C17 - 19",
+          "measures": "20 - 22",
           "counts": "10",
           "leftRight": "Left: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
@@ -760,7 +760,7 @@ export const performerData = {
         },
         {
           "set": 7,
-          "measures": "D20 - 24",
+          "measures": "23 - 24",
           "counts": "8",
           "leftRight": "Left: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
@@ -770,7 +770,7 @@ export const performerData = {
         },
         {
           "set": 8,
-          "measures": "E25 - G34",
+          "measures": "25 - 34",
           "counts": "40",
           "leftRight": "Left: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "4.0 steps In Front Of Visitor Hash",
@@ -781,7 +781,7 @@ export const performerData = {
         },
         {
           "set": 9,
-          "measures": "H35 - 36",
+          "measures": "35 - 36",
           "counts": "8",
           "leftRight": "Left: 3.0 steps Inside 45 yd ln",
           "homeVisitor": "1.5 steps In Front Of Visitor Hash",
@@ -792,7 +792,7 @@ export const performerData = {
         },
         {
           "set": 10,
-          "measures": "H37 - 47",
+          "measures": "37 - 47",
           "counts": "44",
           "leftRight": "Left: 1.75 steps Outside 45 yd ln",
           "homeVisitor": "4.75 steps In Front Of Visitor Hash",
@@ -824,7 +824,7 @@ export const performerData = {
         },
         {
           "set": 2,
-          "measures": "A1 - 7",
+          "measures": "2 - 7",
           "counts": "20",
           "leftRight": "On 50 yd ln",
           "homeVisitor": "14.0 steps In Front Of Visitor side line",
@@ -835,7 +835,7 @@ export const performerData = {
         },
         {
           "set": 3,
-          "measures": "B8 - 10",
+          "measures": "8 - 13",
           "counts": "20",
           "leftRight": "On 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
@@ -846,7 +846,7 @@ export const performerData = {
         },
         {
           "set": 4,
-          "measures": "B11 - 13",
+          "measures": "14 - 16",
           "counts": "10",
           "leftRight": "On 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
@@ -856,7 +856,7 @@ export const performerData = {
         },
         {
           "set": 5,
-          "measures": "C14 - 16",
+          "measures": "17 - 19",
           "counts": "10",
           "leftRight": "On 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
@@ -866,7 +866,7 @@ export const performerData = {
         },
         {
           "set": 6,
-          "measures": "C17 - 19",
+          "measures": "20 - 22",
           "counts": "10",
           "leftRight": "On 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
@@ -876,7 +876,7 @@ export const performerData = {
         },
         {
           "set": 7,
-          "measures": "D20 - 24",
+          "measures": "23 - 24",
           "counts": "8",
           "leftRight": "On 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
@@ -886,7 +886,7 @@ export const performerData = {
         },
         {
           "set": 8,
-          "measures": "E25 - G34",
+          "measures": "25 - 34",
           "counts": "40",
           "leftRight": "On 50 yd ln",
           "homeVisitor": "4.0 steps In Front Of Visitor Hash",
@@ -897,7 +897,7 @@ export const performerData = {
         },
         {
           "set": 9,
-          "measures": "H35 - 36",
+          "measures": "35 - 36",
           "counts": "8",
           "leftRight": "Left: 2.0 steps Outside 50 yd ln",
           "homeVisitor": "1.5 steps In Front Of Visitor Hash",
@@ -908,7 +908,7 @@ export const performerData = {
         },
         {
           "set": 10,
-          "measures": "H37 - 47",
+          "measures": "37 - 47",
           "counts": "44",
           "leftRight": "Left: 1.5 steps Inside 45 yd ln",
           "homeVisitor": "4.5 steps In Front Of Visitor Hash",
@@ -940,7 +940,7 @@ export const performerData = {
         },
         {
           "set": 2,
-          "measures": "A1 - 7",
+          "measures": "2 - 7",
           "counts": "20",
           "leftRight": "On 50 yd ln",
           "homeVisitor": "10.0 steps Behind Visitor Hash",
@@ -951,7 +951,7 @@ export const performerData = {
         },
         {
           "set": 3,
-          "measures": "B8 - 10",
+          "measures": "8 - 13",
           "counts": "20",
           "leftRight": "Right: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
@@ -962,7 +962,7 @@ export const performerData = {
         },
         {
           "set": 4,
-          "measures": "B11 - 13",
+          "measures": "14 - 16",
           "counts": "10",
           "leftRight": "Right: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
@@ -972,7 +972,7 @@ export const performerData = {
         },
         {
           "set": 5,
-          "measures": "C14 - 16",
+          "measures": "17 - 19",
           "counts": "10",
           "leftRight": "Right: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
@@ -982,7 +982,7 @@ export const performerData = {
         },
         {
           "set": 6,
-          "measures": "C17 - 19",
+          "measures": "20 - 22",
           "counts": "10",
           "leftRight": "Right: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
@@ -992,7 +992,7 @@ export const performerData = {
         },
         {
           "set": 7,
-          "measures": "D20 - 24",
+          "measures": "23 - 24",
           "counts": "8",
           "leftRight": "Right: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "2.5 steps Behind Visitor Hash",
@@ -1002,7 +1002,7 @@ export const performerData = {
         },
         {
           "set": 8,
-          "measures": "E25 - G34",
+          "measures": "25 - 34",
           "counts": "40",
           "leftRight": "Right: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "4.0 steps In Front Of Visitor Hash",
@@ -1013,7 +1013,7 @@ export const performerData = {
         },
         {
           "set": 9,
-          "measures": "H35 - 36",
+          "measures": "35 - 36",
           "counts": "8",
           "leftRight": "Right: 1.0 steps Outside 50 yd ln",
           "homeVisitor": "1.5 steps In Front Of Visitor Hash",
@@ -1024,7 +1024,7 @@ export const performerData = {
         },
         {
           "set": 10,
-          "measures": "H37 - 47",
+          "measures": "37 - 47",
           "counts": "44",
           "leftRight": "Left: 3.0 steps Outside 50 yd ln",
           "homeVisitor": "4.75 steps In Front Of Visitor Hash",
@@ -1056,7 +1056,7 @@ export const performerData = {
         },
         {
           "set": 2,
-          "measures": "A1 - 7",
+          "measures": "2 - 7",
           "counts": "20",
           "leftRight": "On 50 yd ln",
           "homeVisitor": "6.0 steps Behind Visitor Hash",
@@ -1067,7 +1067,7 @@ export const performerData = {
         },
         {
           "set": 3,
-          "measures": "B8 - 10",
+          "measures": "8 - 13",
           "counts": "20",
           "leftRight": "Right: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "On Visitor Hash",
@@ -1078,7 +1078,7 @@ export const performerData = {
         },
         {
           "set": 4,
-          "measures": "B11 - 13",
+          "measures": "14 - 16",
           "counts": "10",
           "leftRight": "Right: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "On Visitor Hash",
@@ -1088,7 +1088,7 @@ export const performerData = {
         },
         {
           "set": 5,
-          "measures": "C14 - 16",
+          "measures": "17 - 19",
           "counts": "10",
           "leftRight": "Right: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "On Visitor Hash",
@@ -1098,7 +1098,7 @@ export const performerData = {
         },
         {
           "set": 6,
-          "measures": "C17 - 19",
+          "measures": "20 - 22",
           "counts": "10",
           "leftRight": "Right: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "On Visitor Hash",
@@ -1108,7 +1108,7 @@ export const performerData = {
         },
         {
           "set": 7,
-          "measures": "D20 - 24",
+          "measures": "23 - 24",
           "counts": "8",
           "leftRight": "Right: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "On Visitor Hash",
@@ -1118,7 +1118,7 @@ export const performerData = {
         },
         {
           "set": 8,
-          "measures": "E25 - G34",
+          "measures": "25 - 34",
           "counts": "40",
           "leftRight": "Right: 3.5 steps Inside 45 yd ln",
           "homeVisitor": "6.5 steps In Front Of Visitor Hash",
@@ -1129,7 +1129,7 @@ export const performerData = {
         },
         {
           "set": 9,
-          "measures": "H35 - 36",
+          "measures": "35 - 36",
           "counts": "8",
           "leftRight": "Right: 4.0 steps Outside 50 yd ln",
           "homeVisitor": "1.5 steps In Front Of Visitor Hash",
@@ -1140,7 +1140,7 @@ export const performerData = {
         },
         {
           "set": 10,
-          "measures": "H37 - 47",
+          "measures": "37 - 47",
           "counts": "44",
           "leftRight": "Right: 0.25 steps Outside 50 yd ln",
           "homeVisitor": "5.75 steps In Front Of Visitor Hash",

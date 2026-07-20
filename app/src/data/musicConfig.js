@@ -36,7 +36,7 @@ export const musicConfig = {
     "BD": {
       "2": false,
       "3": false,
-      "4": false,
+      "4": true,
       "5": true,
       "6": true,
       "7": true,
@@ -44,5 +44,23 @@ export const musicConfig = {
       "9": false,
       "10": true
     }
+  },
+  "2": {
+    "Staff": {},
+    "SD": {},
+    "TD": {},
+    "BD": {}
+  },
+  "3": {
+    "Staff": {},
+    "SD": {},
+    "TD": {},
+    "BD": {}
+  },
+  "4": {
+    "Staff": {},
+    "SD": {},
+    "TD": {},
+    "BD": {}
   }
 };
