@@ -751,7 +751,24 @@ if (require.main === module) {
     
     // Update with new data
     const performerData = updatePerformerData(coordinatesPath, existingData);
-    
+
+    // Seed empty arrays for show movements not yet ingested, so the app shows
+    // them as disabled rather than dropping them. Reads movementsConfig.js
+    // sitting next to the output performerData.js (skipped for dry-runs whose
+    // output dir has no config).
+    const movementsConfigPath = path.join(path.dirname(outputPath), 'movementsConfig.js');
+    if (fs.existsSync(movementsConfigPath)) {
+      const mc = fs.readFileSync(movementsConfigPath, 'utf-8');
+      const movementKeys = [...mc.matchAll(/"(\d+)"\s*:\s*\{/g)].map(m => m[1]);
+      let seeded = 0;
+      for (const performer of Object.values(performerData)) {
+        for (const key of movementKeys) {
+          if (!performer.movements[key]) { performer.movements[key] = []; seeded++; }
+        }
+      }
+      if (seeded > 0) console.log(`Seeded ${seeded} empty movement slot(s) from movementsConfig (${movementKeys.join(', ')})`);
+    }
+
     // Generate JS file content
     let jsContent = 'export const performerData = ';
     jsContent += JSON.stringify(performerData, null, 2);

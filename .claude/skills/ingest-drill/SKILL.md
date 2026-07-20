@@ -13,6 +13,29 @@ movement reads the previous movement from performerData.js.
 All intermediate output goes to `ingest-output/m{N}/` (gitignored). Nothing
 touches `app/` until the user approves the review summary.
 
+**Prerequisite:** the extractors shell out to poppler (`pdfinfo`, `pdftotext`,
+`pdftoppm`). If those aren't on `PATH`, prefix commands with the install dir —
+on this Mac: `export PATH="/opt/homebrew/bin:$PATH"`.
+
+## Incremental drill (a movement arriving in batches)
+
+A movement's drill often isn't written all at once. The arranger re-exports the
+**whole movement so far** (a growing full PDF) each time more sets are done, so
+just re-run this whole flow per drop:
+
+- Re-extract over the latest PDF (the extractors clear the movement's prior
+  charts and re-render the current set list — a set that was renumbered or cut
+  upstream is handled).
+- `updateCoordinates.js` **merges** into `performerData.js`: already-applied
+  sets are updated in place, new sets appended, others untouched. So the first
+  new set's move still builds from the last known set (it's present in the
+  re-export), and movement N's first set keeps building from movement N-1.
+- At review, you only need to eyeball the **new** sets (and any the arranger
+  changed) — earlier approved sets keep their values.
+
+(If a set is ever *removed* upstream, its stale chart lingers in
+`app/public/drill/` — delete that one `{N}-{set}.png` by hand.)
+
 ## Step 1 — Locate inputs
 
 The movement number is the argument (call it N). Find in `reference/`:
@@ -133,6 +156,8 @@ Do NOT proceed until the user approves.
 
 1. `cp ingest-output/m{N}/drill/*.png app/public/drill/`
 2. `node scripts/updateCoordinates.js ingest-output/m{N}/coordinates-full.txt app/src/data/performerData.js`
+   (also auto-seeds empty arrays for every movement in `movementsConfig.js`,
+   so not-yet-ingested movements still show as disabled — no manual step needed)
 3. Verify the app loads the new movement (`npm run dev` in `app/`), then remind
    the user of the remaining per-movement steps: music images (`/ingest-music`),
    rehearsal marks, and video/audio placement.
