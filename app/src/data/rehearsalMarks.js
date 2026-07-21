@@ -10,5 +10,17 @@ export const rehearsalMarks = {
     "8": "E-G",
     "9": "H",
     "10": "H-End"
+  },
+  // Movement 2 (sets 20-23 pending — music not yet written past mark H)
+  "2": {
+    "11": "A",
+    "12": "A",
+    "13": "B",
+    "14": "C",
+    "15": "D",
+    "16": "D",
+    "17": "E-F",
+    "18": "G",
+    "19": "H"
   }
 };
