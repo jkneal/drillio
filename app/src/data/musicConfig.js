@@ -56,10 +56,10 @@ export const musicConfig = {
       "17": true,
       "18": true,
       "19": true,
-      "20": false,
-      "21": false,
-      "22": false,
-      "23": false
+      "20": true,
+      "21": true,
+      "22": true,
+      "23": true
     },
     "SD": {
       "11": false,
@@ -86,10 +86,10 @@ export const musicConfig = {
       "17": true,
       "18": true,
       "19": true,
-      "20": false,
-      "21": false,
-      "22": false,
-      "23": false
+      "20": true,
+      "21": true,
+      "22": true,
+      "23": true
     },
     "BD": {
       "11": false,
@@ -104,7 +104,7 @@ export const musicConfig = {
       "20": false,
       "21": false,
       "22": false,
-      "23": false
+      "23": true
     }
   },
   "3": {
