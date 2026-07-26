@@ -59,7 +59,12 @@ export const musicConfig = {
       "20": true,
       "21": true,
       "22": true,
-      "23": true
+      "23": true,
+      "24": true,
+      "25": true,
+      "26": true,
+      "27": true,
+      "28": true
     },
     "SD": {
       "11": false,
@@ -74,7 +79,12 @@ export const musicConfig = {
       "20": false,
       "21": false,
       "22": false,
-      "23": false
+      "23": false,
+      "24": true,
+      "25": true,
+      "26": true,
+      "27": true,
+      "28": true
     },
     "TD": {
       "11": false,
@@ -89,7 +99,12 @@ export const musicConfig = {
       "20": true,
       "21": true,
       "22": true,
-      "23": true
+      "23": true,
+      "24": true,
+      "25": true,
+      "26": true,
+      "27": true,
+      "28": true
     },
     "BD": {
       "11": false,
@@ -104,7 +119,12 @@ export const musicConfig = {
       "20": false,
       "21": false,
       "22": false,
-      "23": true
+      "23": true,
+      "24": true,
+      "25": true,
+      "26": true,
+      "27": true,
+      "28": true
     }
   },
   "3": {
