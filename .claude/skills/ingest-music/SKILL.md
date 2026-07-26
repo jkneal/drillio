@@ -83,6 +83,12 @@ final copy. Do NOT proceed until the user approves.
 
 ## Gotchas
 
+- Check `/ingest-drill`'s "Manual corrections" section first — snippet ranges
+  come from `sets-{N}.json`, so if a movement's chart measures were corrected
+  by hand (2026 movement 1 sets 2-7), re-extracting drill reverts them and the
+  crops come out wrong. Corrections that are counts-only (2026 movement 2
+  set 18's added silent hold) do NOT affect the music.
+
 - Each movement's score restarts measure numbering.
 - The drill's fractional measures ("28.5 - 41") floor/ceil to whole bars —
   crops include the partial bar, which is desirable context.

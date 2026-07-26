@@ -162,6 +162,39 @@ Do NOT proceed until the user approves.
    the user of the remaining per-movement steps: music images (`/ingest-music`),
    rehearsal marks, and video/audio placement.
 
+## Manual corrections — RE-APPLY THESE AFTER ANY RE-INGEST
+
+These fix errors in the source PDFs, so a re-ingest silently reverts them.
+Check this list whenever you re-run a movement, and re-apply anything listed
+for it before the review step.
+
+**2026 movement 1 — chart measures are wrong for sets 2-7.** The charts
+under-count the odd-meter opening (m1-24 is a repeating 4/4 + 4/4 + 2/4, ten
+counts per three bars). Correct values, re-derived from the score against the
+counts (sets 8-10 as printed are already right):
+
+| Set | Chart says | Correct |
+|-----|-----------|---------|
+| 2 | A1 - 7 | 2 - 7 |
+| 3 | B8 - 10 | 8 - 13 |
+| 4 | B11 - 13 | 14 - 16 |
+| 5 | C14 - 16 | 17 - 19 |
+| 6 | C17 - 19 | 20 - 22 |
+| 7 | D20 - 24 | 23 - 24 |
+
+Marks B/C/D/E/H land exactly on set starts, which is the check that this is
+right. Fixing measures also means re-running `/ingest-music 1`.
+
+**2026 movement 2 set 18 — Hold 30, not the footer's 26.** A 4-count silent
+hold was added at the end of the set before stepping off at H. It exists only
+in rehearsal, not in the chart (footer still reads `7+19`) and not in the
+score, so do NOT re-cut the music for it — counts only.
+
+**2026 movement 2 set 25 — trust the footer, not the note.** The note reads
+"S / Q Slide 8 (8 to 5), Float 8, Hold 8" but the footer chunks `8+8+12` are
+correct: snares and quads are `Move 16, Hold 12` (28). Basses differ
+(`Move 8, Hold 20`) per "BD / Tubas step down".
+
 ## Conventions & gotchas
 
 - Measures stay exactly as printed ("2 - 5", "sub 8", "46 to End") — do not
