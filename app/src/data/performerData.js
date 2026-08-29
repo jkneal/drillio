@@ -368,6 +368,69 @@ export const performerData = {
           "form": "2 Battery Lines",
           "orientation": "Front",
           "tip": "Hold for 16 counts"
+        },
+        {
+          "set": 35,
+          "measures": "G26 - 27",
+          "counts": "8",
+          "leftRight": "Left: 1.5 steps Inside 45 yd ln",
+          "homeVisitor": "10.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines",
+          "orientation": "Front",
+          "tip": "Move Left (9-to-5) for 8 counts",
+          "movementVector": 270
+        },
+        {
+          "set": 36,
+          "measures": "G28 - 29",
+          "counts": "8",
+          "leftRight": "Left: 1.5 steps Inside 45 yd ln",
+          "homeVisitor": "10.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines",
+          "orientation": "Front",
+          "tip": "Hold for 8 counts"
+        },
+        {
+          "set": 37,
+          "measures": "G30 - 33",
+          "counts": "16",
+          "leftRight": "Left: On 40 yd ln",
+          "homeVisitor": "10.0 steps In Front Of Visitor Hash",
+          "form": "Battery Arc",
+          "orientation": "Front",
+          "tip": "Move Right (8-to-5) for 10 counts, then hold for 6 counts",
+          "movementVector": 90
+        },
+        {
+          "set": 38,
+          "measures": "I34 - 39",
+          "counts": "22",
+          "leftRight": "Left: On 40 yd ln",
+          "homeVisitor": "10.0 steps In Front Of Visitor Hash",
+          "form": "Battery Arc",
+          "orientation": "Front",
+          "tip": "Hold for 22 counts"
+        },
+        {
+          "set": 39,
+          "measures": "I40 - J42",
+          "counts": "12",
+          "leftRight": "Left: 2.0 steps Inside 40 yd ln",
+          "homeVisitor": "9.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines, Split",
+          "orientation": "Front",
+          "tip": "Move Left Backward (29-to-5) for 8 counts, then hold for 4 counts",
+          "movementVector": 243
+        },
+        {
+          "set": 40,
+          "measures": "J43 - End",
+          "counts": "12",
+          "leftRight": "Left: 2.0 steps Inside 40 yd ln",
+          "homeVisitor": "9.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines, Split",
+          "orientation": "Front",
+          "tip": "Hold for 12 counts"
         }
       ],
       "4": []
@@ -743,6 +806,69 @@ export const performerData = {
           "form": "2 Battery Lines",
           "orientation": "Front",
           "tip": "Hold for 16 counts"
+        },
+        {
+          "set": 35,
+          "measures": "G26 - 27",
+          "counts": "8",
+          "leftRight": "Left: 4.0 steps Inside 45 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines",
+          "orientation": "Front",
+          "tip": "Move Left (9-to-5) for 8 counts",
+          "movementVector": 270
+        },
+        {
+          "set": 36,
+          "measures": "G28 - 29",
+          "counts": "8",
+          "leftRight": "Left: 4.0 steps Inside 45 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines",
+          "orientation": "Front",
+          "tip": "Hold for 8 counts"
+        },
+        {
+          "set": 37,
+          "measures": "G30 - 33",
+          "counts": "16",
+          "leftRight": "Left: 2.75 steps Inside 40 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "Battery Arc",
+          "orientation": "Front",
+          "tip": "Move Right (9-to-5) for 10 counts, then hold for 6 counts",
+          "movementVector": 90
+        },
+        {
+          "set": 38,
+          "measures": "I34 - 39",
+          "counts": "22",
+          "leftRight": "Left: 2.75 steps Inside 40 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "Battery Arc",
+          "orientation": "Front",
+          "tip": "Hold for 22 counts"
+        },
+        {
+          "set": 39,
+          "measures": "I40 - J42",
+          "counts": "12",
+          "leftRight": "Left: 4.0 steps Inside 40 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines, Split",
+          "orientation": "Front",
+          "tip": "Move Left (51-to-5) for 8 counts, then hold for 4 counts",
+          "movementVector": 270
+        },
+        {
+          "set": 40,
+          "measures": "J43 - End",
+          "counts": "12",
+          "leftRight": "Left: 4.0 steps Inside 40 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines, Split",
+          "orientation": "Front",
+          "tip": "Hold for 12 counts"
         }
       ],
       "4": []
@@ -1118,6 +1244,69 @@ export const performerData = {
           "form": "2 Battery Lines",
           "orientation": "Front",
           "tip": "Hold for 16 counts"
+        },
+        {
+          "set": 35,
+          "measures": "G26 - 27",
+          "counts": "8",
+          "leftRight": "Left: 1.5 steps Outside 50 yd ln",
+          "homeVisitor": "10.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines",
+          "orientation": "Front",
+          "tip": "Move Left (9-to-5) for 8 counts",
+          "movementVector": 270
+        },
+        {
+          "set": 36,
+          "measures": "G28 - 29",
+          "counts": "8",
+          "leftRight": "Left: 1.5 steps Outside 50 yd ln",
+          "homeVisitor": "10.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines",
+          "orientation": "Front",
+          "tip": "Hold for 8 counts"
+        },
+        {
+          "set": 37,
+          "measures": "G30 - 33",
+          "counts": "16",
+          "leftRight": "Left: 1.75 steps Outside 45 yd ln",
+          "homeVisitor": "4.5 steps In Front Of Visitor Hash",
+          "form": "Battery Arc",
+          "orientation": "Front",
+          "tip": "Move Right Backward (8-to-5) for 10 counts, then hold for 6 counts",
+          "movementVector": 124
+        },
+        {
+          "set": 38,
+          "measures": "I34 - 39",
+          "counts": "22",
+          "leftRight": "Left: 1.75 steps Outside 45 yd ln",
+          "homeVisitor": "4.5 steps In Front Of Visitor Hash",
+          "form": "Battery Arc",
+          "orientation": "Front",
+          "tip": "Hold for 22 counts"
+        },
+        {
+          "set": 39,
+          "measures": "I40 - J42",
+          "counts": "12",
+          "leftRight": "Left: 2.0 steps Outside 45 yd ln",
+          "homeVisitor": "9.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines, Split",
+          "orientation": "Front",
+          "tip": "Move Forward (14-to-5) for 8 counts, then hold for 4 counts",
+          "movementVector": 3
+        },
+        {
+          "set": 40,
+          "measures": "J43 - End",
+          "counts": "12",
+          "leftRight": "Left: 2.0 steps Outside 45 yd ln",
+          "homeVisitor": "9.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines, Split",
+          "orientation": "Front",
+          "tip": "Hold for 12 counts"
         }
       ],
       "4": []
@@ -1492,6 +1681,69 @@ export const performerData = {
           "form": "2 Battery Lines",
           "orientation": "Front",
           "tip": "Hold for 16 counts"
+        },
+        {
+          "set": 35,
+          "measures": "G26 - 27",
+          "counts": "8",
+          "leftRight": "Right: 1.0 steps Outside 50 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines",
+          "orientation": "Front",
+          "tip": "Move Left (9-to-5) for 8 counts",
+          "movementVector": 270
+        },
+        {
+          "set": 36,
+          "measures": "G28 - 29",
+          "counts": "8",
+          "leftRight": "Right: 1.0 steps Outside 50 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines",
+          "orientation": "Front",
+          "tip": "Hold for 8 counts"
+        },
+        {
+          "set": 37,
+          "measures": "G30 - 33",
+          "counts": "16",
+          "leftRight": "Left: 2.0 steps Inside 45 yd ln",
+          "homeVisitor": "3.0 steps In Front Of Visitor Hash",
+          "form": "Battery Arc",
+          "orientation": "Front",
+          "tip": "Move Right Backward (10-to-5) for 10 counts, then hold for 6 counts",
+          "movementVector": 120
+        },
+        {
+          "set": 38,
+          "measures": "I34 - 39",
+          "counts": "22",
+          "leftRight": "Left: 2.0 steps Inside 45 yd ln",
+          "homeVisitor": "3.0 steps In Front Of Visitor Hash",
+          "form": "Battery Arc",
+          "orientation": "Front",
+          "tip": "Hold for 22 counts"
+        },
+        {
+          "set": 39,
+          "measures": "I40 - J42",
+          "counts": "12",
+          "leftRight": "Left: On 45 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines, Split",
+          "orientation": "Front",
+          "tip": "Move Right Forward (14-to-5) for 8 counts, then hold for 4 counts",
+          "movementVector": 27
+        },
+        {
+          "set": 40,
+          "measures": "J43 - End",
+          "counts": "12",
+          "leftRight": "Left: On 45 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines, Split",
+          "orientation": "Front",
+          "tip": "Hold for 12 counts"
         }
       ],
       "4": []
@@ -1865,6 +2117,69 @@ export const performerData = {
           "form": "2 Battery Lines",
           "orientation": "Front",
           "tip": "Hold for 16 counts"
+        },
+        {
+          "set": 35,
+          "measures": "G26 - 27",
+          "counts": "8",
+          "leftRight": "Right: 3.5 steps Outside 50 yd ln",
+          "homeVisitor": "10.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines",
+          "orientation": "Front",
+          "tip": "Move Left (9-to-5) for 8 counts",
+          "movementVector": 270
+        },
+        {
+          "set": 36,
+          "measures": "G28 - 29",
+          "counts": "8",
+          "leftRight": "Right: 3.5 steps Outside 50 yd ln",
+          "homeVisitor": "10.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines",
+          "orientation": "Front",
+          "tip": "Hold for 8 counts"
+        },
+        {
+          "set": 37,
+          "measures": "G30 - 33",
+          "counts": "16",
+          "leftRight": "Left: 2.0 steps Outside 50 yd ln",
+          "homeVisitor": "2.0 steps In Front Of Visitor Hash",
+          "form": "Battery Arc",
+          "orientation": "Front",
+          "tip": "Move Right Backward (8-to-5) for 10 counts, then hold for 6 counts",
+          "movementVector": 145
+        },
+        {
+          "set": 38,
+          "measures": "I34 - 39",
+          "counts": "22",
+          "leftRight": "Left: 2.0 steps Outside 50 yd ln",
+          "homeVisitor": "2.0 steps In Front Of Visitor Hash",
+          "form": "Battery Arc",
+          "orientation": "Front",
+          "tip": "Hold for 22 counts"
+        },
+        {
+          "set": 39,
+          "measures": "I40 - J42",
+          "counts": "12",
+          "leftRight": "Left: 2.0 steps Inside 45 yd ln",
+          "homeVisitor": "9.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines, Split",
+          "orientation": "Front",
+          "tip": "Move Right Forward (8-to-5) for 8 counts, then hold for 4 counts",
+          "movementVector": 30
+        },
+        {
+          "set": 40,
+          "measures": "J43 - End",
+          "counts": "12",
+          "leftRight": "Left: 2.0 steps Inside 45 yd ln",
+          "homeVisitor": "9.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines, Split",
+          "orientation": "Front",
+          "tip": "Hold for 12 counts"
         }
       ],
       "4": []
@@ -2240,6 +2555,69 @@ export const performerData = {
           "form": "2 Battery Lines",
           "orientation": "Front",
           "tip": "Hold for 16 counts"
+        },
+        {
+          "set": 35,
+          "measures": "G26 - 27",
+          "counts": "8",
+          "leftRight": "Right: 2.0 steps Inside 45 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines",
+          "orientation": "Front",
+          "tip": "Move Left (9-to-5) for 8 counts",
+          "movementVector": 270
+        },
+        {
+          "set": 36,
+          "measures": "G28 - 29",
+          "counts": "8",
+          "leftRight": "Right: 2.0 steps Inside 45 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines",
+          "orientation": "Front",
+          "tip": "Hold for 8 counts"
+        },
+        {
+          "set": 37,
+          "measures": "G30 - 33",
+          "counts": "16",
+          "leftRight": "Right: 2.0 steps Outside 50 yd ln",
+          "homeVisitor": "2.0 steps In Front Of Visitor Hash",
+          "form": "Battery Arc",
+          "orientation": "Front",
+          "tip": "Move Right Backward (12-to-5) for 10 counts, then hold for 6 counts",
+          "movementVector": 141
+        },
+        {
+          "set": 38,
+          "measures": "I34 - 39",
+          "counts": "22",
+          "leftRight": "Right: 2.0 steps Outside 50 yd ln",
+          "homeVisitor": "2.0 steps In Front Of Visitor Hash",
+          "form": "Battery Arc",
+          "orientation": "Front",
+          "tip": "Hold for 22 counts"
+        },
+        {
+          "set": 39,
+          "measures": "I40 - J42",
+          "counts": "12",
+          "leftRight": "Right: 2.0 steps Inside 45 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines, Split",
+          "orientation": "Front",
+          "tip": "Move Left Forward (10-to-5) for 8 counts, then hold for 4 counts",
+          "movementVector": 321
+        },
+        {
+          "set": 40,
+          "measures": "J43 - End",
+          "counts": "12",
+          "leftRight": "Right: 2.0 steps Inside 45 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines, Split",
+          "orientation": "Front",
+          "tip": "Hold for 12 counts"
         }
       ],
       "4": []
@@ -2615,6 +2993,69 @@ export const performerData = {
           "form": "2 Battery Lines",
           "orientation": "Front",
           "tip": "Hold for 16 counts"
+        },
+        {
+          "set": 35,
+          "measures": "G26 - 27",
+          "counts": "8",
+          "leftRight": "Right: 0.5 steps Outside 45 yd ln",
+          "homeVisitor": "10.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines",
+          "orientation": "Front",
+          "tip": "Move Left (9-to-5) for 8 counts",
+          "movementVector": 270
+        },
+        {
+          "set": 36,
+          "measures": "G28 - 29",
+          "counts": "8",
+          "leftRight": "Right: 0.5 steps Outside 45 yd ln",
+          "homeVisitor": "10.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines",
+          "orientation": "Front",
+          "tip": "Hold for 8 counts"
+        },
+        {
+          "set": 37,
+          "measures": "G30 - 33",
+          "counts": "16",
+          "leftRight": "Right: 2.0 steps Inside 45 yd ln",
+          "homeVisitor": "3.0 steps In Front Of Visitor Hash",
+          "form": "Battery Arc",
+          "orientation": "Front",
+          "tip": "Move Right Backward (11-to-5) for 10 counts, then hold for 6 counts",
+          "movementVector": 160
+        },
+        {
+          "set": 38,
+          "measures": "I34 - 39",
+          "counts": "22",
+          "leftRight": "Right: 2.0 steps Inside 45 yd ln",
+          "homeVisitor": "3.0 steps In Front Of Visitor Hash",
+          "form": "Battery Arc",
+          "orientation": "Front",
+          "tip": "Hold for 22 counts"
+        },
+        {
+          "set": 39,
+          "measures": "I40 - J42",
+          "counts": "12",
+          "leftRight": "Right: On 45 yd ln",
+          "homeVisitor": "9.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines, Split",
+          "orientation": "Front",
+          "tip": "Move Left Forward (10-to-5) for 8 counts, then hold for 4 counts",
+          "movementVector": 342
+        },
+        {
+          "set": 40,
+          "measures": "J43 - End",
+          "counts": "12",
+          "leftRight": "Right: On 45 yd ln",
+          "homeVisitor": "9.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines, Split",
+          "orientation": "Front",
+          "tip": "Hold for 12 counts"
         }
       ],
       "4": []
@@ -2990,6 +3431,69 @@ export const performerData = {
           "form": "2 Battery Lines",
           "orientation": "Front",
           "tip": "Hold for 16 counts"
+        },
+        {
+          "set": 35,
+          "measures": "G26 - 27",
+          "counts": "8",
+          "leftRight": "Right: 3.0 steps Outside 45 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines",
+          "orientation": "Front",
+          "tip": "Move Left (9-to-5) for 8 counts",
+          "movementVector": 270
+        },
+        {
+          "set": 36,
+          "measures": "G28 - 29",
+          "counts": "8",
+          "leftRight": "Right: 3.0 steps Outside 45 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines",
+          "orientation": "Front",
+          "tip": "Hold for 8 counts"
+        },
+        {
+          "set": 37,
+          "measures": "G30 - 33",
+          "counts": "16",
+          "leftRight": "Right: 1.75 steps Outside 45 yd ln",
+          "homeVisitor": "4.5 steps In Front Of Visitor Hash",
+          "form": "Battery Arc",
+          "orientation": "Front",
+          "tip": "Move Right Backward (29-to-5) for 10 counts, then hold for 6 counts",
+          "movementVector": 153
+        },
+        {
+          "set": 38,
+          "measures": "I34 - 39",
+          "counts": "22",
+          "leftRight": "Right: 1.75 steps Outside 45 yd ln",
+          "homeVisitor": "4.5 steps In Front Of Visitor Hash",
+          "form": "Battery Arc",
+          "orientation": "Front",
+          "tip": "Hold for 22 counts"
+        },
+        {
+          "set": 39,
+          "measures": "I40 - J42",
+          "counts": "12",
+          "leftRight": "Right: 2.0 steps Outside 45 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines, Split",
+          "orientation": "Front",
+          "tip": "Move Left Forward (25-to-5) for 8 counts, then hold for 4 counts",
+          "movementVector": 354
+        },
+        {
+          "set": 40,
+          "measures": "J43 - End",
+          "counts": "12",
+          "leftRight": "Right: 2.0 steps Outside 45 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines, Split",
+          "orientation": "Front",
+          "tip": "Hold for 12 counts"
         }
       ],
       "4": []
@@ -3365,6 +3869,69 @@ export const performerData = {
           "form": "2 Battery Lines",
           "orientation": "Front",
           "tip": "Hold for 16 counts"
+        },
+        {
+          "set": 35,
+          "measures": "G26 - 27",
+          "counts": "8",
+          "leftRight": "Right: 2.5 steps Inside 40 yd ln",
+          "homeVisitor": "10.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines",
+          "orientation": "Front",
+          "tip": "Move Left (9-to-5) for 8 counts",
+          "movementVector": 270
+        },
+        {
+          "set": 36,
+          "measures": "G28 - 29",
+          "counts": "8",
+          "leftRight": "Right: 2.5 steps Inside 40 yd ln",
+          "homeVisitor": "10.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines",
+          "orientation": "Front",
+          "tip": "Hold for 8 counts"
+        },
+        {
+          "set": 37,
+          "measures": "G30 - 33",
+          "counts": "16",
+          "leftRight": "Right: 2.75 steps Inside 40 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "Battery Arc",
+          "orientation": "Front",
+          "tip": "Move Backward (27-to-5) for 10 counts, then hold for 6 counts",
+          "movementVector": 175
+        },
+        {
+          "set": 38,
+          "measures": "I34 - 39",
+          "counts": "22",
+          "leftRight": "Right: 2.75 steps Inside 40 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "Battery Arc",
+          "orientation": "Front",
+          "tip": "Hold for 22 counts"
+        },
+        {
+          "set": 39,
+          "measures": "I40 - J42",
+          "counts": "12",
+          "leftRight": "Right: 4.0 steps Outside 45 yd ln",
+          "homeVisitor": "9.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines, Split",
+          "orientation": "Front",
+          "tip": "Move Right Forward (27-to-5) for 8 counts, then hold for 4 counts",
+          "movementVector": 32
+        },
+        {
+          "set": 40,
+          "measures": "J43 - End",
+          "counts": "12",
+          "leftRight": "Right: 4.0 steps Outside 45 yd ln",
+          "homeVisitor": "9.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines, Split",
+          "orientation": "Front",
+          "tip": "Hold for 12 counts"
         }
       ],
       "4": []
@@ -3740,6 +4307,69 @@ export const performerData = {
           "form": "2 Battery Lines",
           "orientation": "Front",
           "tip": "Hold for 16 counts"
+        },
+        {
+          "set": 35,
+          "measures": "G26 - 27",
+          "counts": "8",
+          "leftRight": "Right: On 40 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines",
+          "orientation": "Front",
+          "tip": "Move Left (9-to-5) for 8 counts",
+          "movementVector": 270
+        },
+        {
+          "set": 36,
+          "measures": "G28 - 29",
+          "counts": "8",
+          "leftRight": "Right: On 40 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines",
+          "orientation": "Front",
+          "tip": "Hold for 8 counts"
+        },
+        {
+          "set": 37,
+          "measures": "G30 - 33",
+          "counts": "16",
+          "leftRight": "Right: On 40 yd ln",
+          "homeVisitor": "10.0 steps In Front Of Visitor Hash",
+          "form": "Battery Arc",
+          "orientation": "Front",
+          "tip": "Move Forward (27-to-5) for 10 counts, then hold for 6 counts",
+          "movementVector": 0
+        },
+        {
+          "set": 38,
+          "measures": "I34 - 39",
+          "counts": "22",
+          "leftRight": "Right: On 40 yd ln",
+          "homeVisitor": "10.0 steps In Front Of Visitor Hash",
+          "form": "Battery Arc",
+          "orientation": "Front",
+          "tip": "Hold for 22 counts"
+        },
+        {
+          "set": 39,
+          "measures": "I40 - J42",
+          "counts": "12",
+          "leftRight": "Right: 2.0 steps Inside 40 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines, Split",
+          "orientation": "Front",
+          "tip": "Move Right Backward (18-to-5) for 8 counts, then hold for 4 counts",
+          "movementVector": 146
+        },
+        {
+          "set": 40,
+          "measures": "J43 - End",
+          "counts": "12",
+          "leftRight": "Right: 2.0 steps Inside 40 yd ln",
+          "homeVisitor": "7.0 steps In Front Of Visitor Hash",
+          "form": "2 Battery Lines, Split",
+          "orientation": "Front",
+          "tip": "Hold for 12 counts"
         }
       ],
       "4": []
@@ -3855,6 +4485,24 @@ export const performerData = {
         },
         {
           "set": 34
+        },
+        {
+          "set": 35
+        },
+        {
+          "set": 36
+        },
+        {
+          "set": 37
+        },
+        {
+          "set": 38
+        },
+        {
+          "set": 39
+        },
+        {
+          "set": 40
         }
       ],
       "4": []

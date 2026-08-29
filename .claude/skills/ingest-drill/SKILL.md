@@ -195,6 +195,21 @@ score, so do NOT re-cut the music for it — counts only.
 correct: snares and quads are `Move 16, Hold 12` (28). Basses differ
 (`Move 8, Hold 20`) per "BD / Tubas step down".
 
+**2026 movement 3 — two quirks in every export of this movement.**
+
+- Page 1 of the charts PDF is **movement 2's set 28**, not a movement 3 set:
+  counts `0`, measures `O65 - 70`, coordinates identical to the applied set 28.
+  It is a starting-position reference. Drop it (chart image, `sets-3.json`
+  entry, and the coordinate rows) so it does not duplicate the set — set 29
+  then builds its move from movement 2 through the normal cross-movement
+  lookup.
+- Set 33's measures print with an equals sign, `E18 = 21`. Normalise to
+  `E18 - 21`.
+
+**2026 movement 3 set 37 — Move 10, Hold 6.** The footer chunks read `6+10`,
+which the derivation turns into `Move 6, Hold 10`, but the DL note says
+"DL Float 10, Hold 6". The note is right; the total is 16 either way.
+
 ## Conventions & gotchas
 
 - Measures stay exactly as printed ("2 - 5", "sub 8", "46 to End") — do not
