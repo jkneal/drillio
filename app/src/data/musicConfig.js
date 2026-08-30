@@ -134,9 +134,53 @@ export const musicConfig = {
     "BD": {}
   },
   "4": {
-    "Staff": {},
-    "SD": {},
-    "TD": {},
-    "BD": {}
+    "Staff": {
+      "41": false,
+      "42": true,
+      "43": true,
+      "44": true,
+      "45": true,
+      "46": true,
+      "47": true,
+      "48": true,
+      "49": true,
+      "50": true
+    },
+    "SD": {
+      "41": false,
+      "42": true,
+      "43": true,
+      "44": true,
+      "45": true,
+      "46": true,
+      "47": true,
+      "48": true,
+      "49": true,
+      "50": true
+    },
+    "TD": {
+      "41": false,
+      "42": false,
+      "43": true,
+      "44": true,
+      "45": true,
+      "46": true,
+      "47": true,
+      "48": true,
+      "49": true,
+      "50": true
+    },
+    "BD": {
+      "41": false,
+      "42": false,
+      "43": false,
+      "44": true,
+      "45": true,
+      "46": true,
+      "47": true,
+      "48": true,
+      "49": true,
+      "50": true
+    }
   }
 };

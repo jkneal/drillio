@@ -210,6 +210,26 @@ correct: snares and quads are `Move 16, Hold 12` (28). Basses differ
 which the derivation turns into `Move 6, Hold 10`, but the DL note says
 "DL Float 10, Hold 6". The note is right; the total is 16 either way.
 
+**2026 movement 4 — use the Part 4A music, never 4B.** The 4B revision's
+rehearsal letters are wrong: it adds a spurious one-bar `B` at m5, which shifts
+every later letter by one (4B calls m6 "C" where the drill and 4A both call it
+"B"). Measure numbers are identical between the revisions, so cropping from 4B
+still produces musically correct snippets and the error is invisible unless you
+compare letters. 4A's marks — A=2, B=6, C=10, D=14, E=18, F=22, G=26 — match the
+drill charts. Use `Part 4A - SnareLine/TenorLine/BassLine` plus
+`Part 4A - Battery Score (1).pdf`.
+
+**2026 movement 4 set 46 — Hold 8, Move 8.** The footer reads a flat `16`, which
+the derivation turns into `Move 16`, but the DL note says "Low Voices / DL Hold
+8, Backward March 8". The corrected entry also makes the tip render as "Move
+Backward", which matches the backward march.
+
+**2026 movement 4 set 42 — `sub 6`, needs hand-mapped music.** Subset charts
+cannot be auto-mapped, so `/ingest-music 4` skips the set. Sets 42 and 43 are
+6 counts each and together cover m3-5, so set 42's first six counts land in m3
+and the first half of m4. Crop it as measures `3 - 4`: temporarily set that in
+`sets-4.json`, re-run the extractor, then restore the printed `sub 6`.
+
 ## Conventions & gotchas
 
 - Measures stay exactly as printed ("2 - 5", "sub 8", "46 to End") — do not

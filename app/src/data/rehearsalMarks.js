@@ -31,5 +31,19 @@ export const rehearsalMarks = {
     "26": "M",
     "27": "N",
     "28": "O-End"
+  },
+  // Movement 3 has no battery music; movement 4 marks follow Part 4A, whose
+  // lettering matches the drill charts (the 4B revision is off by one).
+  "4": {
+    "41": "A",
+    "42": "A",
+    "43": "A",
+    "44": "B",
+    "45": "B",
+    "46": "C",
+    "47": "D",
+    "48": "E",
+    "49": "E",
+    "50": "F"
   }
 };
