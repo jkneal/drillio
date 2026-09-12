@@ -89,6 +89,21 @@ final copy. Do NOT proceed until the user approves.
   crops come out wrong. Corrections that are counts-only (2026 movement 2
   set 18's added silent hold) do NOT affect the music.
 
+- **Hidden barlines at meter changes.** Engravers sometimes suppress the
+  barline where the time signature changes mid-phrase (2026 m4, J: a 4:3
+  tuplet line runs through two of them). The vector layer then has fewer bars
+  than the score numbers, every rehearsal mark after that point comes out low,
+  and the offset detector picks a bogus offset. `score-map.py` now inserts an
+  implied barline at any mid-system time signature with no barline beside it
+  and reports the count in its summary line. Symptoms if it ever misses one:
+  total measures short of the drill's last measure, marks drifting after a
+  specific letter while section lengths still match, a low alignment score.
+
+- **2026 movement 4 subs.** Set 42 (`sub 6`) crops as `3 - 4`; set 51
+  (`sub 6`) crops as `30 - 31` (six counts of alternating 4/4 + 2/4 = two
+  bars). Also normalise set 57's chart footer `M50 - 53, M50 - N56` to
+  `M50 - N56` and set 55 to `K42 - 45` in `sets-4.json` first.
+
 - Each movement's score restarts measure numbering.
 - The drill's fractional measures ("28.5 - 41") floor/ceil to whole bars —
   crops include the partial bar, which is desirable context.

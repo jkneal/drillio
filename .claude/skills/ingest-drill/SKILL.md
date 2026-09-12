@@ -210,19 +210,43 @@ correct: snares and quads are `Move 16, Hold 12` (28). Basses differ
 which the derivation turns into `Move 6, Hold 10`, but the DL note says
 "DL Float 10, Hold 6". The note is right; the total is 16 either way.
 
-**2026 movement 4 — use the Part 4A music, never 4B.** The 4B revision's
-rehearsal letters are wrong: it adds a spurious one-bar `B` at m5, which shifts
-every later letter by one (4B calls m6 "C" where the drill and 4A both call it
-"B"). Measure numbers are identical between the revisions, so cropping from 4B
-still produces musically correct snippets and the error is invisible unless you
-compare letters. 4A's marks — A=2, B=6, C=10, D=14, E=18, F=22, G=26 — match the
-drill charts. Use `Part 4A - SnareLine/TenorLine/BassLine` plus
-`Part 4A - Battery Score (1).pdf`.
+**2026 movement 4 — cut music from the final `Part 4` PDFs.** The movement
+went through revisions: Part 4A (correct letters, ends at G), Part 4B (adds a
+spurious one-bar `B` at m5, shifting every later letter by one — same measure
+numbers, so the error is invisible in the snippets), then the final
+`Edgewood 2026 Part 4 - *.pdf` set, whose letters match the drill exactly
+(A=2 … H=30, I=34, J=38, K=42, L=46, M=50, N=54, O=57, P=61, Q=67, R=71,
+S=75, T=81, 86 bars). If an old 4B file ever reappears, do not use it.
 
 **2026 movement 4 set 46 — Hold 8, Move 8.** The footer reads a flat `16`, which
 the derivation turns into `Move 16`, but the DL note says "Low Voices / DL Hold
 8, Backward March 8". The corrected entry also makes the tip render as "Move
 Backward", which matches the backward march.
+
+**2026 movement 4 sets 52/53/58/60 — DL note beats the footer.** Same pattern
+as set 46. The footer gives a flat count and the derivation makes it all Move;
+the DL note has the real split:
+
+| Set | Footer | DL note | Entry |
+|-----|--------|---------|-------|
+| 52 | 6 | "DL Float 10, Hold 2" (covers sub 51 + 52 = 12) | `Move 4, Hold 2` (51 stays `Move 6`) |
+| 53 | 12 | "DL Hold 6, Float 6" | `Hold 6, Move 6` |
+| 58 | 16 | "DL Float 8, Hold 8" | `Move 8, Hold 8` |
+| 60 | 16 | "DL Float 8, Hold 8" | `Move 8, Hold 8` |
+
+**2026 movement 4 set 56 — measures print as `l46 - 49`** (lowercase L) in
+both PDFs. Normalise to `L46 - 49` in `coordinates-4-performers.txt` and
+`sets-4.json` before the dry run.
+
+**2026 movement 4 set 57 — chart footer reads `M50 - 53, M50 - N56`.** The
+coordinates PDF has the clean `M50 - N56`, so the drill data is fine as-is; but
+`sets-4.json` (which feeds `/ingest-music`) carries the comma form and will not
+parse as a range. Set it to `M50 - N56` before cutting music.
+
+**2026 movement 4 set 55 — `K42 - 44` is a chart typo; use `K42 - 45`.**
+Confirmed against the final score: K spans m42-45 (4/4 + 2/4 + 4/4 + 2/4 =
+the set's 12 counts) and L starts at 46. Fix it in
+`coordinates-4-performers.txt` and `sets-4.json` before the dry run.
 
 **2026 movement 4 set 42 — `sub 6`, needs hand-mapped music.** Subset charts
 cannot be auto-mapped, so `/ingest-music 4` skips the set. Sets 42 and 43 are

@@ -4,6 +4,8 @@
 These PDFs (Sibelius/Opus engraving) expose everything as vectors and fonts:
   - staff lines: long horizontal line objects (5 per staff)
   - barlines: vertical line objects spanning a staff's height
+    (plus implied barlines at mid-system time-signature changes that the
+    engraver left unbarred — a meter change always starts a measure)
   - multirest counts: OpusStd size-16 digits above a bar
   - whole-bar rests: '∑' glyphs (OpusStd size-14)
   - rehearsal marks: Arial-BoldMT single uppercase letters (size ~9-14;
@@ -77,6 +79,30 @@ def find_barlines(page, staff):
     xs = [l['x0'] for l in barline_lines(page)
           if l['top'] <= staff['y0'] + 2 and l['bottom'] >= staff['y1'] - 2]
     return cluster(xs, 4)
+
+
+def implied_barlines(staff, opus_digits, barlines):
+    """Barlines the engraver hid at mid-system time-signature changes.
+
+    A meter change always starts a measure, but engravers sometimes suppress
+    the barline (2026 m4: a 4:3 tuplet phrase runs through two of them).
+    Time-signature digits are staff-height OpusStd digits centred on the
+    staff; multirest counts are the same font but sit above the staff."""
+    h = staff['y1'] - staff['y0']
+    xs = [c['x0'] for c in opus_digits
+          if 0.8 * h <= c['size'] <= 1.3 * h
+          and staff['y0'] + 2 < (c['top'] + c['bottom']) / 2 < staff['y1'] + 4]
+    last = max(barlines) if barlines else 0
+    out = []
+    for x in cluster(xs, 3):
+        if x < staff['x0'] + 30:      # the opening signature after the clef
+            continue
+        if x > last - 2:              # courtesy signature after the final barline
+            continue
+        if any(x - 10 <= b <= x + 2 for b in barlines):
+            continue                  # a real barline already precedes it
+        out.append(round(x - 1.5, 1))
+    return out
 
 
 def group_systems(page, staves):
@@ -167,6 +193,10 @@ def main():
                 # The first measure starts at the staff's left edge — single-staff
                 # systems draw no leading barline
                 barlines = cluster([sy['staves'][0]['x0']] + find_barlines(page, sy['staves'][0]), 4)
+                implied = implied_barlines(sy['staves'][0], multirests, barlines)
+                if implied:
+                    barlines = cluster(barlines + implied, 4)
+                sy['implied'] = implied
                 sy['measures'] = []
 
                 # printed number at this system's start (verification)
@@ -239,8 +269,10 @@ def main():
         with open(out_path, 'w') as f:
             f.write(text + '\n')
         bad = [c for c in checks if not c['ok']]
+        n_implied = sum(len(s.get('implied', [])) for s in all_systems)
         print(f"wrote {out_path}: {measure_no} measures, {len(all_systems)} systems, "
               f"marks {''.join(result['marks'])}"
+              + (f", {n_implied} implied barline(s) at unbarred meter changes" if n_implied else "")
               + (f"  CHECK MISMATCHES: {bad}" if bad else "  (numbering verified)"))
     else:
         print(text)
