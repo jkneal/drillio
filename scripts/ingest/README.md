@@ -197,3 +197,29 @@ diffing against production:
 - Derived rehearsal marks vs the hand-kept rehearsalMarks.js: 32/52 exact,
   18 compatible (same anchors, different verbosity), 2 requiring manual
   mapping ("sub 8" sets, correctly flagged).
+
+### Color the drumline and clean chart images
+
+After importing drill charts, recolor the original PDF text with the show's
+home-page palette (D/bass red, Q/tenors yellow, S/snares blue):
+
+```sh
+python3 scripts/ingest/color-drill-charts.py --out /tmp/drillio-colored-charts
+```
+
+Requires `pypdf`, `fontTools`, and Poppler's `pdftoppm`. The script reads the existing image
+inventory from `app/public/drill/`, handles combined text runs such as `QQS`,
+colors each section's symbols and performer numbers, and retains the original
+fonts and geometry. Yellow text has a thin dark outline for contrast. The
+palette and roster are in `app/src/data/drumlineSections.json`.
+The script also removes the short gray connector strokes between every
+performer symbol and number. It matches their exact PDF drawing pattern,
+preserving field markings, symbols, and the white halos behind numbers.
+It removes only the small center-dot contour from the embedded D and Q glyphs,
+retaining each letter's original outline and spacing.
+
+Review the generated PNGs and `color-report.json`, then copy the PNGs into
+`app/public/drill/`. The report validates all ten symbols and ten performer
+numbers, 73 removed connectors, and seven removed symbol dots on each of the 66 current charts. The source
+PDFs remain unchanged. When regenerating images, update the image version query in
+`DrillChartModal.jsx` so cached chart images refresh.

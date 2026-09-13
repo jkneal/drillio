@@ -1,0 +1,5 @@
+{
+  "BD": { "name": "Bass", "symbol": "D", "color": "#ef2b2d", "numbers": [56, 57, 58, 59, 60] },
+  "TD": { "name": "Tenors", "symbol": "Q", "color": "#f4ed00", "numbers": [51, 52], "outline": "#403d00" },
+  "SD": { "name": "Snares", "symbol": "S", "color": "#244cff", "numbers": [53, 54, 55] }
+}
