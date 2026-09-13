@@ -323,6 +323,8 @@ const DrillPage = () => {
 
           <DrillChartModal
             show={showDrillChart}
+            performerKey={selectedPerformer}
+            isStaffView={true}
             onClose={() => setShowDrillChart(false)}
             imagePath={getDrillChartPath(movement.match(/\d+/)?.[0] || '1', setNumber)}
             movement={movement.match(/\d+/)?.[0] || '1'}
@@ -462,6 +464,8 @@ const DrillPage = () => {
 
         <DrillChartModal
           show={showDrillChart}
+          performerKey={selectedPerformer}
+          isStaffView={false}
           onClose={() => setShowDrillChart(false)}
           imagePath={getDrillChartPath(movement.match(/\d+/)?.[0] || '1', currentSetData.set)}
           movement={movement.match(/\d+/)?.[0] || '1'}

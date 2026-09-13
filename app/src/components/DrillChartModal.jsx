@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { X, Map as MapIcon, ChevronLeft, ChevronRight, Maximize2, Users } from 'lucide-react';
+import { X, Map as MapIcon, ChevronLeft, ChevronRight, Maximize2, Users, Music } from 'lucide-react';
 import { performerData } from '../data/performerData';
 import { rehearsalMarks } from '../data/rehearsalMarks';
 import drumlineSections from '../data/drumlineSections.json';
 import chartFormationBounds from '../data/chartFormationBounds.json';
+import { musicConfig } from '../data/musicConfig';
+import MusicModal from './MusicModal';
 import {
   CHART, MAX_ZOOM, PERFORMER_HIT_RADIUS, constrainView, fitFormation, performerBounds,
   getChartPerformers, hitTestPerformer, resolveChartMovement,
@@ -76,11 +78,29 @@ function CoordinateGuides({ performer: p, scale, view, size }) {
   );
 }
 
-function ChartViewer({ onClose, movement, actualMovement, setNumber, minSetNumber = 1, maxSetNumber = setNumber }) {
+function ChartMusicPreview({ onClose, ...props }) {
+  const dialogRef = useRef(null);
+  useEffect(() => {
+    const trigger = document.activeElement;
+    const dialog = dialogRef.current;
+    dialog.showModal();
+    return () => {
+      dialog.close();
+      trigger?.focus();
+    };
+  }, []);
+  return <dialog ref={dialogRef} className="chart-music-dialog" aria-label="Set music"
+    onCancel={e => { e.preventDefault(); e.stopPropagation(); onClose(); }}>
+    <MusicModal show onClose={onClose} {...props} />
+  </dialog>;
+}
+
+function ChartViewer({ onClose, movement, actualMovement, setNumber, minSetNumber = 1, maxSetNumber = setNumber, performerKey = 'Staff', isStaffView = performerKey === 'Staff' }) {
   const [currentSet, setCurrentSet] = useState(setNumber);
   const [selectedId, setSelectedId] = useState(null);
   const [followDrumline, setFollowDrumline] = useState(false);
   const [followBand, setFollowBand] = useState(true);
+  const [showMusic, setShowMusic] = useState(false);
   const [imageStatus, setImageStatus] = useState('loading');
   const [size, setSize] = useState({ width: 1, height: 1 });
   const [view, setView] = useState({ zoom: 1, x: 0, y: 0 });
@@ -100,6 +120,8 @@ function ChartViewer({ onClose, movement, actualMovement, setNumber, minSetNumbe
   const selected = performers.find(p => p.id === selectedId);
   const setData = performerData.TD1?.movements[currentMovement]?.find(s => s.set === currentSet);
   const mark = rehearsalMarks[currentMovement]?.[String(currentSet)];
+  const musicPart = isStaffView ? 'Staff' : performerKey.replace(/\d+$/, '');
+  const movementSets = performerData.TD1?.movements[currentMovement] || [];
   const setOptions = useMemo(() => Array.from({ length: maxSetNumber - minSetNumber + 1 }, (_, index) => {
     const number = minSetNumber + index;
     const owner = resolveChartMovement(performerData, actualMovement || movement, number);
@@ -326,7 +348,10 @@ function ChartViewer({ onClose, movement, actualMovement, setNumber, minSetNumbe
           <div className="chart-music-marks" aria-label="Set music and counts">
             <span className="chart-rehearsal">Rehearsal <strong>{mark || '—'}</strong></span>
             <span>Counts <strong>{setData?.counts || (currentSet === 1 ? '0' : '—')}</strong></span>
-            {setData?.measures && <span className="chart-measures">Measures <strong>{setData.measures}</strong></span>}
+            <button className="chart-tool chart-music-button" onClick={() => setShowMusic(true)}
+              aria-label={`View music for Set ${currentSet}`} title={`View ${musicPart} music for Set ${currentSet}`}>
+              <Music size={18} aria-hidden="true" />
+            </button>
           </div>
           <nav className="chart-corner-navigation" aria-label="Chart set navigation">
             <button className="chart-tool" aria-label="Previous chart set" onClick={() => jumpToSet(currentSet - 1)} disabled={currentSet <= minSetNumber}><ChevronLeft size={22} /></button>
@@ -354,6 +379,11 @@ function ChartViewer({ onClose, movement, actualMovement, setNumber, minSetNumbe
         </div>
         <small>Pinch / scroll to zoom · Drag to pan</small>
       </footer>
+      {showMusic && <ChartMusicPreview onClose={() => setShowMusic(false)}
+        movement={currentMovement} setNumber={currentSet} performerKey={performerKey} isStaffView={isStaffView}
+        availableSets={musicConfig[currentMovement]?.[musicPart] || {}}
+        minSetNumber={Math.max(2, Math.min(...movementSets.map(set => set.set)))}
+        maxSetNumber={Math.max(...movementSets.map(set => set.set))} />}
     </dialog>
   );
 }

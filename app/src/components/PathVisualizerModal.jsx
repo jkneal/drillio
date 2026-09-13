@@ -4151,6 +4151,8 @@ const PathVisualizerModal = ({
       {/* Drill Chart Modal */}
       <DrillChartModal
         show={showDrillChart}
+        performerKey={isStaffView ? 'Staff' : performerId}
+        isStaffView={isStaffView}
         onClose={() => setShowDrillChart(false)}
         imagePath={`/drill/${movement !== '1' && currentSetIndex === 0 ? (parseInt(movement) - 1).toString() : movement}-${currentSet?.set || 1}.png`}
         movement={movement}

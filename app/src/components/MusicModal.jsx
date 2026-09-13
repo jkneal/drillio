@@ -9,6 +9,8 @@ const MusicModal = ({
   isStaffView = false,
   performerKey = '',
   totalSets = 0,
+  minSetNumber = 2,
+  availableSets = null,
   maxSetNumber = 0
 }) => {
   const [currentSet, setCurrentSet] = useState(setNumber);
@@ -90,9 +92,10 @@ const MusicModal = ({
   }, [currentSet, movement, performerKey]);
   
   if (!show) return null;
+  const hasImage = !imageError && (!availableSets || availableSets[String(currentSet)] === true);
   
   const handlePrevious = () => {
-    if (currentSet > 2) { // Music starts at set 2
+    if (currentSet > minSetNumber) {
       setCurrentSet(currentSet - 1);
       setImageError(false);
     }
@@ -329,12 +332,13 @@ const MusicModal = ({
           </h3>
           <button
             onClick={onClose}
+            aria-label="Close music"
             className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon transition-all duration-200"
           >
             <X className="w-5 h-5 text-white" />
           </button>
         </div>
-        {!imageError && (
+        {hasImage && (
           <div className="mb-4 flex gap-1 sm:gap-2 justify-center flex-wrap">
             <button
               onClick={() => {
@@ -396,12 +400,12 @@ const MusicModal = ({
             )}
           </div>
         )}
-        {isHighlighting && !imageError && (
+        {isHighlighting && hasImage && (
           <div className="text-center text-sm text-white/70 mb-2">
             Draw around an area to highlight. Click on highlights to delete them.
           </div>
         )}
-        {scale !== 1 && !imageError && (
+        {scale !== 1 && hasImage && (
           <div className="text-center mb-2">
             <button
               onClick={() => {
@@ -415,7 +419,7 @@ const MusicModal = ({
           </div>
         )}
         <div className="text-center relative" ref={containerRef}>
-          {!imageError ? (
+          {hasImage ? (
             <div 
               className="relative inline-block overflow-hidden" 
               style={{ 
@@ -584,7 +588,8 @@ const MusicModal = ({
               <div className="flex justify-center items-center mt-4 space-x-4">
                 <button
                   onClick={handlePrevious}
-                  disabled={currentSet <= 2}
+                  aria-label="Previous music set"
+                  disabled={currentSet <= minSetNumber}
                   className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ChevronLeft className="w-5 h-5 text-white" />
@@ -594,6 +599,7 @@ const MusicModal = ({
                 </span>
                 <button
                   onClick={handleNext}
+                  aria-label="Next music set"
                   disabled={currentSet >= maxSetNumber}
                   className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -605,15 +611,16 @@ const MusicModal = ({
             <div className="bg-red-700/20 border border-red-500/30 rounded-lg p-8 text-center">
               <Music className="w-12 h-12 text-red-300 mx-auto mb-4" />
               <p className="text-white/80">
-                Music snippet not available for Set {currentSet}
+                No music available for Set {currentSet}
               </p>
               <p className="text-white/60 text-sm mt-1">
-                {getCurrentImagePath()}
+                {isStaffView ? 'No score snippet has been added for this set.' : 'No snippet has been added for your instrument in this set.'}
               </p>
               <div className="flex justify-center items-center mt-4 space-x-4">
                 <button
                   onClick={handlePrevious}
-                  disabled={currentSet <= 2}
+                  aria-label="Previous music set"
+                  disabled={currentSet <= minSetNumber}
                   className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ChevronLeft className="w-5 h-5 text-white" />
@@ -623,6 +630,7 @@ const MusicModal = ({
                 </span>
                 <button
                   onClick={handleNext}
+                  aria-label="Next music set"
                   disabled={currentSet >= maxSetNumber}
                   className="bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg p-icon-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
