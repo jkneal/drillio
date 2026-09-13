@@ -11,6 +11,10 @@ export const PIXELS_PER_STEP = (CHART.right - CHART.left) / 160;
 export const PERFORMER_HIT_RADIUS = 22;
 export const MAX_ZOOM = 16;
 
+export function getChartImagePath(movement, setNumber) {
+  return `/drill/${movement}-${setNumber}.png?v=show-section-colors-clean-symbols-1`;
+}
+
 export function parseChartCoordinate(leftRight = '', homeVisitor = '') {
   const center = (CHART.left + CHART.right) / 2;
   let yardX = center;

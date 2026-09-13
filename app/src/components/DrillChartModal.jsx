@@ -1,14 +1,15 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { X, Map as MapIcon, ChevronLeft, ChevronRight, Maximize2, Users, Music } from 'lucide-react';
+import { X, Map as MapIcon, ChevronLeft, ChevronRight, Maximize2, Users, Music, LayoutGrid } from 'lucide-react';
 import { performerData } from '../data/performerData';
 import { rehearsalMarks } from '../data/rehearsalMarks';
-import drumlineSections from '../data/drumlineSections.json';
+import DrumlineLegend from './DrumlineLegend';
+import QuickMovementView from './QuickMovementView';
 import chartFormationBounds from '../data/chartFormationBounds.json';
 import { musicConfig } from '../data/musicConfig';
 import MusicModal from './MusicModal';
 import {
   CHART, MAX_ZOOM, PERFORMER_HIT_RADIUS, constrainView, fitFormation, performerBounds,
-  getChartPerformers, hitTestPerformer, resolveChartMovement,
+  getChartImagePath, getChartPerformers, hitTestPerformer, resolveChartMovement,
 } from '../utils/drillChartGeometry';
 import './DrillChartModal.css';
 
@@ -101,6 +102,7 @@ function ChartViewer({ onClose, movement, actualMovement, setNumber, minSetNumbe
   const [followDrumline, setFollowDrumline] = useState(false);
   const [followBand, setFollowBand] = useState(true);
   const [showMusic, setShowMusic] = useState(false);
+  const [showQuickMovement, setShowQuickMovement] = useState(false);
   const [imageStatus, setImageStatus] = useState('loading');
   const [size, setSize] = useState({ width: 1, height: 1 });
   const [view, setView] = useState({ zoom: 1, x: 0, y: 0 });
@@ -114,7 +116,7 @@ function ChartViewer({ onClose, movement, actualMovement, setNumber, minSetNumbe
   const fitScale = Math.min(size.width / CHART.width, size.height / CHART.height);
   const scale = fitScale * view.zoom;
   const currentMovement = resolveChartMovement(performerData, actualMovement || movement, currentSet);
-  const chartPath = `/drill/${currentMovement}-${currentSet}.png?v=show-section-colors-clean-symbols-1`;
+  const chartPath = getChartImagePath(currentMovement, currentSet);
   const performers = useMemo(() => getChartPerformers(performerData, currentMovement, currentSet), [currentMovement, currentSet]);
   const bandBounds = chartFormationBounds[`${currentMovement}-${currentSet}`];
   const selected = performers.find(p => p.id === selectedId);
@@ -369,21 +371,23 @@ function ChartViewer({ onClose, movement, actualMovement, setNumber, minSetNumbe
           <div className="chart-selection-title"><strong>{selected.name} <span>{selected.id} · #{selected.number}</span><small>Tap another member to switch · Tap elsewhere to dismiss</small></strong>
             <button className="chart-tool" aria-label="Clear selected performer" onClick={() => setSelectedId(null)}><X size={18} /></button></div>
           <div className="chart-coordinates"><p className="chart-yard-coordinate">{selected.leftRight}</p><p className="chart-depth-coordinate">{selected.homeVisitor}</p></div>
-        </> : <p>{notice || 'Tap a colored drumline member to see coordinates.'}</p>}
+        </> : !selected && <div className="chart-selection-hint">
+          <p>{notice || 'Tap a colored drumline member to see coordinates.'}</p>
+          <DrumlineLegend />
+          <small>Pinch / scroll to zoom · Drag to pan</small>
+        </div>}
       </div>
       <footer className="drill-chart-footer">
-        <div className="chart-section-legend" aria-label="Drumline section colors">
-          {Object.values(drumlineSections).map(section => <span key={section.symbol}>
-            <i style={{ backgroundColor: section.color }} aria-hidden="true" />{section.symbol} · {section.name}
-          </span>)}
-        </div>
-        <small>Pinch / scroll to zoom · Drag to pan</small>
+        <button className="chart-quick-link" onClick={() => setShowQuickMovement(true)}><LayoutGrid size={16} />Quick Movement View</button>
       </footer>
       {showMusic && <ChartMusicPreview onClose={() => setShowMusic(false)}
         movement={currentMovement} setNumber={currentSet} performerKey={performerKey} isStaffView={isStaffView}
         availableSets={musicConfig[currentMovement]?.[musicPart] || {}}
         minSetNumber={Math.max(2, Math.min(...movementSets.map(set => set.set)))}
         maxSetNumber={Math.max(...movementSets.map(set => set.set))} />}
+      {showQuickMovement && <QuickMovementView movement={movement} actualMovement={actualMovement}
+        sets={setOptions} currentSet={currentSet} onClose={() => setShowQuickMovement(false)}
+        onSelect={number => { setSelectedId(null); jumpToSet(number); setShowQuickMovement(false); }} />}
     </dialog>
   );
 }

@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Music, ChevronLeft, ChevronRight, Plus, Trash2, Highlighter } from 'lucide-react';
+import { X, Music, ChevronLeft, ChevronRight, Plus, Trash2, Highlighter, Maximize2 } from 'lucide-react';
+import MusicImageViewport from './MusicImageViewport';
+import './MusicModal.css';
 
 const MusicModal = ({ 
   show, 
@@ -26,13 +28,8 @@ const MusicModal = ({
   const [drawStart, setDrawStart] = useState(null);
   const [drawEnd, setDrawEnd] = useState(null);
   const [isDrawing, setIsDrawing] = useState(false);
-  const [scale, setScale] = useState(1);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isPinching, setIsPinching] = useState(false);
-  const imageRef = useRef(null);
-  const containerRef = useRef(null);
+  const [resetZoomKey, setResetZoomKey] = useState(0);
   const svgRef = useRef(null);
-  const lastTouchDistance = useRef(0);
   
   const noteTemplates = {
     hold: 'Hold',
@@ -45,8 +42,10 @@ const MusicModal = ({
       setCurrentSet(setNumber);
       setImageError(false);
       loadNotes();
-      setScale(1);
-      setPosition({ x: 0, y: 0 });
+      setIsDrawing(false);
+      setDrawStart(null);
+      setDrawEnd(null);
+      setShowCustomInput(false);
     }
   }, [show, setNumber]);
   
@@ -86,8 +85,10 @@ const MusicModal = ({
   useEffect(() => {
     if (show) {
       loadNotes();
-      setScale(1);
-      setPosition({ x: 0, y: 0 });
+      setIsDrawing(false);
+      setDrawStart(null);
+      setDrawEnd(null);
+      setShowCustomInput(false);
     }
   }, [currentSet, movement, performerKey]);
   
@@ -202,7 +203,7 @@ const MusicModal = ({
   };
 
   const handleStart = (e) => {
-    if (!isHighlighting || isPinching) return;
+    if (!isHighlighting) return;
     if (e.touches && e.touches.length > 1) return; // Don't start drawing on multi-touch
     e.preventDefault();
     
@@ -285,47 +286,15 @@ const MusicModal = ({
     setDrawEnd(null);
   };
 
-  // Calculate distance between two touch points
-  const getTouchDistance = (touches) => {
-    if (touches.length < 2) return 0;
-    const dx = touches[0].clientX - touches[1].clientX;
-    const dy = touches[0].clientY - touches[1].clientY;
-    return Math.sqrt(dx * dx + dy * dy);
-  };
-
-  // Handle pinch zoom
-  const handleTouchStart = (e) => {
-    if (e.touches.length === 2) {
-      e.preventDefault();
-      setIsPinching(true);
-      lastTouchDistance.current = getTouchDistance(e.touches);
-    }
-  };
-
-  const handleTouchMove = (e) => {
-    if (e.touches.length === 2 && isPinching) {
-      e.preventDefault();
-      const currentDistance = getTouchDistance(e.touches);
-      const delta = currentDistance - lastTouchDistance.current;
-      
-      // Calculate new scale
-      const scaleDelta = delta * 0.01;
-      const newScale = Math.min(Math.max(scale + scaleDelta, 0.5), 3);
-      setScale(newScale);
-      
-      lastTouchDistance.current = currentDistance;
-    }
-  };
-
-  const handleTouchEnd = (e) => {
-    if (e.touches.length < 2) {
-      setIsPinching(false);
-    }
+  const cancelDrawing = () => {
+    setIsDrawing(false);
+    setDrawStart(null);
+    setDrawEnd(null);
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-red-600/20 border border-red-500/30 rounded-xl p-4 backdrop-blur-sm max-w-full max-h-full overflow-auto">
+    <div className="music-modal-backdrop" onTouchStart={e => e.stopPropagation()} onTouchMove={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()}>
+      <div className="music-modal-panel">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-white font-bold text-lg">
             Music - Movement {movement}, Set {currentSet}
@@ -340,6 +309,10 @@ const MusicModal = ({
         </div>
         {hasImage && (
           <div className="mb-4 flex gap-1 sm:gap-2 justify-center flex-wrap">
+            <button onClick={() => { cancelDrawing(); setResetZoomKey(key => key + 1); }} aria-label="Fit music"
+              className="px-2 sm:px-3 py-1 rounded-lg border border-red-500/50 bg-red-600/20 text-white text-xs sm:text-sm">
+              <Maximize2 className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />Fit
+            </button>
             <button
               onClick={() => {
                 setIsAddingNote(true);
@@ -400,65 +373,15 @@ const MusicModal = ({
             )}
           </div>
         )}
-        {isHighlighting && hasImage && (
-          <div className="text-center text-sm text-white/70 mb-2">
-            Draw around an area to highlight. Click on highlights to delete them.
-          </div>
-        )}
-        {scale !== 1 && hasImage && (
-          <div className="text-center mb-2">
-            <button
-              onClick={() => {
-                setScale(1);
-                setPosition({ x: 0, y: 0 });
-              }}
-              className="px-2 py-1 bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 rounded-lg text-white text-xs transition-all duration-200"
-            >
-              Reset Zoom
-            </button>
-          </div>
-        )}
-        <div className="text-center relative" ref={containerRef}>
+        <div className="music-modal-body">
           {hasImage ? (
-            <div 
-              className="relative inline-block overflow-hidden" 
-              style={{ 
-                userSelect: 'none',
-                touchAction: isPinching ? 'none' : 'auto'
-              }}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
-            >
-              <div
-                style={{
-                  transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-                  transformOrigin: 'center',
-                  transition: isPinching ? 'none' : 'transform 0.2s'
-                }}
-              >
-              <img
-                ref={imageRef}
-                src={getCurrentImagePath()}
-                alt={`Music snippet for Movement ${movement}, Set ${currentSet}`}
-                className={`max-w-full max-h-96 object-contain rounded ${
-                  isAddingNote ? 'cursor-crosshair' : isHighlighting ? 'cursor-crosshair' : ''
-                }`}
-                style={{ 
-                  pointerEvents: isHighlighting ? 'none' : 'auto',
-                  touchAction: isAddingNote ? 'none' : 'auto'
-                }}
-                onClick={handleImageClick}
-                onTouchEnd={(e) => {
-                  if (isAddingNote && !isHighlighting) {
-                    e.preventDefault();
-                    handleImageClick(e);
-                  }
-                }}
-                onError={() => setImageError(true)}
-                draggable={false}
-              />
-              
+            <>
+              <MusicImageViewport key={getCurrentImagePath()} src={getCurrentImagePath()}
+                alt={`Music snippet for Movement ${movement}, Set ${currentSet}`} resetKey={resetZoomKey}
+                annotationMode={isHighlighting ? 'highlight' : isAddingNote ? 'note' : null}
+                onError={() => setImageError(true)} onTap={handleImageClick}
+                onDrawStart={handleStart} onDrawMove={handleMove} onDrawEnd={handleEnd} onDrawCancel={cancelDrawing}
+                onDeleteHighlight={deleteHighlight}>
               {/* SVG overlay for drawing and highlights */}
               <svg 
                 ref={svgRef}
@@ -468,24 +391,17 @@ const MusicModal = ({
                 style={{ 
                   pointerEvents: isHighlighting ? 'auto' : 'none',
                   cursor: isHighlighting ? 'crosshair' : 'default',
-                  touchAction: isHighlighting ? 'none' : 'auto',
+                  touchAction: 'none',
                   WebkitTouchCallout: 'none',
                   WebkitUserSelect: 'none',
                   userSelect: 'none'
                 }}
-                onMouseDown={handleStart}
-                onMouseMove={handleMove}
-                onMouseUp={handleEnd}
-                onMouseLeave={handleEnd}
-                onTouchStart={handleStart}
-                onTouchMove={handleMove}
-                onTouchEnd={handleEnd}
-                onTouchCancel={handleEnd}
               >
                 {/* Rendered highlights */}
                 {highlights.map((highlight) => (
                   <g key={highlight.id} className="group">
                     <rect
+                      data-highlight-id={highlight.id}
                       x={highlight.x1}
                       y={highlight.y1}
                       width={highlight.x2 - highlight.x1}
@@ -493,11 +409,6 @@ const MusicModal = ({
                       fill="rgba(255, 235, 59, 0.5)"
                       stroke="none"
                       style={{ cursor: 'pointer', pointerEvents: 'all' }}
-                      onPointerDown={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        deleteHighlight(highlight.id);
-                      }}
                       onMouseEnter={(e) => e.target.setAttribute('fill', 'rgba(255, 235, 59, 0.7)')}
                       onMouseLeave={(e) => e.target.setAttribute('fill', 'rgba(255, 235, 59, 0.5)')}
                     >
@@ -535,6 +446,7 @@ const MusicModal = ({
                   >
                     <span>{note.text}</span>
                     <button
+                      aria-label={`Delete note: ${note.text}`}
                       onClick={(e) => {
                         e.stopPropagation();
                         deleteNote(note.id);
@@ -584,7 +496,8 @@ const MusicModal = ({
                   </div>
                 </div>
               )}
-              </div>
+              </MusicImageViewport>
+              <p className="music-pan-hint">{isHighlighting ? 'Drag to highlight · Tap a highlight to delete · Pinch to zoom' : 'Pinch / scroll to zoom · Drag to pan'}</p>
               <div className="flex justify-center items-center mt-4 space-x-4">
                 <button
                   onClick={handlePrevious}
@@ -606,7 +519,7 @@ const MusicModal = ({
                   <ChevronRight className="w-5 h-5 text-white" />
                 </button>
               </div>
-            </div>
+            </>
           ) : (
             <div className="bg-red-700/20 border border-red-500/30 rounded-lg p-8 text-center">
               <Music className="w-12 h-12 text-red-300 mx-auto mb-4" />

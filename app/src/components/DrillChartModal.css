@@ -44,7 +44,7 @@
 .chart-corner-navigation { display: flex; align-items: center; flex-shrink: 0; pointer-events: auto; background: #0f172af5; border: 1px solid #64748b; border-radius: 9px; box-shadow: 0 2px 8px #0003; }
 .chart-corner-navigation .chart-tool { min-height: 32px; padding-block: 4px; border: 0; background: transparent; }
 .chart-corner-navigation .chart-tool:hover:not(:disabled) { background: #ffffff20; }
-.chart-corner-navigation > span { min-width: 54px; text-align: center; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.chart-corner-navigation > span { min-width: 0; padding-inline: 2px; text-align: center; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .chart-music-marks > span { color: #1e293b; background: #fffffff2; border: 1px solid #cbd5e1; box-shadow: 0 2px 8px #0001; border-radius: 6px; padding: 6px 10px; }
 .chart-music-marks strong { margin-left: 6px; font-weight: 800; }
 .chart-music-marks > .chart-rehearsal { color: #6b21a8; background: #faf5fff5; border-color: #d8b4fe; }
@@ -54,7 +54,9 @@
 .chart-music-dialog::backdrop { background: transparent; }
 .chart-image-message { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #334155; background: #f1f5f9; pointer-events: none; }
 .chart-selection { padding: 8px 18px; min-height: 94px; flex-shrink: 0; border-top: 1px solid #ffffff20; }
-.chart-selection > p { margin: 22px 0; font-size: 13px; color: #d9cbd0; text-align: center; }
+.chart-selection-hint { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 76px; text-align: center; }
+.chart-selection-hint p { margin: 0; font-size: 13px; color: #d9cbd0; }
+.chart-selection-hint small { color: #c6b6bf; font-size: 11px; }
 .chart-selection-title { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .chart-selection-title strong { font-size: 14px; }
 .chart-selection-title small { display: block; font-size: 10px; font-weight: 400; color: #c6b6bf; }
@@ -67,7 +69,9 @@
 .chart-section-legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 11px; color: #e2e8f0; }
 .chart-section-legend span { display: inline-flex; align-items: center; gap: 5px; }
 .chart-section-legend i { width: 8px; height: 8px; border-radius: 50%; }
-.drill-chart-footer small { display: block; margin-top: 2px; color: #c6b6bf; font-size: 11px; font-weight: 400; }
+.chart-quick-link { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 36px; padding: 4px 10px; color: #bae6fd; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; border-radius: 6px; }
+.chart-quick-link:hover { background: #ffffff0c; color: #e0f2fe; }
+.chart-quick-link:focus-visible { outline: 3px solid #7dd3fc; }
 @media (max-width: 600px) {
   .drill-chart-dialog { width: 100vw; height: 100dvh; border: 0; border-radius: 0; }
   .drill-chart-header { padding: 8px 12px; }
@@ -78,18 +82,21 @@
   .chart-set-select { flex: 1; min-width: 90px; padding-left: 6px; padding-right: 28px; font-size: 12px; }
   .chart-tool-primary { margin-left: 0; }
   .chart-top-overlay { top: 8px; left: 8px; right: 8px; }
-  .chart-music-marks { font-size: 11px; }
+  .chart-corner-navigation .chart-tool { min-width: 32px; padding-inline: 4px; }
+  .chart-corner-navigation > span { padding-inline: 0; font-size: 12px; }
+  .chart-music-marks { font-size: 11px; gap: 4px; }
   .chart-music-marks > span { padding: 5px 7px; }
   .chart-selection { padding: 6px 12px; min-height: 116px; }
+  .chart-selection-hint { min-height: 102px; }
   .chart-coordinates { display: grid; gap: 5px; font-size: 13px; }
   .drill-chart-footer { padding-bottom: max(8px, env(safe-area-inset-bottom)); }
 }
 @media (max-height: 500px) and (orientation: landscape) {
   .drill-chart-dialog { height: 100dvh; width: 100vw; border-radius: 0; }
   .drill-chart-header, .drill-chart-toolbar, .drill-chart-footer { padding-block: 2px; }
-  .drill-chart-eyebrow, .drill-chart-footer small { display: none; }
+  .drill-chart-eyebrow { display: none; }
   .chart-selection { min-height: 55px; padding-block: 2px; }
   .chart-selection-title { float: left; margin-right: 20px; }
-  .chart-selection > p { margin: 14px 0; }
+  .chart-selection-hint { min-height: 51px; flex-direction: row; flex-wrap: wrap; gap: 3px 16px; }
   .chart-coordinates { padding-top: 10px; }
 }

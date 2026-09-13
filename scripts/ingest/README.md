@@ -221,8 +221,9 @@ retaining each letter's original outline and spacing.
 Review the generated PNGs and `color-report.json`, then copy the PNGs into
 `app/public/drill/`. The report validates all ten symbols and ten performer
 numbers, 73 removed connectors, and seven removed symbol dots on each of the 66 current charts. The source
-PDFs remain unchanged. When regenerating images, update the image version query in
-`DrillChartModal.jsx` so cached chart images refresh.
+PDFs remain unchanged. When regenerating images, update the image version query
+in `getChartImagePath` in `app/src/utils/drillChartGeometry.js` so cached chart
+images refresh in both the viewer and Quick Movement View.
 
 Run `python3 scripts/ingest/extract-chart-bounds.py` (requires `PyMuPDF`) after
 importing charts to update `app/src/data/chartFormationBounds.json`. It records
