@@ -223,3 +223,8 @@ Review the generated PNGs and `color-report.json`, then copy the PNGs into
 numbers, 73 removed connectors, and seven removed symbol dots on each of the 66 current charts. The source
 PDFs remain unchanged. When regenerating images, update the image version query in
 `DrillChartModal.jsx` so cached chart images refresh.
+
+Run `python3 scripts/ingest/extract-chart-bounds.py` (requires `PyMuPDF`) after
+importing charts to update `app/src/data/chartFormationBounds.json`. It records
+the bounds of all 73 performer symbols and their numbers on every chart, so
+the viewer's Fit button frames the band formation rather than the PDF page.

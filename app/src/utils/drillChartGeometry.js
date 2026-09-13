@@ -8,7 +8,7 @@ export const CHART = {
   homeHash: 916, visitorHash: 562.5,
 };
 export const PIXELS_PER_STEP = (CHART.right - CHART.left) / 160;
-export const MIN_PERFORMER_SPACING = 36;
+export const PERFORMER_HIT_RADIUS = 22;
 export const MAX_ZOOM = 16;
 
 export function parseChartCoordinate(leftRight = '', homeVisitor = '') {
@@ -60,11 +60,40 @@ export function nearestSpacing(performer, performers) {
 }
 
 export function hitTestPerformer(performers, point, pixelsPerChartPixel) {
-  const nearest = performers.map(p => ({ performer: p, distance: Math.hypot(p.x - point.x, p.y - point.y) * pixelsPerChartPixel }))
-    .sort((a, b) => a.distance - b.distance)[0];
-  if (!nearest || nearest.distance > 22) return null;
-  if (nearestSpacing(nearest.performer, performers) * pixelsPerChartPixel < MIN_PERFORMER_SPACING) return null;
+  const [nearest, runnerUp] = performers.map(p => ({ performer: p, distance: Math.hypot(p.x - point.x, p.y - point.y) * pixelsPerChartPixel }))
+    .sort((a, b) => a.distance - b.distance);
+  if (!nearest || nearest.distance > PERFORMER_HIT_RADIUS) return null;
+  // A clear nearest target can be selected even when neighboring touch areas
+  // overlap. Ambiguous taps are enlarged by the viewer for another try.
+  if (runnerUp && runnerUp.distance - nearest.distance < 4) return null;
   return nearest.performer;
+}
+
+export function performerBounds(performers) {
+  if (!performers.length) return null;
+  // Include printed symbols and their offset number labels, not only centers.
+  return {
+    left: Math.min(...performers.map(p => p.x)) - 42,
+    right: Math.max(...performers.map(p => p.x)) + 42,
+    top: Math.min(...performers.map(p => p.y)) - 42,
+    bottom: Math.max(...performers.map(p => p.y)) + 42,
+  };
+}
+
+export function fitFormation(bounds, size, fitScale) {
+  if (!bounds) return constrainView({ zoom: 1, x: 0, y: 0 }, size, fitScale);
+  const side = 20, top = size.width < 360 ? 88 : 68, bottom = 20;
+  const width = Math.max(1, size.width - 2 * side);
+  const height = Math.max(1, size.height - top - bottom);
+  const targetScale = Math.min(width / Math.max(1, bounds.right - bounds.left), height / Math.max(1, bounds.bottom - bounds.top));
+  const zoom = Math.max(1, Math.min(MAX_ZOOM, targetScale / fitScale));
+  // Framing may need space beyond a page edge (especially in landscape) to
+  // keep the formation below the fixed chart controls.
+  return {
+    zoom,
+    x: side + width / 2 - (bounds.left + bounds.right) / 2 * fitScale * zoom,
+    y: top + height / 2 - (bounds.top + bounds.bottom) / 2 * fitScale * zoom,
+  };
 }
 
 // Resolve shared boundary sets to the movement that actually owns the chart.

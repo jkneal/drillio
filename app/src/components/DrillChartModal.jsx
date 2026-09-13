@@ -3,9 +3,10 @@ import { X, Map as MapIcon, ChevronLeft, ChevronRight, Maximize2, Users } from '
 import { performerData } from '../data/performerData';
 import { rehearsalMarks } from '../data/rehearsalMarks';
 import drumlineSections from '../data/drumlineSections.json';
+import chartFormationBounds from '../data/chartFormationBounds.json';
 import {
-  CHART, MAX_ZOOM, MIN_PERFORMER_SPACING, constrainView,
-  getChartPerformers, hitTestPerformer, nearestSpacing, resolveChartMovement,
+  CHART, MAX_ZOOM, PERFORMER_HIT_RADIUS, constrainView, fitFormation, performerBounds,
+  getChartPerformers, hitTestPerformer, resolveChartMovement,
 } from '../utils/drillChartGeometry';
 import './DrillChartModal.css';
 
@@ -79,6 +80,7 @@ function ChartViewer({ onClose, movement, actualMovement, setNumber, minSetNumbe
   const [currentSet, setCurrentSet] = useState(setNumber);
   const [selectedId, setSelectedId] = useState(null);
   const [followDrumline, setFollowDrumline] = useState(false);
+  const [followBand, setFollowBand] = useState(true);
   const [imageStatus, setImageStatus] = useState('loading');
   const [size, setSize] = useState({ width: 1, height: 1 });
   const [view, setView] = useState({ zoom: 1, x: 0, y: 0 });
@@ -94,6 +96,7 @@ function ChartViewer({ onClose, movement, actualMovement, setNumber, minSetNumbe
   const currentMovement = resolveChartMovement(performerData, actualMovement || movement, currentSet);
   const chartPath = `/drill/${currentMovement}-${currentSet}.png?v=show-section-colors-clean-symbols-1`;
   const performers = useMemo(() => getChartPerformers(performerData, currentMovement, currentSet), [currentMovement, currentSet]);
+  const bandBounds = chartFormationBounds[`${currentMovement}-${currentSet}`];
   const selected = performers.find(p => p.id === selectedId);
   const setData = performerData.TD1?.movements[currentMovement]?.find(s => s.set === currentSet);
   const mark = rehearsalMarks[currentMovement]?.[String(currentSet)];
@@ -102,7 +105,6 @@ function ChartViewer({ onClose, movement, actualMovement, setNumber, minSetNumbe
     const owner = resolveChartMovement(performerData, actualMovement || movement, number);
     return { number, mark: rehearsalMarks[owner]?.[String(number)] || 'No mark' };
   }), [minSetNumber, maxSetNumber, actualMovement, movement]);
-  const selectable = performers.filter(p => nearestSpacing(p, performers) * scale >= MIN_PERFORMER_SPACING);
 
   useEffect(() => {
     const previouslyFocused = document.activeElement;
@@ -121,11 +123,7 @@ function ChartViewer({ onClose, movement, actualMovement, setNumber, minSetNumbe
     const viewport = viewportRef.current;
     const observer = new ResizeObserver(([entry]) => {
       const nextSize = { width: entry.contentRect.width, height: entry.contentRect.height };
-      const nextFit = Math.min(nextSize.width / CHART.width, nextSize.height / CHART.height);
-      const next = constrainView({ zoom: 1, x: 0, y: 0 }, nextSize, nextFit);
       setSize(nextSize);
-      viewRef.current = next;
-      setView(next);
     });
     observer.observe(viewport);
     return () => observer.disconnect();
@@ -138,6 +136,7 @@ function ChartViewer({ onClose, movement, actualMovement, setNumber, minSetNumbe
   };
 
   const zoomAt = (zoom, point = { x: size.width / 2, y: size.height / 2 }) => {
+    setFollowBand(false);
     const previous = viewRef.current;
     const nextZoom = Math.min(MAX_ZOOM, Math.max(1, zoom));
     const ratio = nextZoom / previous.zoom;
@@ -146,29 +145,27 @@ function ChartViewer({ onClose, movement, actualMovement, setNumber, minSetNumbe
   };
 
   useEffect(() => {
-    if (!followDrumline || !performers.length) return;
-    const xs = performers.map(p => p.x);
-    const ys = performers.map(p => p.y);
-    const left = Math.min(...xs), right = Math.max(...xs);
-    const top = Math.min(...ys), bottom = Math.max(...ys);
-    const spacing = Math.min(...performers.map(p => nearestSpacing(p, performers)));
-    const fitBattery = Math.min(size.width / (right - left + 150), size.height / (bottom - top + 150));
-    const targetScale = Math.max(fitBattery, spacing > 0 ? 44 / spacing : fitBattery);
-    const zoom = Math.max(1, Math.min(MAX_ZOOM, targetScale / fitScale));
-    const next = constrainView({ zoom, x: size.width / 2 - (left + right) / 2 * fitScale * zoom, y: size.height / 2 - (top + bottom) / 2 * fitScale * zoom }, size, fitScale);
+    const bounds = followDrumline ? performerBounds(performers) : bandBounds;
+    const next = followDrumline || followBand
+      ? fitFormation(bounds, size, fitScale)
+      : constrainView(viewRef.current, size, fitScale);
     viewRef.current = next;
     setView(next);
-  }, [followDrumline, performers, size, fitScale]);
+  }, [followDrumline, followBand, performers, bandBounds, size, fitScale]);
 
   const fitChart = () => {
     setFollowDrumline(false);
-    updateView({ zoom: 1, x: 0, y: 0 });
+    setFollowBand(true);
+    const next = fitFormation(bandBounds, size, fitScale);
+    viewRef.current = next;
+    setView(next);
     setNotice('');
   };
 
   const toggleDrumlineZoom = () => {
     if (followDrumline) fitChart();
     else {
+      setFollowBand(false);
       setFollowDrumline(true);
       setNotice('');
     }
@@ -202,6 +199,7 @@ function ChartViewer({ onClose, movement, actualMovement, setNumber, minSetNumbe
     const points = [...pointers.current.values()];
     const start = gesture.current;
     if (points.length > 1) {
+      setFollowBand(false);
       const midpoint = { x: (points[0].x + points[1].x) / 2, y: (points[0].y + points[1].y) / 2 };
       const distance = Math.hypot(points[1].x - points[0].x, points[1].y - points[0].y);
       const zoom = Math.min(MAX_ZOOM, Math.max(1, start.view.zoom * distance / (start.distance || distance)));
@@ -210,7 +208,10 @@ function ChartViewer({ onClose, movement, actualMovement, setNumber, minSetNumbe
     } else {
       const dx = points[0].x - start.point.x, dy = points[0].y - start.point.y;
       if (Math.hypot(dx, dy) > 6) suppressClick.current = true;
-      if (suppressClick.current) updateView({ ...start.view, x: start.view.x + dx, y: start.view.y + dy });
+      if (suppressClick.current) {
+        setFollowBand(false);
+        updateView({ ...start.view, x: start.view.x + dx, y: start.view.y + dy });
+      }
     }
   };
 
@@ -227,14 +228,19 @@ function ChartViewer({ onClose, movement, actualMovement, setNumber, minSetNumbe
       const currentScale = fitScale * current.zoom;
       const chartPoint = { x: (point.x - current.x) / currentScale, y: (point.y - current.y) / currentScale };
       const hit = hitTestPerformer(performers, chartPoint, currentScale);
-      const nearPerformer = performers.some(p => Math.hypot(p.x - chartPoint.x, p.y - chartPoint.y) * currentScale <= 22);
+      const nearPerformer = performers.some(p => Math.hypot(p.x - chartPoint.x, p.y - chartPoint.y) * currentScale <= PERFORMER_HIT_RADIUS);
       if (hit) {
         selectPerformer(hit.id);
       } else if (selected && !nearPerformer) {
         setSelectedId(null);
         setNotice('');
       } else {
-        setNotice(selectable.length < performers.length ? 'Zoom in further or use Zoom to drumline to select an individual performer.' : 'Tap a colored drumline member to see their coordinates.');
+        if (nearPerformer && current.zoom < MAX_ZOOM) {
+          zoomAt(current.zoom * 1.8, point);
+          setNotice('Zoomed in for a clearer choice. Tap the member again.');
+        } else {
+          setNotice(nearPerformer ? 'Tap closer to the center of a drumline symbol.' : 'Tap a colored drumline member to see their coordinates.');
+        }
       }
     }
     pointers.current.delete(e.pointerId);
@@ -291,7 +297,7 @@ function ChartViewer({ onClose, movement, actualMovement, setNumber, minSetNumbe
             if (e.target !== e.currentTarget) return;
             if (['+', '=', '-'].includes(e.key)) { e.preventDefault(); zoomAt(view.zoom * (e.key === '-' ? 1 / 1.4 : 1.4)); }
             const arrows = { ArrowLeft: [60, 0], ArrowRight: [-60, 0], ArrowUp: [0, 60], ArrowDown: [0, -60] };
-            if (arrows[e.key]) { e.preventDefault(); updateView({ ...view, x: view.x + arrows[e.key][0], y: view.y + arrows[e.key][1] }); }
+            if (arrows[e.key]) { e.preventDefault(); setFollowBand(false); updateView({ ...view, x: view.x + arrows[e.key][0], y: view.y + arrows[e.key][1] }); }
           }}>
           <svg width={size.width} height={size.height} className="drill-chart-svg">
             <g transform={`translate(${view.x} ${view.y}) scale(${scale})`}>
@@ -303,14 +309,13 @@ function ChartViewer({ onClose, movement, actualMovement, setNumber, minSetNumbe
               width={size.width} height={size.height} fill="#0f172a" fillOpacity="0.8" pointerEvents="none" />}
             <g transform={`translate(${view.x} ${view.y}) scale(${scale})`}>
               {imageStatus === 'ready' && performers.map(p => {
-                const canSelect = selectable.includes(p) || p.id === selectedId;
-                return <circle key={p.id} cx={p.x} cy={p.y} r={(canSelect ? 8 : 3) / scale}
+                return <circle key={p.id} cx={p.x} cy={p.y} r={8 / scale}
                   fill="transparent" stroke="none" strokeWidth={1.5 / scale}
-                  role="button" aria-label={`${p.name}, ${p.id}, chart number ${p.number}`} aria-disabled={!canSelect} aria-pressed={p.id === selectedId}
-                  tabIndex={canSelect ? 0 : -1} className="chart-performer"
-                  onClick={e => { if (e.detail === 0 && canSelect) { selectPerformer(p.id); } }}
-                  onKeyDown={e => { if (canSelect && ['Enter', ' '].includes(e.key)) { e.preventDefault(); selectPerformer(p.id); } }}>
-                  <title>{p.id} · {p.name} (#{p.number}){canSelect ? '' : ' · Zoom in to select'}</title>
+                  role="button" aria-label={`${p.name}, ${p.id}, chart number ${p.number}`} aria-pressed={p.id === selectedId}
+                  tabIndex={0} className="chart-performer"
+                  onClick={e => { if (e.detail === 0) { selectPerformer(p.id); } }}
+                  onKeyDown={e => { if (['Enter', ' '].includes(e.key)) { e.preventDefault(); selectPerformer(p.id); } }}>
+                  <title>{p.id} · {p.name} (#{p.number})</title>
                 </circle>;
               })}
             </g>
@@ -339,7 +344,7 @@ function ChartViewer({ onClose, movement, actualMovement, setNumber, minSetNumbe
           <div className="chart-selection-title"><strong>{selected.name} <span>{selected.id} · #{selected.number}</span><small>Tap another member to switch · Tap elsewhere to dismiss</small></strong>
             <button className="chart-tool" aria-label="Clear selected performer" onClick={() => setSelectedId(null)}><X size={18} /></button></div>
           <div className="chart-coordinates"><p className="chart-yard-coordinate">{selected.leftRight}</p><p className="chart-depth-coordinate">{selected.homeVisitor}</p></div>
-        </> : <p>{notice || (selectable.length ? 'Tap a colored drumline member to see coordinates.' : 'Zoom in to select a performer, or use Zoom to drumline.')}</p>}
+        </> : <p>{notice || 'Tap a colored drumline member to see coordinates.'}</p>}
       </div>
       <footer className="drill-chart-footer">
         <div className="chart-section-legend" aria-label="Drumline section colors">
